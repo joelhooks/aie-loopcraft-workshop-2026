@@ -5,10 +5,10 @@ FROM node:22-bookworm
 LABEL org.opencontainers.image.source="https://github.com/joelhooks/aie-loopcraft-workshop-2026"
 LABEL org.opencontainers.image.description="AI Engineer Loopcraft Workshop 2026 workshop computer"
 
-ARG PI_VERSION=0.79.10
-ARG CLAUDE_CODE_VERSION=2.1.185
-ARG CODEX_VERSION=0.141.0
-ARG OPENCODE_VERSION=1.17.9
+ARG PI_VERSION=0.80.2
+ARG CLAUDE_CODE_VERSION=2.1.195
+ARG CODEX_VERSION=0.142.3
+ARG OPENCODE_VERSION=1.17.11
 ARG HERDR_VERSION=0.7.1
 ARG STARSHIP_VERSION=1.25.1
 ARG TARGETARCH
@@ -49,7 +49,7 @@ RUN groupadd --gid ${USER_GID} ${USERNAME} \
   && chmod 0440 /etc/sudoers.d/${USERNAME}
 
 RUN corepack enable \
-  && corepack prepare pnpm@11.1.2 --activate \
+  && corepack prepare pnpm@11.9.0 --activate \
   && npm install -g --ignore-scripts @earendil-works/pi-coding-agent@${PI_VERSION} \
   && npm install -g \
     @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION} \

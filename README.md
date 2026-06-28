@@ -15,6 +15,7 @@ We are not pretending this starts from nothing. The heavy sources and harness pi
 - Pi project config and a tiny Lesson 01 helper extension in `.pi/extensions/loop-workshop.ts`
 - Lakebed capsule shell in `surface/lakebed`
 - Lesson guide in `lessons/`
+- Public Wzrrd workshop site source in `web/`
 
 ## What is not built yet
 
@@ -53,6 +54,7 @@ Ask one question at a time to define the product vision, operator boundaries, st
 - `agents/skills/loopcraft-ta/SKILL.md` — local guide context
 - `.agent_sources/README.md` — source mirrors already staged
 - `surface/lakebed/README.md` — operator surface capsule
+- `web/README.md` — Wzrrd workshop site build/publish notes
 
 ## Expected end state
 

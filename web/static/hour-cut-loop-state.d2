@@ -1,0 +1,63 @@
+direction: down
+
+blocked: "approval_required\noperator gate is visible" {
+  shape: rectangle
+  style.fill: "#f4f1e8"
+  style.stroke: "#2f5f6f"
+}
+
+ready: "ready\napproved facts exist" {
+  shape: rectangle
+  style.fill: "#fffdf8"
+  style.stroke: "#9c9282"
+}
+
+checking: "checking\nread Lakebed events + validate with Effect" {
+  shape: rectangle
+  style.fill: "#fffdf8"
+  style.stroke: "#9c9282"
+}
+
+decision: "XState decision\nsafe to progress?" {
+  shape: diamond
+  style.fill: "#fbfaf5"
+  style.stroke: "#2f5f6f"
+}
+
+needs_input: "needs_input\nstop and ask" {
+  shape: rectangle
+  style.fill: "#fffdf8"
+  style.stroke: "#9c9282"
+}
+
+doing: "in_progress\nloop claims work" {
+  shape: rectangle
+  style.fill: "#f4f1e8"
+  style.stroke: "#2f5f6f"
+}
+
+receipt: "receipt_written\nwhy it moved" {
+  shape: document
+  style.fill: "#fffdf8"
+  style.stroke: "#2f5f6f"
+}
+
+next: "board updates\nor one next issue appears" {
+  shape: rectangle
+  style.fill: "#f4f1e8"
+  style.stroke: "#2f5f6f"
+}
+
+blocked -> ready: "operator approves"
+ready -> checking: "manual check / daemon tick"
+checking -> decision: "project state"
+decision -> doing: "yes"
+decision -> needs_input: "no"
+doing -> receipt: "write evidence"
+receipt -> next: "append progression"
+needs_input -> blocked: "operator answers" {
+  style.stroke-dash: 3
+}
+next -> ready: "more ready work" {
+  style.stroke-dash: 3
+}

@@ -1,0 +1,26 @@
+{
+  "name": "aie-loopcraft-workshop-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "dev": "vite --host 0.0.0.0",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.10",
+    "@sveltejs/kit": "^2.63.0",
+    "@types/node": "^25.8.0",
+    "mdsvex": "^0.12.7",
+    "shiki": "^4.2.0",
+    "svelte": "^5.56.1",
+    "svelte-check": "^4.5.0",
+    "vite": "^8.0.16"
+  },
+  "dependencies": {
+    "@hugeicons/core-free-icons": "^4.2.1",
+    "@hugeicons/svelte": "^1.1.4"
+  }
+}

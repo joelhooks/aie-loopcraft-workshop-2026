@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="980" viewBox="0 0 760 980" role="img" aria-labelledby="state-title state-desc">
+  <title id="state-title">One issue state chart</title>
+  <desc id="state-desc">A portrait state chart for one issue moving from approval required to ready, checking, decision, in progress, receipt written, and visible board update, with a needs input branch.</desc>
+  <defs>
+    <style>
+      .bg{fill:#fffdf8}.box{fill:#fbfaf5;stroke:#9c9282;stroke-width:1.5}.accent{fill:#f4f1e8;stroke:#2f5f6f;stroke-width:2}.decision{fill:#fffdf8;stroke:#2f5f6f;stroke-width:2}.title{font:600 23px Georgia,serif;fill:#1b1a17}.label{font:700 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1b1a17}.small{font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#575247}.mono{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#2f5f6f}.arrow{stroke:#2f5f6f;stroke-width:2.2;fill:none;marker-end:url(#arrow)}.dash{stroke-dasharray:6 5}.note{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#7b7366}.num{font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#2f5f6f}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#2f5f6f"/></marker>
+  </defs>
+  <rect class="bg" width="760" height="980" rx="16"/>
+  <text class="title" x="58" y="48">One issue state chart</text>
+  <text class="small" x="58" y="74">The safety story: approval gates the loop, the check projects facts, and progress always writes a receipt.</text>
+
+  <g transform="translate(120 112)">
+    <rect class="accent" width="520" height="90" rx="12"/>
+    <text class="num" x="24" y="28">01</text>
+    <text class="label" x="58" y="32">approval_required</text>
+    <text class="small" x="58" y="58">operator gate is visible on the board</text>
+    <text class="mono" x="58" y="78">human approval required</text>
+  </g>
+  <path class="arrow" d="M380 214 V258"/>
+  <text class="note" x="404" y="242">operator approves</text>
+
+  <g transform="translate(120 270)">
+    <rect class="box" width="520" height="86" rx="12"/>
+    <text class="num" x="24" y="28">02</text>
+    <text class="label" x="58" y="32">ready</text>
+    <text class="small" x="58" y="58">approved facts exist in the event log</text>
+    <text class="mono" x="58" y="76">ready work is explicit</text>
+  </g>
+  <path class="arrow" d="M380 368 V410"/>
+  <text class="note" x="404" y="394">manual check or daemon tick</text>
+
+  <g transform="translate(120 422)">
+    <rect class="box" width="520" height="90" rx="12"/>
+    <text class="num" x="24" y="28">03</text>
+    <text class="label" x="58" y="32">checking</text>
+    <text class="small" x="58" y="58">read Lakebed events and validate with Effect</text>
+    <text class="mono" x="58" y="78">adapter → schemas → projection</text>
+  </g>
+  <path class="arrow" d="M380 524 V568"/>
+
+  <g transform="translate(250 580)">
+    <path class="decision" d="M130 0 L260 66 L130 132 L0 66 Z"/>
+    <text class="label" x="130" y="58" text-anchor="middle">safe?</text>
+    <text class="small" x="130" y="82" text-anchor="middle">XState decision</text>
+  </g>
+
+  <path class="arrow" d="M508 646 H648 V740 H606"/>
+  <text class="note" x="604" y="628">no</text>
+  <g transform="translate(412 710)">
+    <rect class="box" width="224" height="82" rx="12"/>
+    <text class="label" x="24" y="32">needs_input</text>
+    <text class="small" x="24" y="58">stop and ask</text>
+  </g>
+  <path class="arrow dash" d="M412 751 H80 V156 H112"/>
+
+  <path class="arrow" d="M380 714 V758"/>
+  <text class="note" x="402" y="740">yes</text>
+  <g transform="translate(120 770)">
+    <rect class="accent" width="260" height="82" rx="12"/>
+    <text class="label" x="24" y="32">in_progress</text>
+    <text class="small" x="24" y="58">loop claims work</text>
+  </g>
+  <path class="arrow" d="M380 812 H430"/>
+  <g transform="translate(440 770)">
+    <rect class="box" width="200" height="82" rx="12"/>
+    <text class="label" x="24" y="32">receipt</text>
+    <text class="small" x="24" y="58">why it moved</text>
+  </g>
+
+  <path class="arrow" d="M540 852 V900 H380 V894"/>
+  <g transform="translate(120 894)">
+    <rect class="accent" width="520" height="66" rx="12"/>
+    <text class="label" x="24" y="30">board updates or one next issue appears</text>
+    <text class="mono" x="24" y="52">append progression event</text>
+  </g>
+</svg>

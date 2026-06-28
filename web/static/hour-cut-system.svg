@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="540" viewBox="0 0 760 540" role="img" aria-labelledby="system-title system-desc">
+  <title id="system-title">Loopcraft hour-cut system seam</title>
+  <desc id="system-desc">A readable landscape system diagram showing the operator pane, Lakebed capsule, local loop core, durable evidence, and visible board motion.</desc>
+  <defs>
+    <style>
+      .bg{fill:#fffdf8}.panel{fill:#fbfaf5;stroke:#dfd8c8;stroke-width:1.5}.box{fill:#fffdf8;stroke:#9c9282;stroke-width:1.5}.accent{fill:#f4f1e8;stroke:#2f5f6f;stroke-width:2}.title{font:600 23px Georgia,serif;fill:#1b1a17}.label{font:700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1b1a17}.small{font:13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#575247}.mono{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#2f5f6f}.arrow{stroke:#2f5f6f;stroke-width:2.3;fill:none;marker-end:url(#arrow)}.dash{stroke-dasharray:6 5}.num{font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#2f5f6f}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#2f5f6f"/></marker>
+  </defs>
+  <rect class="bg" width="760" height="540" rx="16"/>
+  <text class="title" x="38" y="44">Hour-cut system seam</text>
+  <text class="small" x="38" y="68">One operator action crosses one provider boundary, then the loop writes evidence before anything moves.</text>
+
+  <rect class="box" x="38" y="104" width="188" height="112" rx="12"/>
+  <text class="num" x="58" y="132">01</text>
+  <text class="label" x="88" y="132">Operator pane</text>
+  <text class="small" x="58" y="160">Pi chat + human approval</text>
+  <text class="mono" x="58" y="188">click approve</text>
+
+  <rect class="accent" x="286" y="104" width="220" height="112" rx="12"/>
+  <text class="num" x="306" y="132">02</text>
+  <text class="label" x="336" y="132">Lakebed capsule</text>
+  <text class="small" x="306" y="160">Board UI, API, event log</text>
+  <text class="mono" x="306" y="188">append issue.updated</text>
+
+  <rect class="box" x="566" y="104" width="156" height="112" rx="12"/>
+  <text class="num" x="586" y="132">03</text>
+  <text class="label" x="616" y="132">Loop pane</text>
+  <text class="small" x="586" y="160">daemon/status</text>
+  <text class="mono" x="586" y="188">run one check</text>
+
+  <path class="arrow" d="M226 160 H278"/>
+  <path class="arrow" d="M506 160 H558"/>
+
+  <rect class="panel" x="122" y="282" width="516" height="118" rx="14"/>
+  <text class="num" x="148" y="314">04</text>
+  <text class="label" x="178" y="314">Local loop core</text>
+  <text class="small" x="148" y="344">adapter → Effect schemas → projected state → XState decision</text>
+  <text class="mono" x="148" y="374">no hidden mutation; every decision has a reason</text>
+
+  <path class="arrow" d="M644 216 C644 252 594 276 548 294"/>
+
+  <rect class="box" x="70" y="448" width="270" height="62" rx="12"/>
+  <text class="label" x="94" y="474">Durable evidence</text>
+  <text class="mono" x="94" y="496">receipts · outbox · MEMORY.md</text>
+
+  <rect class="accent" x="420" y="448" width="270" height="62" rx="12"/>
+  <text class="label" x="444" y="474">Visible board motion</text>
+  <text class="mono" x="444" y="496">ready → in_progress / next issue</text>
+
+  <path class="arrow" d="M250 400 V440"/>
+  <path class="arrow dash" d="M510 400 V440"/>
+  <path class="arrow" d="M340 480 H412"/>
+</svg>

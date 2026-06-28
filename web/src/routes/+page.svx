@@ -1,0 +1,442 @@
+<script lang="ts">
+  import FeedbackExport from "$lib/feedback-export.svelte";
+  import FeedbackParagraph from "$lib/feedback-paragraph.svelte";
+  import FlowChart from "$lib/flow-chart.svelte";
+  import LessonPass from "$lib/lesson-pass.svelte";
+  import OpenQuestions from "$lib/open-questions.svelte";
+  import PatternCards from "$lib/pattern-cards.svelte";
+  import ReportLayout from "$lib/ReportLayout.svelte";
+  import StatLine from "$lib/stat-line.svelte";
+
+  const pageRef = {
+    run: "issue-checker-06-hour-cut-grill",
+    slug: "loopcraft-hour-cut",
+    url: "https://loopcraft-hour-cut.wzrrd.sh/",
+    version: "0.6.0",
+  };
+
+  const feedbackStoragePrefix = "loopcraft-hour-cut-feedback:";
+
+  const feedbackParagraphs = [
+    "premise",
+    "lesson-machine",
+    "lesson-pass",
+    "start-state",
+    "hour-beats",
+    "happy-path",
+    "trims",
+    "open-questions",
+  ];
+
+  const stats = [
+    { label: "Source run", value: "06" },
+    { label: "Pi sessions", value: "17" },
+    { label: "User turns", value: "301" },
+    { label: "Loop events", value: "1.5k+" },
+    { label: "Tests", value: "132" },
+  ];
+
+  const patterns = [
+    {
+      id: "preseed-boring-rig",
+      title: "Preseed the boring rig",
+      why: "Herdr, Docker, the Lakebed capsule, and the Pi extension shell should exist before the hour starts. The live build should focus on the loop pattern, not install/auth/plumbing failure.",
+      receipts: [{ label: "run-06 friction", href: "#what-the-logs-say" }],
+    },
+    {
+      id: "real-boundary",
+      title: "Build one real boundary",
+      why: "Lakebed owns the operator surface and event storage. The loop core reads through an adapter, validates provider events, decides, and writes evidence. That is the teaching spine.",
+      receipts: [{ label: "adapter seam", href: "#happy-path" }],
+    },
+    {
+      id: "motion-not-magic",
+      title: "Show motion, not magic",
+      why: "The board should move left to right because an append-only event landed. The receipt should explain why. No hidden mutable state, no hand-waved daemon behavior.",
+      receipts: [{ label: "board motion", href: "#hour-beats" }],
+    },
+  ];
+
+  const lessonStates = [
+    {
+      state: "Tour + vision",
+      teaches: "Before autonomy, tour the prepared surfaces, grill the product intent, and write the repo's first boundaries.",
+      proof: "VISION.md and the minimal repo baseline exist; implementation is deliberately deferred.",
+    },
+    {
+      state: "Reliability floor",
+      teaches: "Move down for reliability before moving up for leverage: guardrails, typed events, explicit state, receipts.",
+      proof: "A local loop check validates events, classifies work, and writes a receipt.",
+    },
+    {
+      state: "Lakebed projection",
+      teaches: "Lakebed is the operator/provider surface, not the domain model.",
+      proof: "List, board, and event viewer agree because they project the same issue events.",
+    },
+    {
+      state: "Pi/Herdr control",
+      teaches: "Pi becomes the harness around the machine; Herdr keeps operator and daemon state visible.",
+      proof: "A Pi control action and side-pane daemon/status output point at the same latest check.",
+    },
+    {
+      state: "Safe dispatch",
+      teaches: "Claim first, dry-run second, receipt always. No hidden agent mutation.",
+      proof: "One ready issue reaches a claim/dispatch receipt without product edits hidden behind the loop.",
+    },
+    {
+      state: "Bounded maintenance",
+      teaches: "Agentic maintenance is safe only when it writes explicit events and stops visibly.",
+      proof: "The gardener proposes/applies a bounded event and explains duplicate or dirty-state stops.",
+    },
+    {
+      state: "Specialist review",
+      teaches: "Multi-agent review is leverage only when roles, artifacts, and stop rules are loop-owned.",
+      proof: "A scout/reviewer packet produces a non-mutating artifact linked to issue state.",
+    },
+    {
+      state: "Supervisor shadow",
+      teaches: "The top of the leverage arrow is facts, guards, events, and receipts with better lifecycle ownership.",
+      proof: "A shadow XState actor tree agrees with bridge decisions and survives a recovery drill.",
+    },
+  ];
+
+  const lessonPass = [
+    {
+      id: "tour-vision-repo",
+      title: "Tour the rig and set the course",
+      challenge: "Use Pi plus grill-with-docs to tour the prepared surfaces, define the product vision, and create only the minimal repo baseline.",
+      starterPrompt: "/skill:grill-with-docs — Tour README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, the Pi helper, local skills, and Lakebed. Ask one question at a time, write VISION.md, and update repo rules only when clear.",
+      buildOperate: "Create VISION.md, minimal package.json identity, and any clear AGENTS.md/README.md rule. Do not build product behavior yet.",
+      observe: "Inspect VISION.md for intent, safety boundary, non-goal, and next setup need; confirm issue events are still deliberately deferred.",
+      discuss: "The first move is orientation plus decision capture. The agent should not improvise a product from vibes.",
+      checkpoint: "The repo can explain what it is building, what must stop for a human, what setup exists, and what setup waits for Lesson 02.",
+      drill: "Read one VISION.md sentence and classify it as intent, boundary, non-goal, or setup need.",
+      next: "Turn the vision into a first issue-event queue and typed loop check.",
+      receipt: "Run 06 grill turns named approvals/gates before implementation; run 07 starts with a guided tour and durable vision capture.",
+    },
+    {
+      id: "reliability-floor",
+      title: "Build the reliability floor",
+      challenge: "Make the first issue queue typed, testable, and receipt-backed.",
+      starterPrompt: "Use VISION.md from Lesson 01. Create the first issue-event queue, then build the smallest reliability floor: package scripts, strict TypeScript, Effect schemas, an explicit loop-check classifier, tests, and a receipt for one check run.",
+      buildOperate: "Add issue events, package scripts, strict config, src/issue-events.ts, src/loop-check.ts, tests, run-log and receipt output.",
+      observe: "Run the checks that exist, then run the loop check and inspect the receipt.",
+      discuss: "This is the down-for-reliability move: fast strict guardrails, typed boundaries, explicit state, and evidence.",
+      checkpoint: "The loop classifies ready / approval / input without external trackers or hidden edits.",
+      drill: "For one receipt, name inputs read, stop reason, and next allowed action.",
+      next: "Project the same facts into Lakebed without changing the core model.",
+      receipt: "Run 06 ISS-001..004 added tooling, Effect schemas, XState loop check, receipts, run log, and memory.",
+    },
+    {
+      id: "lakebed-projection",
+      title: "Project issue state into Lakebed",
+      challenge: "Make Lakebed the operator projection while keeping local files testable.",
+      starterPrompt: "Add a Lakebed provider/projection path: the core should read issue events through an adapter, and Lakebed should show list, board, and event views. Keep JSONL/local files testable.",
+      buildOperate: "Add an IssueStore-style adapter, Lakebed /api/issue-events seam, and list/Kanban/event viewer projection.",
+      observe: "Compare the local event file to the Lakebed event view and board lane.",
+      discuss: "Lakebed is the projection, not the domain model. Useful UI explains movement from append-only facts.",
+      checkpoint: "One issue appears in the correct Lakebed lane and the event viewer explains why.",
+      drill: "Pick one card and trace it back to the event that put it there.",
+      next: "Control the loop from Pi and Herdr instead of only reading files/UI.",
+      receipt: "Run 06 chose Lakebed endpoint first, kept JSON adapter for tests, and made list/board/event state visible.",
+    },
+    {
+      id: "pi-herdr-control",
+      title: "Control the loop from Pi and Herdr",
+      challenge: "Make the loop visible and controllable from the operator harness.",
+      starterPrompt: "Add the smallest local control plane: a bridge/status process, machine-readable check output, and Pi controls to inspect or trigger a check. Keep Herdr visible with an operator pane and a daemon/status pane.",
+      buildOperate: "Use the scaffold daemon side pane, then replace it with bridge health/status/check-now/SSE and Pi status/check controls.",
+      observe: "Run a check from Pi and watch the side pane, latest status, and latest receipt agree.",
+      discuss: "Pi is the harness around the machine. Herdr turns hidden process state into operator-visible runtime state.",
+      checkpoint: "The operator can start/inspect/check the loop from Pi and see matching status in Herdr.",
+      drill: "Diagnose stale state by checking bridge status, last receipt, wake/check state, and pane output.",
+      next: "Use the control plane to progress one ready item safely.",
+      receipt: "Run 06’s poke/kick/dead-again loop is the scar that made heartbeat, freshness, and controls essential.",
+    },
+    {
+      id: "safe-dispatch",
+      title: "Make dispatch safe",
+      challenge: "Progress one ready issue through policy, claim, dry-run dispatch, and receipt before implementation edits.",
+      starterPrompt: "Use the ready issue from the loop check. Add the smallest safe dispatch seam: policy decides eligibility, the loop claims the issue first, dispatch runs in dry-run or memory mode, and the result writes a receipt.",
+      buildOperate: "Add policy classification, claim event, runtime adapter seam, dry-run/memory runtime, and dispatch receipt.",
+      observe: "Inspect the event stream before/after claim and then inspect the dispatch receipt.",
+      discuss: "Just run an agent is the trap. Ownership and policy come first.",
+      checkpoint: "One ready issue has a claim and dispatch receipt, with no hidden mutation.",
+      drill: "For a candidate issue, say whether it is claimable and why.",
+      next: "Let a bounded maintenance helper write issue events.",
+      receipt: "Run 06 ISS-011..015 added dispatch policy, Herdr runtime dry-run, claims, and memory dispatch receipts.",
+    },
+    {
+      id: "bounded-gardener",
+      title: "Add a bounded gardener",
+      challenge: "Let the loop propose or apply maintenance events, then prove it stops visibly when it should.",
+      starterPrompt: "Add a bounded gardener pass. It may propose or apply fully formed issue events, but it must stop for ready work, approval-required work, input-required work, active runtime, duplicate follow-up, or dirty state.",
+      buildOperate: "Add gardener dry-run/apply, stop reasons, duplicate prevention, and maintenance receipt/snapshot.",
+      observe: "Run dry-run and one allowed happy path; inspect the event it would write or did write.",
+      discuss: "Maintenance is agentic behavior. It is safe only when it writes explicit events and stops visibly.",
+      checkpoint: "The gardener can create/propose one useful event and can explain why it stopped.",
+      drill: "Read a gardener stop reason and name the operator’s next action.",
+      next: "Ask a specialist for read-only help instead of expanding the gardener.",
+      receipt: "Run 06 hit dirty-worktree and duplicate-gardener scars; those became stop reasons and duplicate checks.",
+    },
+    {
+      id: "specialist-review",
+      title: "Add specialist review carefully",
+      challenge: "Ask a small specialist agent for help without giving a generic agent swarm the keys.",
+      starterPrompt: "Add a loop-owned specialist review seam. Define one non-mutating scout/reviewer role, produce a work packet from issue state, run or simulate the specialist, and save the artifact.",
+      buildOperate: "Define role contract, packet shape, read-only artifact, runtime seam, and receipt linking issue/packet/artifact.",
+      observe: "Inspect the specialist artifact and compare it to issue acceptance criteria.",
+      discuss: "Multi-agent review is leverage only when the loop owns roles, artifacts, and stop rules.",
+      checkpoint: "One specialist artifact exists and did not mutate product state.",
+      drill: "Classify a specialist request as scout, reviewer, implementer, or do-not-run.",
+      next: "Move decision ownership into an explicit supervisor runtime.",
+      receipt: "Run 06 installed loop-owned scout/reviewer roles and avoided unbounded default agent swarms.",
+    },
+    {
+      id: "supervisor-runtime",
+      title: "Shadow the supervisor runtime",
+      challenge: "Move decision ownership from bridge glue toward an explicit supervisor/actor runtime in shadow mode.",
+      starterPrompt: "Add the smallest supervisor runtime shadow. The bridge should still drive the visible loop, but a supervisor actor should make the same decision in parallel and write a comparison receipt. Include one recovery drill.",
+      buildOperate: "Add off/shadow/on mode, supervisor decision/actor, per-issue lifecycle shape, comparison receipt, and one recovery drill test.",
+      observe: "Run the same input through bridge and supervisor paths; inspect whether decisions agree.",
+      discuss: "The top of the leverage arrow is not magic. It is the same facts, guards, events, and receipts with better lifecycle ownership.",
+      checkpoint: "A shadow receipt proves the supervisor agrees on one happy-path decision and a recovery drill passes.",
+      drill: "For one issue, name which actor should own the next decision.",
+      next: "After the hour: deepen worktrees, launchd scheduling, provider adapters, and real specialist dispatch.",
+      receipt: "Run 06 ISS-059..068 migrated toward dynamic execution runtime and recovery drills one ready issue at a time.",
+    },
+  ];
+
+  const openQuestions = [
+    {
+      id: "minute-zero-files",
+      prompt: "What exact files exist at minute zero?",
+      answer: "Start from a useful surface, not a blank slate. Docker/Herdr, normal Pi, guardrails, Lakebed shell, loop pane, and enough extension/control scaffolding should already exist so the discussion can focus on why the building blocks matter instead of watching the agent install rudiments.",
+      placeholder: "What starting files and scaffolds should be present?",
+    },
+    {
+      id: "daemon-trigger",
+      prompt: "How should the loop pane run during the hour?",
+      answer: "Keep the daemon running in the side pane so people can see the agentic turn and automatic pickup. Use the left Pi pane to start, stop, reset, and inspect the loop through the bespoke Pi extension/control surface. This teaches when to extend Pi with a tool or extension instead of only adding a skill.",
+      placeholder: "Manual, polling, or both? What should the operator control?",
+    },
+    {
+      id: "final-progression",
+      prompt: "What visible Lakebed motion should the hour preserve?",
+      answer: "Keep the current Lakebed surface energy: list view, Kanban board, and an event viewer. Show issues moving lane to lane, show what is in progress, and make the append-only event stream part of the lesson.",
+      placeholder: "Which board/event motion is the final demo?",
+    },
+    {
+      id: "take-home-proof",
+      prompt: "What should the take-home artifact feel like?",
+      answer: "Use the Matt Pocock AI Engineer workshop page as the reference shape: a landing page with lesson sections beneath it, part tutorial and part visual presentation guide, published statically through Wzrrd/Wizard so someone can follow the beats later.",
+      placeholder: "Repo, guide page, slide-ish reference, or all three?",
+    },
+  ];
+</script>
+
+<svelte:head>
+  <title>Loopcraft in Pi: the one-hour cut</title>
+  <meta
+    name="description"
+    content="A source-grounded hour-cut plan for teaching Loopcraft in Pi with Herdr, Lakebed, append-only issue events, a tiny loop daemon, and receipt-backed progression."
+  />
+  <meta property="og:title" content="Loopcraft in Pi: the one-hour cut" />
+  <meta property="og:description" content="Keep the Lakebed oh-shit moment. Trim the rest to one event boundary, one loop decision, and one visible progression." />
+  <meta property="og:image" content="/og.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap"
+    rel="stylesheet"
+  />
+</svelte:head>
+
+<ReportLayout>
+
+<p class="eyebrow"><span class="mascot" aria-hidden="true">🌀</span><span class="eyebrow-stack"><span>Loopcraft in Pi</span><span>One-hour workshop cut</span></span></p>
+
+# Keep the oh-shit moment. Cut the machinery.
+
+<p class="lead">Run 06 produced a genuinely useful issue-progress loop. The one-hour version should be an on-rails replay of that build: tour the prepared rig, grill the vision, set up the repo baseline, make the reliability floor, project it through Lakebed, control it from Pi and Herdr, then climb toward safe dispatch, bounded maintenance, specialists, and supervisor runtime shadowing.</p>
+
+<StatLine items={stats} />
+
+<FeedbackParagraph id="premise" storagePrefix={feedbackStoragePrefix} note="Source: curated run-06 transcript and artifact analysis, not raw transcript publication.">
+  <p>The promise is not “start from nothing in an hour.” The promise is “feel the important moves from run 06 without losing the hour to install/auth/debug sludge.” Lessons are the rails, not issue tickets. Issues are the product substrate the learner builds toward. By the end, the loop should be starting to use its own issue surface to progress work.</p>
+</FeedbackParagraph>
+
+<PatternCards items={patterns} storagePrefix={feedbackStoragePrefix} />
+
+## The workshop is the state machine
+
+<FeedbackParagraph id="lesson-machine" storagePrefix={feedbackStoragePrefix} note="This reframes the hour from a feature build into a sequence of teachable loop states.">
+  <p>The lesson is not “generate an issue tracker from scratch.” The lesson is to rebuild the run-06 example as a trustworthy state machine: events enter, guards decide, actions write receipts, and Lakebed projects the current state. The start state should already be interesting; the hour teaches why each piece exists and how the loop becomes reliable.</p>
+</FeedbackParagraph>
+
+<div class="table-wrap lesson-state-table">
+  <table>
+    <thead>
+      <tr><th>Workshop state</th><th>Topic to teach</th><th>Proof in the demo</th></tr>
+    </thead>
+    <tbody>
+      {#each lessonStates as lesson}
+        <tr><td>{lesson.state}</td><td>{lesson.teaches}</td><td>{lesson.proof}</td></tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
+
+## Test pass: rebuild the machine
+
+<FeedbackParagraph id="lesson-pass" storagePrefix={feedbackStoragePrefix} note="Use this as the next working pass: Joel can run through the lessons, write notes per lesson, then export feedback.">
+  <p>This is the playable worksheet version. Work through it as the learner testing the hour: each lesson gives a challenge, starter prompt, build/operate target, evidence to inspect, discussion point, checkpoint, tiny drill, and run-06 scar. Lesson 01 is an active tour plus <code>grill-with-docs</code> vision/repo setup. The lessons are rails; the issue queue is the product substrate the learner builds toward.</p>
+</FeedbackParagraph>
+
+<div class="state-boundaries">
+  <section>
+    <h3>Starting state</h3>
+    <p>A useful repo and workshop computer are already alive: normal Pi, two Herdr panes, source mirrors, Matt Pocock skills, Lakebed shell, scaffold daemon, and a tiny Pi helper extension.</p>
+  </section>
+  <section>
+    <h3>End state</h3>
+    <p>The repo has a captured vision, issue-event surface, typed loop check, Lakebed projection, Pi/Herdr controls, and starts progressing or maintaining work with receipts.</p>
+  </section>
+</div>
+
+<LessonPass lessons={lessonPass} storagePrefix={feedbackStoragePrefix} />
+
+<span id="what-the-logs-say"></span>
+
+## What the run logs say
+
+<FeedbackParagraph id="what-the-logs-say" storagePrefix={feedbackStoragePrefix} note="These are curated findings from run 06. Keep the raw Pi JSONL local.">
+  <p>The app became useful when Joel stopped treating it as a side UI and started using it as the operator surface. The recurring friction was not “we need more features.” It was: the bridge is offline, the loop is sitting there, the board is hard to read, ready work is not picked up, open pre-approved work is stale, dirty loop artifacts stop the gardener, and work that still needs grilling must not auto-run.</p>
+</FeedbackParagraph>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Observed friction</th><th>What it taught</th><th>Hour-cut response</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Board hard to read</td><td>The operator needs compact lanes and live state, not a data dump.</td><td>Preseed a tiny Lakebed kanban/list board.</td></tr>
+      <tr><td>Bridge offline / stale</td><td>Daemon health must be visible beside issue state.</td><td>Run a tiny loop pane and show status/control events.</td></tr>
+      <tr><td>Ready work not picked up</td><td>The loop needs an explicit decision point and receipt.</td><td>Build one check that projects events and writes evidence.</td></tr>
+      <tr><td>Open pre-approved backlog</td><td>Promotion is a decision, not a random script.</td><td>Show exactly one progression event after the check.</td></tr>
+      <tr><td>Over-eager automation</td><td>Input-required work must stay blocked until grilled.</td><td>Keep one visible approval/input gate in the UI.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+## Where the hour starts
+
+<FeedbackParagraph id="start-state" storagePrefix={feedbackStoragePrefix} note="This is the recommended scaffold boundary, not the product outcome.">
+  <p>Start with a useful repo, not a fake blank slate. The workshop computer, remote Herdr session, normal Pi, guardrails, Lakebed shell, loop pane, and basic extension/control surface should already exist. The live hour should teach the components and rebuild the interesting state transitions, not spend attention on routine scaffolding.</p>
+</FeedbackParagraph>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Preseed</th><th>Why it exists before the hour</th><th>Live work still required</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Herdr container</td><td>Pane management and resume should not steal workshop time.</td><td>Use the two panes to observe operator versus loop behavior.</td></tr>
+      <tr><td>Lakebed list + board shell</td><td>The visual “oh-shit” moment needs to be available early.</td><td>Wire the views to append-only issue events.</td></tr>
+      <tr><td>Event viewer shell</td><td>The append-only model is a teaching topic, not just storage.</td><td>Show the event that caused each visible move.</td></tr>
+      <tr><td>Running loop pane</td><td>The daemon should feel alive during the hour.</td><td>Watch automatic pickup while keeping manual operator control.</td></tr>
+      <tr><td>Pi extension control shell</td><td>The workshop is also about building bespoke harness tools.</td><td>Start, stop, reset, and inspect the loop from the operator pane.</td></tr>
+      <tr><td>Minimal package guardrails</td><td>Fast checks protect the live build from mush.</td><td>Add only the checks needed for this path.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<FlowChart
+  src="/hour-cut-system.svg"
+  title="The hour-cut system seam"
+  caption="Lakebed owns the operator surface and append-only issue events. The local loop core reads through one adapter, validates the boundary, decides, and writes evidence back."
+  alt="Landscape system diagram showing the operator pane, Herdr loop pane, Lakebed UI and issue-events API, local loop core, and durable receipts."
+  version="0.6.0"
+  wide={true}
+/>
+
+<FlowChart
+  src="/hour-cut-flow.svg"
+  title="The one-hour Loopcraft path"
+  caption="The build starts with the rig alive, then creates one real event-to-loop-to-receipt path."
+  alt="Vertical diagram of the one-hour Loopcraft path from Herdr setup to Lakebed approval, loop daemon check, evidence, and board movement."
+  version="0.6.0"
+/>
+
+<span id="hour-beats"></span>
+
+## Lesson states to rebuild run 06
+
+<FeedbackParagraph id="hour-beats" storagePrefix={feedbackStoragePrefix} note="The exact minute marks are less important than protecting the state-machine spine.">
+  <p>The hour should feel like prompting the machine into existence on rails. Each move teaches a topic, then proves it in the running surface. If the build slips, cut optional depth, not the tour/vision capture, issue-event contract, reliability check, Lakebed projection, Pi/Herdr control, or first receipt-backed transition.</p>
+</FeedbackParagraph>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>State</th><th>Teach</th><th>Visible payoff</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Vision exists</td><td>Before autonomy, tour the rig, run <code>grill-with-docs</code>, and name the repo's boundaries.</td><td><code>VISION.md</code> plus minimal repo setup explain the course.</td></tr>
+      <tr><td>Reliability floor holds</td><td>Move down for reliability before moving up for leverage.</td><td>First issue events exist; <code>loop check</code> validates them, classifies work, and writes a receipt.</td></tr>
+      <tr><td>Lakebed projects facts</td><td>Lakebed is the operator/provider surface, not the domain model.</td><td>List, board, and event viewer agree because they project the same events.</td></tr>
+      <tr><td>Pi controls the loop</td><td>Pi can become the harness around the machine, not just chat.</td><td>Herdr shows operator pane plus loop pane; Pi controls health/status/check-now.</td></tr>
+      <tr><td>Dispatch is safe</td><td>Claim first, dry-run second, receipt always.</td><td>One ready issue reaches a dispatch receipt without hidden implementation edits.</td></tr>
+      <tr><td>Maintenance stops visibly</td><td>Agentic maintenance is safe only when bounded by events and stop reasons.</td><td>Gardener proposes/applies bounded events, then stops on duplicate or dirty-state guard.</td></tr>
+      <tr><td>Specialists are owned</td><td>Multi-agent review is leverage only when roles, artifacts, and stop rules are explicit.</td><td>Scout/reviewer packets produce review artifacts without mutating product state.</td></tr>
+      <tr><td>Supervisor owns lifecycle</td><td>The top of the leverage arrow is facts, guards, events, and receipts with better lifecycle ownership.</td><td>Shadow XState actor tree agrees with bridge decisions and survives a recovery drill.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<span id="happy-path"></span>
+
+## Extreme happy path
+
+<FeedbackParagraph id="happy-path" storagePrefix={feedbackStoragePrefix} note="This is the minimum demo that still feels like the real tool.">
+  <p>Tour the prepared rig, run <code>grill-with-docs</code>, capture <code>VISION.md</code>, create the first issue events, run the reliability check, project the same facts into Lakebed, approve one blocked issue, and watch the loop respond through Pi/Herdr control. The loop claims or dry-runs one safe unit of work, writes receipts, proposes a bounded maintenance event, asks a specialist for non-mutating review, and mirrors one decision in a shadow supervisor. Every visible move has an event, receipt, or status line beside it.</p>
+</FeedbackParagraph>
+
+<FlowChart
+  src="/hour-cut-loop-state.svg"
+  title="The one issue state chart"
+  caption="The state chart makes the safety story explicit: approval gates the loop, the loop checks projected facts, unsafe work stops, and visible progress always writes a receipt."
+  alt="Portrait state chart for a single issue moving from approval required to ready, checking, decision, needs input, in progress, receipt written, and next issue created."
+  version="0.6.0"
+  wide={true}
+/>
+
+## What we intentionally cut
+
+<FeedbackParagraph id="trims" storagePrefix={feedbackStoragePrefix} note="Cutting these is not a value judgment. It is how the hour stays honest.">
+  <p>The hour should not productionize every layer. Keep dispatch dry-run, maintenance bounded, specialists non-mutating, and the supervisor in shadow mode. Cut provider swapping, launchd hardening, deep worktree isolation, full subagent orchestration, and long-tail UI polish. The point is to show the seam and the receipt, not finish the platform.</p>
+</FeedbackParagraph>
+
+## Source answers from the previous pass
+
+<FeedbackParagraph id="open-questions" storagePrefix={feedbackStoragePrefix} note="These answers are the input that produced the lesson worksheet above.">
+  <p>These are no longer open questions. They are the source notes behind the lesson pass: start from a useful preseeded surface, keep the daemon visibly running, make Pi extension control part of the teaching path, preserve list/Kanban/event views in Lakebed, and shape the take-home as a static workshop guide like Matt Pocock's AI Engineer workshop page.</p>
+</FeedbackParagraph>
+
+<OpenQuestions questions={openQuestions} storagePrefix={feedbackStoragePrefix} />
+
+<FeedbackExport
+  {...pageRef}
+  paragraphs={feedbackParagraphs}
+  lessons={lessonPass}
+  patterns={patterns}
+  questions={openQuestions}
+  storagePrefix={feedbackStoragePrefix}
+/>
+
+<footer id="feedback-export">
+  Source-grounded draft from <code>examples/issue-checker-06-launchd-try</code>, curated session-tree analysis, Lakebed issue events, and loop-control receipts. Raw transcripts stay local.
+</footer>
+
+</ReportLayout>

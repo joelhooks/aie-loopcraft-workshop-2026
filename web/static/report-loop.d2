@@ -1,0 +1,23 @@
+direction: down
+
+inputs: "Receipts + notes\nlogs · links · data" {
+  shape: document
+}
+writer: "Agent writer\ncrafts the story" {
+  shape: hexagon
+}
+mdsvx: "MDSvX page\nprose + components" {
+  shape: document
+}
+review: "wzrrd review URL\nread + steer" {
+  shape: rectangle
+}
+next: "Next pass\napply feedback" {
+  shape: step
+}
+
+inputs -> writer: "source-grounded facts"
+writer -> mdsvx: "plain-language narrative"
+mdsvx -> review: "static build"
+review -> next: "paragraph feedback"
+next -> inputs: "better inputs"

@@ -77,6 +77,7 @@ Project state belongs in this nested Git repo. Runtime receipts and generated fi
 - Pi/Claude skill symlinks are wired.
 - Lakebed capsule shell is present.
 - Pi helper extension is present.
+- Loop-owned scout/reviewer subagent definitions are present in `.pi/agents` for the later specialist lesson.
 
 ## Big lifts intentionally not done
 

@@ -1,0 +1,29 @@
+services:
+  workshop:
+    build:
+      context: .
+      dockerfile: docker/workshop.Dockerfile
+    image: aie-loopcraft-workshop-2026:local
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    environment:
+      SHELL: /usr/bin/zsh
+      TERM: xterm-256color
+    volumes:
+      - .:/workspace
+      - workshop-pi:/home/workshop/.pi
+      - workshop-claude:/home/workshop/.claude
+      - workshop-codex:/home/workshop/.codex
+      - workshop-opencode:/home/workshop/.opencode
+      - workshop-herdr:/home/workshop/.config/herdr
+      - pnpm-store:/home/workshop/.local/share/pnpm/store
+    command: zsh
+
+volumes:
+  workshop-pi:
+  workshop-claude:
+  workshop-codex:
+  workshop-opencode:
+  workshop-herdr:
+  pnpm-store:

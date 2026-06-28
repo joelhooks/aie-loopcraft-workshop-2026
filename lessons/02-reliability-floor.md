@@ -15,7 +15,7 @@ Use VISION.md from Lesson 01. Create the first local issue-event queue, then bui
 Expected additions:
 
 - `issues.jsonl` or `data/issue-events.jsonl` with ready / approval-required / input-required events
-- `package.json` upgraded with scripts for typecheck, lint, format, test, and check
+- `package.json` upgraded with product scripts for typecheck, lint, format, test, and check, while preserving the workshop scripts
 - strict TypeScript config using the prepared source guidance
 - fast lint/format guardrails
 - `src/issue-events.ts`

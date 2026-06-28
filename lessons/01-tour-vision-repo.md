@@ -27,7 +27,7 @@ Ask one question at a time to define the product vision, operator boundaries, st
 Expected files by the end of this lesson:
 
 - `VISION.md` — product intent, safe boundaries, stop points, and non-goals
-- `package.json` — minimal project identity and package manager metadata only; guardrail scripts come next
+- `package.json` — review the existing workshop scripts; add only minimal metadata if the grill session proves it is needed. Product guardrail scripts come next.
 - `AGENTS.md` — updated only if the grill session produces a clear operating rule
 - optionally `docs/decisions/0001-loop-vision.md` — only if there is a decision that would surprise a future reader
 
@@ -49,7 +49,7 @@ After the pass, inspect:
 
 - what `VISION.md` says the loop is for;
 - what `VISION.md` says the loop must not do;
-- what repo setup exists and what is intentionally deferred;
+- what repo setup exists, including Docker Compose and workshop scripts, and what is intentionally deferred;
 - whether `AGENTS.md` contains only operational rules, not lesson notes.
 
 ## Discuss
@@ -64,6 +64,7 @@ You can answer:
 - What is the loop allowed to change?
 - What must stop for a human?
 - What repo setup exists now?
+- Which scripts are workshop operations rather than product guardrails?
 - What setup is deliberately waiting for Lesson 02?
 
 ## Small drill

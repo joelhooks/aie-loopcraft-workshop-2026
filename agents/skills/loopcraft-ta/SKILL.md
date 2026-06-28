@@ -150,7 +150,7 @@ Do not treat tooling as invisible setup magic. Before installing a guardrail, ex
 
 Use these as the experienced-guide map, not as a rigid checklist:
 
-1. Tour, vision, and repo baseline exist: `VISION.md`, minimal `package.json`, and any clear repo rules captured in `AGENTS.md`.
+1. Tour, vision, and repo baseline exist: `VISION.md`, Docker Compose / workshop scripts are understood, and any clear repo rules are captured in `AGENTS.md`.
 2. Product intent becomes an issue queue: initial issue events exist with clear ready / approval-required / input-required gates.
 3. Reliability foundation is visible: package scripts, fast strict guardrails, Effect schemas, XState classifier, tests, receipts, run log, and memory.
 4. Provider boundary exists: JSONL remains testable and Lakebed reads issue events through an adapter.

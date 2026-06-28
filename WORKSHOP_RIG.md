@@ -30,17 +30,18 @@ node scripts/loop-daemon-stub.mjs
 
 It exposes `GET /health`, `GET /status`, `POST /check-now`, and `GET /events` on port `8787`. It watches for `data/issue-events.jsonl` or `issues.jsonl` so the issue-event lesson has something visible to wake up.
 
-From `/workspace` in the workshop computer, use the parent launcher for this scenario:
+From this public repo, use Docker Compose:
 
 ```sh
-scripts/start-learner-pi.sh issue-checker-07-full-task-workshop
+pnpm run workshop:build
+pnpm run workshop:pi
 ```
 
-For remote Herdr container work from the parent repo:
+For a shell or Herdr session:
 
 ```sh
-HERDR_WORKSHOP_SSH_PORT=2228 scripts/start-workshop-herdr-remote.sh issue-checker-07-full-task-workshop
-HERDR_WORKSHOP_SSH_PORT=2228 scripts/attach-workshop-herdr-remote.sh issue-checker-07-full-task-workshop
+pnpm run workshop:shell
+pnpm run workshop:herdr
 ```
 
 ### Lakebed
@@ -82,7 +83,7 @@ Project state belongs in this nested Git repo. Runtime receipts and generated fi
 ## Big lifts intentionally not done
 
 - No final loop implementation yet.
-- No product `package.json` yet; Lesson 01 creates only the minimal repo baseline.
+- No product guardrail scripts yet; the root `package.json` is only workshop orchestration until Lesson 02 adds product checks.
 - No `VISION.md` yet; Lesson 01 creates it through `grill-with-docs`.
 - No `issues.jsonl` yet; Lesson 02 creates the first issue-event queue.
 - No external tracker/auth setup.

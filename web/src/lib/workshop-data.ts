@@ -3,7 +3,7 @@ export const site = {
   title: "AI Engineer Loopcraft Workshop 2026",
   url: "https://aie-loopcraft-workshop-2026.wzrrd.sh/",
   repo: "https://github.com/joelhooks/aie-loopcraft-workshop-2026",
-  version: "0.7.1",
+  version: "0.8.0",
 };
 
 export type Lesson = {
@@ -33,7 +33,7 @@ export const lessons: Lesson[] = [
     challenge: "Use Pi plus grill-with-docs to tour the prepared surfaces, define the product vision, and create only the minimal repo baseline.",
     starterPrompt:
       "/skill:grill-with-docs — Tour README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, the Pi helper, local skills, and Lakebed. Ask one question at a time, write VISION.md, and update repo rules only when clear.",
-    buildOperate: "Create VISION.md, minimal package.json identity, and any clear AGENTS.md/README.md rule. Do not build product behavior yet.",
+    buildOperate: "Create VISION.md, inspect the Docker Compose / workshop scripts, and capture any clear AGENTS.md/README.md rule. Do not build product behavior yet.",
     observe: "Inspect VISION.md for intent, safety boundary, non-goal, and next setup need; confirm issue events are still deliberately deferred.",
     discuss: "The first move is orientation plus decision capture. The agent should not improvise a product from vibes.",
     checkpoint: "The repo can explain what it is building, what must stop for a human, what setup exists, and what setup waits for Lesson 02.",

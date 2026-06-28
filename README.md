@@ -1,61 +1,131 @@
-# Issue Progress Loop Workshop
+# AI Engineer Loopcraft Workshop 2026
 
-This is the on-rails Loopcraft learner rig.
+Build a local issue-progress loop you can trust.
 
-We are not pretending this starts from nothing. The heavy sources and harness pieces are already here so the hour can focus on the useful moves: prompting the loop into existence, making it reliable, putting it on a visible surface, and letting it start progressing work through its own issue queue.
+This is a hands-on workshop about developing loop systems with a customized Pi harness. We use Pi, Herdr, Lakebed, typed issue events, receipts, and a small local repo to make agent work visible instead of magical.
 
-## What is already prepared
+## Outcome
 
-- Local Loopcraft TA skill: `agents/skills/loopcraft-ta`
-- Matt Pocock skill capsule in `.agents/skills` and `.claude/skills`
-- Source mirrors in `.agent_sources`:
-  - Effect
-  - XState
-  - pi-subagents
-- Pi project config and a tiny Lesson 01 helper extension in `.pi/extensions/loop-workshop.ts`
-- Lakebed capsule shell in `surface/lakebed`
-- Lesson guide in `lessons/`
-- Public Wzrrd workshop site source in `web/`
+By the end, you will have a small local loop that can:
 
-## What is not built yet
+- read its own issue events;
+- decide what is ready, blocked, or missing input;
+- stop for approval when it should;
+- write receipts for every move;
+- show state in Lakebed;
+- run through Pi and Herdr controls;
+- climb toward safe dispatch, bounded maintenance, specialist review, and supervisor runtime shadowing.
 
-The loop itself is still yours to build.
+The repo starts prepared, not finished. The harness and source mirrors are here. The product loop is still yours to build.
 
-Lesson 01 starts with a tour, a `grill-with-docs` vision session, and minimal repo setup. Later lessons add the first issue-event queue, reliability floor, Lakebed projection, Pi/Herdr control, safe dispatch, maintenance, specialists, and supervisor runtime shadowing.
+## Start fast
 
-Lessons are the rails. Issues are the product substrate we are building toward.
+Recommended container path:
 
-## Start Lesson 01
-
-From this folder in Pi:
-
-```txt
-/loop-lesson-01
+```sh
+pnpm run workshop:build
+pnpm run workshop:pi
 ```
 
-That command fills the editor with the starter prompt. Read it, adjust it if needed, then send it.
+In a second pane:
 
-If the command is not loaded yet, reload Pi extensions or paste this prompt manually:
-
-```txt
-/skill:grill-with-docs
-
-Tour this prepared Loopcraft repo with me before we build product behavior.
-
-Inspect README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, .pi/extensions/loop-workshop.ts, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.
-
-Ask one question at a time to define the product vision, operator boundaries, stop rules, and first repo setup choices. Write the decisions into VISION.md. Update AGENTS.md or README.md only when a repo rule or command is clear. Create only the minimal repo setup needed for the next lesson. Do not build the loop yet.
+```sh
+pnpm run workshop:daemon
 ```
 
-## Useful files
+Host path if you already have the tools:
 
-- `lessons/01-tour-vision-repo.md` — first guided challenge
-- `WORKSHOP_RIG.md` — how Pi, Herdr, Lakebed, and persistence fit together
-- `agents/skills/loopcraft-ta/SKILL.md` — local guide context
-- `.agent_sources/README.md` — source mirrors already staged
-- `surface/lakebed/README.md` — operator surface capsule
-- `web/README.md` — Wzrrd workshop site build/publish notes
+```sh
+pi
+node scripts/loop-daemon-stub.mjs
+```
 
-## Expected end state
+Full setup notes live in [`docs/setup.md`](docs/setup.md).
 
-By the end of the hour, the loop should be able to read its own issue events, classify work, show state in Lakebed, run through Pi/Herdr controls, claim or maintain one safe unit of work, and leave evidence for every move.
+## Tools we use
+
+### Pi
+
+Pi is the operator harness. We use it to prompt the next move, inspect evidence, and add small local controls.
+
+### Herdr
+
+Herdr gives us the two-pane workshop shape: one pane for Pi, one pane for runtime/status output.
+
+### Docker Compose
+
+Docker Compose is the recommended workshop computer. It keeps tool versions boring and keeps auth out of the image.
+
+### Lakebed
+
+Lakebed is the operator surface. It should project issue facts into list, board, and event views. It is not the domain model.
+
+### Effect
+
+Effect is the boundary tool. We use schemas and structured errors so sloppy issue input is hard to ignore.
+
+### XState
+
+XState is the lifecycle tool. We use it when the loop has real states, gates, retries, and recovery paths.
+
+### pi-subagents
+
+pi-subagents gives us bounded specialist help. Scouts and reviewers produce artifacts; they do not get the keys by default.
+
+### Claude Code, Codex, and OpenCode
+
+These are available in the workshop computer as optional comparison harnesses. Pi is the main teaching surface.
+
+### Guardrails
+
+pnpm, TypeScript, tsgo, oxlint, oxfmt, Ultracite, tests, and hooks are introduced as lesson work. They are speed and strictness choices for keeping the agent loop honest.
+
+### Matt Pocock skills
+
+Matt's workshop shape is the reference for the site: clear landing page, step-by-step lessons, and practical prompts. The core work here is Loopcraft: developing reliable loop systems through Pi.
+
+## Lesson path
+
+1. [Tour the rig and set the course](lessons/01-tour-vision-repo.md)
+2. [Build the reliability floor](lessons/02-reliability-floor.md)
+3. [Project issue state into Lakebed](lessons/03-lakebed-projection.md)
+4. [Control the loop from Pi and Herdr](lessons/04-pi-herdr-control.md)
+5. [Make dispatch safe](lessons/05-safe-dispatch.md)
+6. [Add a bounded gardener](lessons/06-bounded-gardener.md)
+7. [Add specialist review carefully](lessons/07-specialist-review.md)
+8. [Shadow the supervisor runtime](lessons/08-supervisor-runtime.md)
+
+Lessons are rails. Issues are the product substrate we build toward.
+
+## Workshop site
+
+```sh
+pnpm run web:install
+pnpm run web:check
+pnpm run web:build
+pnpm run web:publish
+```
+
+Published site:
+
+```txt
+https://aie-loopcraft-workshop-2026.wzrrd.sh/
+```
+
+## Repo map
+
+```txt
+agents/skills/loopcraft-ta       local guide skill
+agents/skills/grill-with-docs    vision/session grilling skill
+.agent_sources/                  source mirrors for Effect, XState, pi-subagents
+.pi/extensions/loop-workshop.ts  Pi helper commands
+.pi/agents/                      loop-owned scout/reviewer definitions
+lessons/                         lesson rails
+surface/lakebed/                 Lakebed capsule shell
+scripts/loop-daemon-stub.mjs     temporary status daemon
+web/                             Wzrrd workshop site
+```
+
+## Public boundary
+
+No secrets. No raw transcripts. No private machine paths. No hidden auth. If a tool needs auth, sign into it locally or inside the container.

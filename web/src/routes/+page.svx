@@ -2,8 +2,22 @@
   import FlowChart from "$lib/flow-chart.svelte";
   import ReportLayout from "$lib/ReportLayout.svelte";
   import StatLine from "$lib/stat-line.svelte";
+  import ToolGrid from "$lib/tool-grid.svelte";
   import WorkshopNav from "$lib/workshop-nav.svelte";
   import { lessons, site, stats } from "$lib/workshop-data";
+
+  const tools = [
+    { name: "Pi", icon: "spark", text: "The operator harness. We use it to prompt the next move, inspect evidence, and add small local controls." },
+    { name: "Herdr", icon: "check", text: "The two-pane shape: one pane for Pi, one pane for runtime/status output." },
+    { name: "Docker Compose", icon: "guard", text: "The recommended workshop computer. Tool versions stay boring and auth stays out of the image." },
+    { name: "Lakebed", icon: "check", text: "The operator surface. It projects issue facts into list, board, and event views." },
+    { name: "Effect", icon: "guard", text: "The boundary tool. Schemas and structured errors make sloppy issue input hard to ignore." },
+    { name: "XState", icon: "check", text: "The lifecycle tool. We use it when the loop has real states, gates, retries, and recovery paths." },
+    { name: "pi-subagents", icon: "chat", text: "Bounded specialist help. Scouts and reviewers produce artifacts; they do not get the keys by default." },
+    { name: "Claude Code, Codex, OpenCode", icon: "chat", text: "Optional comparison harnesses in the workshop computer. Pi stays the main teaching surface." },
+    { name: "Guardrails", icon: "guard", text: "pnpm, TypeScript, tsgo, oxlint, oxfmt, Ultracite, tests, and hooks are introduced as lesson work." },
+    { name: "Matt Pocock skills", icon: "spark", text: "The reference for clear lesson progression. The core work here is Loopcraft through Pi." },
+  ] as const;
 </script>
 
 <svelte:head>
@@ -20,23 +34,24 @@
 <ReportLayout>
   <WorkshopNav current="home" />
 
-  <p class="eyebrow"><span class="mascot">🧪</span><span class="eyebrow-stack"><span>Loopcraft Workshop</span><span>AI Engineer · 2026</span></span></p>
-  <h1>Build an issue-progress loop you can trust.</h1>
+  <p class="eyebrow"><span class="mascot">🧶</span><span class="eyebrow-stack"><span>Loopcraft Workshop</span><span>AI Engineer · 2026</span></span></p>
+  <h1>Build a local issue-progress loop you can trust.</h1>
 
-  <p class="lead">This workshop teaches the useful shape behind agent loops: start with a clear vision, build a strict local reliability floor, make state visible in Lakebed, control the loop from Pi and Herdr, then climb toward dispatch, maintenance, specialists, and supervisor runtime without hand-waving safety.</p>
+  <p class="lead">This is a hands-on workshop about developing loop systems with a customized Pi harness. We use Pi, Herdr, Lakebed, typed issue events, receipts, and a small local repo to make agent work visible instead of magical.</p>
 
   <StatLine items={stats} />
 
   <div class="action-row">
     <a class="primary-action" href="/lessons/01-tour-vision-repo/">Start Lesson 01</a>
+    <a href="/lessons/">Browse lessons</a>
     <a href={site.repo}>Open the public repo</a>
   </div>
 
-  <h2>What you will build</h2>
+  <h2>Outcome</h2>
 
-  <p>You will build a local issue-progress loop. It reads issue events, classifies what can move, stops for approval or missing input, writes receipts, projects state into an operator surface, and eventually starts progressing or maintaining its own work through the issue queue.</p>
+  <p>By the end, you will have a small local loop that can read its own issue events, decide what is ready or blocked, stop for approval, write receipts, show state in Lakebed, and run through Pi and Herdr controls.</p>
 
-  <p>The repo is prepared but unfinished. Heavy sources, skills, the Lakebed shell, Pi helper, and daemon stub are already present so the lesson time goes into the loop instead of install sludge.</p>
+  <p>The repo starts prepared, not finished. The harness and source mirrors are here. The product loop is still yours to build.</p>
 
   <FlowChart
     src="/workshop-system.svg"
@@ -47,9 +62,31 @@
     wide={true}
   />
 
-  <h2>The lesson path</h2>
+  <h2>Start fast</h2>
 
-  <p>Each lesson is its own page. The lessons are rails; the issue queue is the product substrate we build toward and eventually use.</p>
+  <p>Recommended container path:</p>
+
+  <pre><code>pnpm run workshop:build
+pnpm run workshop:pi</code></pre>
+
+  <p>In a second pane:</p>
+
+  <pre><code>pnpm run workshop:daemon</code></pre>
+
+  <p>Host path if you already have the tools:</p>
+
+  <pre><code>pi
+node scripts/loop-daemon-stub.mjs</code></pre>
+
+  <p>Full setup notes live in <a href={`${site.repo}/blob/main/docs/setup.md`}>docs/setup.md</a>.</p>
+
+  <h2>Tools we use</h2>
+
+  <ToolGrid tools={[...tools]} />
+
+  <h2>Lesson path</h2>
+
+  <p>Each lesson is its own page. Lessons are rails. Issues are the product substrate we build toward.</p>
 
   <ol class="lesson-index">
     {#each lessons as lesson}
@@ -63,29 +100,26 @@
     {/each}
   </ol>
 
-  <h2>Start in the workshop computer</h2>
+  <h2>Workshop site</h2>
 
-  <p>From the parent workshop container, open the prepared learner repo in Pi:</p>
+  <pre><code>pnpm run web:install
+pnpm run web:check
+pnpm run web:build
+pnpm run web:publish</code></pre>
 
-  <pre><code>scripts/start-learner-pi.sh issue-checker-07-full-task-workshop</code></pre>
+  <h2>Repo map</h2>
 
-  <p>Inside the learner repo, Lesson 01 starts with the project-local helper:</p>
-
-  <pre><code>/loop-lesson-01</code></pre>
-
-  <p>Keep a side pane ready for runtime status:</p>
-
-  <pre><code>node scripts/loop-daemon-stub.mjs</code></pre>
-
-  <h2>Public artifacts</h2>
-
-  <ul>
-    <li>Repo: <a href={site.repo}>{site.repo}</a></li>
-    <li>Site: <a href={site.url}>{site.url}</a></li>
-    <li>Current site version: <code>{site.version}</code></li>
-  </ul>
+  <pre><code>agents/skills/loopcraft-ta       local guide skill
+agents/skills/grill-with-docs    vision/session grilling skill
+.agent_sources/                  source mirrors for Effect, XState, pi-subagents
+.pi/extensions/loop-workshop.ts  Pi helper commands
+.pi/agents/                      loop-owned scout/reviewer definitions
+lessons/                         lesson rails
+surface/lakebed/                 Lakebed capsule shell
+scripts/loop-daemon-stub.mjs     temporary status daemon
+web/                             Wzrrd workshop site</code></pre>
 
   <footer>
-    Source-grounded from run 06, rebuilt as the public run 07 workshop rig. Raw transcripts stay out of the public site.
+    No secrets. No raw transcripts. No private machine paths. No hidden auth. If a tool needs auth, sign into it locally or inside the container.
   </footer>
 </ReportLayout>

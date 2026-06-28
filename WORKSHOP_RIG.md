@@ -33,7 +33,7 @@ It exposes `GET /health`, `GET /status`, `POST /check-now`, and `GET /events` on
 From this public repo, use Docker Compose:
 
 ```sh
-pnpm run workshop:build
+pnpm run workshop:pull
 pnpm run workshop:pi
 ```
 
@@ -42,6 +42,12 @@ For a shell or Herdr session:
 ```sh
 pnpm run workshop:shell
 pnpm run workshop:herdr
+```
+
+Local image rebuild:
+
+```sh
+pnpm run workshop:build
 ```
 
 ### Lakebed

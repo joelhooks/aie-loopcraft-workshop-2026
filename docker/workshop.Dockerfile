@@ -2,11 +2,15 @@
 
 FROM node:22-bookworm
 
+LABEL org.opencontainers.image.source="https://github.com/joelhooks/aie-loopcraft-workshop-2026"
+LABEL org.opencontainers.image.description="AI Engineer Loopcraft Workshop 2026 workshop computer"
+
 ARG PI_VERSION=0.79.10
 ARG CLAUDE_CODE_VERSION=2.1.185
 ARG CODEX_VERSION=0.141.0
 ARG OPENCODE_VERSION=1.17.9
 ARG HERDR_VERSION=0.7.1
+ARG STARSHIP_VERSION=1.25.1
 ARG TARGETARCH
 ARG USERNAME=workshop
 ARG USER_UID=1001
@@ -60,7 +64,16 @@ RUN corepack enable \
   && chmod +x /usr/local/bin/herdr \
   && herdr --version
 
-RUN curl -fsSL https://starship.rs/install.sh | sh -s -- --yes --bin-dir /usr/local/bin
+RUN case "${TARGETARCH:-$(dpkg --print-architecture)}" in \
+    amd64) starship_target="x86_64-unknown-linux-gnu" ;; \
+    arm64) starship_target="aarch64-unknown-linux-musl" ;; \
+    *) echo "Unsupported Starship architecture: ${TARGETARCH:-$(dpkg --print-architecture)}" >&2; exit 1 ;; \
+  esac \
+  && curl -fsSL -o /tmp/starship.tar.gz "https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-${starship_target}.tar.gz" \
+  && tar -xzf /tmp/starship.tar.gz -C /usr/local/bin starship \
+  && chmod +x /usr/local/bin/starship \
+  && rm /tmp/starship.tar.gz \
+  && starship --version
 
 USER ${USERNAME}
 WORKDIR /workspace

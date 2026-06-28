@@ -6,10 +6,22 @@ Use Docker Compose if you want the workshop computer. Use your host if you alrea
 
 This is the recommended path for a live workshop. It keeps the tool versions boring and avoids leaking anyone's local machine setup into the lesson.
 
-Build the container:
+Pull the published image:
+
+```sh
+pnpm run workshop:pull
+```
+
+Or build the container locally:
 
 ```sh
 pnpm run workshop:build
+```
+
+Published image:
+
+```txt
+ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest
 ```
 
 Open a shell in the workshop computer:

@@ -23,8 +23,20 @@ The repo starts prepared, not finished. The harness and source mirrors are here.
 Recommended container path:
 
 ```sh
-pnpm run workshop:build
+pnpm run workshop:pull
 pnpm run workshop:pi
+```
+
+Build locally instead of pulling:
+
+```sh
+pnpm run workshop:build
+```
+
+Published image:
+
+```txt
+ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest
 ```
 
 In a second pane:

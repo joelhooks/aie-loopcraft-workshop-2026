@@ -66,8 +66,16 @@
 
   <p>Recommended container path:</p>
 
-  <pre><code>pnpm run workshop:build
+  <pre><code>pnpm run workshop:pull
 pnpm run workshop:pi</code></pre>
+
+  <p>Build locally instead of pulling:</p>
+
+  <pre><code>pnpm run workshop:build</code></pre>
+
+  <p>Published image:</p>
+
+  <pre><code>ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest</code></pre>
 
   <p>In a second pane:</p>
 

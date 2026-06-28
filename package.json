@@ -5,6 +5,7 @@
   "type": "module",
   "packageManager": "pnpm@11.1.2",
   "scripts": {
+    "workshop:pull": "docker compose pull workshop",
     "workshop:build": "docker compose build workshop",
     "workshop:shell": "docker compose run --rm workshop zsh",
     "workshop:pi": "docker compose run --rm workshop zsh -lc 'pi'",

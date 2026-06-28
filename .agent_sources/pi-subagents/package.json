@@ -1,0 +1,80 @@
+{
+  "name": "pi-subagents",
+  "version": "0.31.0",
+  "description": "Pi extension for delegating tasks to subagents with chains, parallel execution, and TUI clarification",
+  "author": "Nico Bailon",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicobailon/pi-subagents.git"
+  },
+  "homepage": "https://github.com/nicobailon/pi-subagents#readme",
+  "bugs": {
+    "url": "https://github.com/nicobailon/pi-subagents/issues"
+  },
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-coding-agent",
+    "subagents",
+    "ai",
+    "agents",
+    "cli"
+  ],
+  "bin": {
+    "pi-subagents": "install.mjs"
+  },
+  "files": [
+    "src/**/*.ts",
+    "*.mjs",
+    "agents/",
+    "skills/**/*",
+    "prompts/**/*",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "npm run test:unit",
+    "test:unit": "node --experimental-strip-types --test test/unit/*.test.ts",
+    "test:integration": "node --experimental-transform-types --import ./test/support/register-loader.mjs --test test/integration/*.test.ts",
+    "test:all": "npm run test:unit && npm run test:integration"
+  },
+  "pi": {
+    "extensions": [
+      "./src/extension/index.ts"
+    ],
+    "skills": [
+      "./skills"
+    ],
+    "prompts": [
+      "./prompts"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-agent-core": {
+      "optional": true
+    },
+    "@earendil-works/pi-ai": {
+      "optional": true
+    },
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@earendil-works/pi-tui": "0.74.0",
+    "jiti": "2.7.0",
+    "typebox": "1.1.24"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-agent-core": "0.74.0",
+    "@earendil-works/pi-ai": "0.74.0",
+    "@earendil-works/pi-coding-agent": "0.74.0"
+  }
+}

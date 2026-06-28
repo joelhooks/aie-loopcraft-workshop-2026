@@ -1,0 +1,90 @@
+# Workshop Rig
+
+This repo is prepared so the hour starts on the important work instead of install/debugging sludge.
+
+## Surfaces
+
+### Pi
+
+Pi is the operator harness. It should help you prompt the next small pass, inspect evidence, and control the loop.
+
+Project-local helper:
+
+```txt
+/loop-workshop-status
+/loop-lesson-01
+```
+
+### Herdr
+
+Herdr gives us the two-pane workshop surface:
+
+- left/operator pane: Pi
+- right/runtime pane: daemon or status output
+
+Until the real loop daemon exists, use the scaffold status process in the side pane:
+
+```sh
+node scripts/loop-daemon-stub.mjs
+```
+
+It exposes `GET /health`, `GET /status`, `POST /check-now`, and `GET /events` on port `8787`. It watches for `data/issue-events.jsonl` or `issues.jsonl` so Lesson 01 has something visible to wake up.
+
+From `/workspace` in the workshop computer, use the parent launcher for this scenario:
+
+```sh
+scripts/start-learner-pi.sh issue-checker-07-full-task-workshop
+```
+
+For remote Herdr container work from the parent repo:
+
+```sh
+HERDR_WORKSHOP_SSH_PORT=2228 scripts/start-workshop-herdr-remote.sh issue-checker-07-full-task-workshop
+HERDR_WORKSHOP_SSH_PORT=2228 scripts/attach-workshop-herdr-remote.sh issue-checker-07-full-task-workshop
+```
+
+### Lakebed
+
+Lakebed is the operator projection surface. It should show the same issue facts in list, board, and event views.
+
+The capsule shell lives at:
+
+```txt
+surface/lakebed
+```
+
+The lesson path should use Lakebed once the local issue events exist. Do not make Lakebed the domain model; keep it as provider/projection.
+
+### Persistence
+
+The workshop container persists user harness state through parent-mounted folders:
+
+```txt
+.workshop/home/.pi
+.workshop/home/.claude
+.workshop/home/.codex
+.workshop/home/.opencode
+.workshop/home/.config/herdr
+.workshop/pi-sessions
+```
+
+Project state belongs in this nested Git repo. Runtime receipts and generated files should be inspectable and committed when they become useful evidence.
+
+## Big lifts already done
+
+- Source mirrors are preloaded in `.agent_sources`.
+- Matt Pocock skills are preloaded.
+- Pi/Claude skill symlinks are wired.
+- Lakebed capsule shell is present.
+- Pi helper extension is present.
+
+## Big lifts intentionally not done
+
+- No final loop implementation yet.
+- No product `package.json` yet.
+- No `VISION.md` yet.
+- No `issues.jsonl` yet.
+- No external tracker/auth setup.
+- No launchd scheduling yet.
+
+Those are lesson work, not scaffold work.

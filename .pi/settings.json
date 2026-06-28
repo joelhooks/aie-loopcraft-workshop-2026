@@ -1,0 +1,9 @@
+{
+  "packages": [
+    "git:github.com/joelhooks/pi-bellwether@3a00555598b754e8b336199d4262b31c27ce27b1",
+    "git:github.com/nicobailon/pi-subagents@e4f06282d0c95856b36b7ec2893f4fd294ebfefe"
+  ],
+  "subagents": {
+    "disableBuiltins": true
+  }
+}

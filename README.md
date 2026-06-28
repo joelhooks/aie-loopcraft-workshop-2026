@@ -1,18 +1,57 @@
-# Loopcraft Blank Project
+# Issue Progress Loop Workshop
 
-This is a blank workspace for building a tool step by step.
+This is the on-rails Loopcraft learner rig.
 
-It starts with almost no toolchain on purpose. Add the low-level guardrails visibly instead of hiding them in the template.
+We are not pretending this starts from nothing. The heavy sources and harness pieces are already here so the hour can focus on the useful moves: prompting the loop into existence, making it reliable, putting it on a visible surface, and letting it start progressing work through its own issue queue.
 
-Expected early setup sequence:
+## What is already prepared
 
-1. choose `pnpm` and create the package shape;
-2. add TypeScript, `tsgo`, `oxlint`, `oxfmt`, Ultracite, and Git/Lefthook in one visible foundation pass;
-3. install a local `grill-with-docs` skill from Matt Pocock's `grill-me` pattern;
-4. use the grill to write `VISION.md` as the repo compass for future agents and humans: what the tool is for, safe boundaries, stop points, and non-goals;
-5. build the local spine quickly: issue fixture → review packet → agent review result → summary;
-6. make the same safe command repeat on a learner Mac with a LaunchAgent path;
-7. add a notification sink: local outbox first, Discord webhook only if setup is easy;
-8. attach GitHub or Linear only when auth is boring enough not to steal the hour.
+- Local Loopcraft TA skill: `agents/skills/loopcraft-ta`
+- Matt Pocock skill capsule in `.agents/skills` and `.claude/skills`
+- Source mirrors in `.agent_sources`:
+  - Effect
+  - XState
+  - pi-subagents
+- Pi project config and a tiny Lesson 01 helper extension in `.pi/extensions/loop-workshop.ts`
+- Lakebed capsule shell in `surface/lakebed`
+- Lesson guide in `lessons/`
 
-Use Git for history while learning. Keep checkpoints useful, but do not turn every tiny step into a ceremony.
+## What is not built yet
+
+The loop itself is still yours to build.
+
+Lesson 01 starts by creating the product intent and first issue-event queue. Later lessons add the reliability floor, Lakebed projection, Pi/Herdr control, safe dispatch, maintenance, specialists, and supervisor runtime shadowing.
+
+Lessons are the rails. Issues are the product substrate we are building toward.
+
+## Start Lesson 01
+
+From this folder in Pi:
+
+```txt
+/loop-lesson-01
+```
+
+That command fills the editor with the starter prompt. Read it, adjust it if needed, then send it.
+
+If the command is not loaded yet, reload Pi extensions or paste this prompt manually:
+
+```txt
+We are building a local issue-progress loop.
+
+Lesson 01: prompt the loop contract into existence.
+
+Do the next small pass only: clarify the loop, write the first product intent, and create the first local issue-event queue with ready / approval-required / input-required gates. Keep it local, leave receipts, and explain the evidence before moving on.
+```
+
+## Useful files
+
+- `lessons/01-loop-contract.md` — first guided challenge
+- `WORKSHOP_RIG.md` — how Pi, Herdr, Lakebed, and persistence fit together
+- `agents/skills/loopcraft-ta/SKILL.md` — local guide context
+- `.agent_sources/README.md` — source mirrors already staged
+- `surface/lakebed/README.md` — operator surface capsule
+
+## Expected end state
+
+By the end of the hour, the loop should be able to read its own issue events, classify work, show state in Lakebed, run through Pi/Herdr controls, claim or maintain one safe unit of work, and leave evidence for every move.

@@ -1,0 +1,59 @@
+{
+  "name": "@xstate/store",
+  "version": "4.2.0",
+  "type": "module",
+  "description": "Simple stores",
+  "keywords": [
+    "store",
+    "state"
+  ],
+  "author": "David Khourshid <davidkpiano@gmail.com>",
+  "homepage": "https://github.com/statelyai/xstate/tree/main/packages/xstate-store#readme",
+  "license": "MIT",
+  "exports": {
+    "./undo": "./dist/xstate-store-undo.js",
+    ".": "./dist/xstate-store.js",
+    "./reset": "./dist/xstate-store-reset.js",
+    "./persist": "./dist/xstate-store-persist.js",
+    "./validate": "./dist/xstate-store-validate.js",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "undo",
+    "persist",
+    "reset",
+    "validate"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/statelyai/xstate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/statelyai/xstate/issues"
+  },
+  "devDependencies": {
+    "@statelyai/inspect": "^0.4.0",
+    "@testing-library/vue": "^8.1.0",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@xstate/vue": "workspace:^",
+    "immer": "^10.0.2",
+    "react": "^19.0.0",
+    "solid-js": "^1.9.7",
+    "vite-plugin-solid": "^2.11.6",
+    "vue": "3.5.27",
+    "xstate": "workspace:^",
+    "zod": "^4.4.3"
+  },
+  "preconstruct": {
+    "umdName": "XStateStore",
+    "entrypoints": [
+      "./index.ts",
+      "./undo.ts",
+      "./persist.ts",
+      "./reset.ts",
+      "./validate.ts"
+    ]
+  }
+}

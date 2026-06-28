@@ -1,0 +1,134 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import { buildWorkflowGraphSnapshot } from "../../src/runs/shared/workflow-graph.ts";
+
+describe("workflow graph snapshots", () => {
+	it("maps sequential chains with phase, label, output name, and stable flat indexes", () => {
+		const graph = buildWorkflowGraphSnapshot({
+			runId: "run-1",
+			steps: [
+				{ agent: "scout", task: "Scan", phase: "Research", label: "Find context", as: "context" },
+				{ agent: "writer", task: "Use {outputs.context}", phase: "Synthesis", outputSchema: { type: "object" } },
+			],
+			results: [{ exitCode: 0 }, { exitCode: 1, error: "bad output" }],
+		});
+
+		assert.equal(graph.nodes[0]?.id, "step-0");
+		assert.equal(graph.nodes[0]?.label, "Find context");
+		assert.equal(graph.nodes[0]?.flatIndex, 0);
+		assert.equal(graph.nodes[0]?.outputName, "context");
+		assert.equal(graph.nodes[1]?.structured, true);
+		assert.equal(graph.nodes[1]?.status, "failed");
+		assert.deepEqual(graph.phases, [
+			{ title: "Research", nodeIds: ["step-0"] },
+			{ title: "Synthesis", nodeIds: ["step-1"] },
+		]);
+	});
+
+	it("maps a long alternating worker and reviewer chain without losing indexes", () => {
+		const steps = Array.from({ length: 40 }, (_, index) => ({
+			agent: index % 2 === 0 ? "worker" : "reviewer",
+			task: index === 0 ? "Start" : "{previous}",
+		}));
+		const results = steps.map(() => ({ exitCode: 0 }));
+		const graph = buildWorkflowGraphSnapshot({
+			runId: "run-long",
+			steps,
+			results,
+			currentFlatIndex: 37,
+			currentStepIndex: 37,
+		});
+
+		assert.equal(graph.nodes.length, 40);
+		assert.equal(graph.nodes[0]?.id, "step-0");
+		assert.equal(graph.nodes[0]?.flatIndex, 0);
+		assert.equal(graph.nodes[37]?.id, "step-37");
+		assert.equal(graph.nodes[37]?.agent, "reviewer");
+		assert.equal(graph.nodes[37]?.flatIndex, 37);
+		assert.equal(graph.nodes[39]?.id, "step-39");
+		assert.equal(graph.nodes[39]?.agent, "reviewer");
+		assert.equal(graph.nodes[39]?.flatIndex, 39);
+		assert.equal(graph.currentNodeId, "step-37");
+	});
+
+	it("maps parallel chain steps with stable group and child indexes", () => {
+		const graph = buildWorkflowGraphSnapshot({
+			runId: "run-2",
+			steps: [
+				{ agent: "setup", task: "Setup" },
+				{
+					parallel: [
+						{ agent: "reviewer", label: "Correctness", phase: "Review", as: "correctness" },
+						{ agent: "security", label: "Security", phase: "Review", as: "security" },
+					],
+				},
+			],
+			currentFlatIndex: 2,
+		});
+
+		const group = graph.nodes[1];
+		assert.equal(group?.kind, "parallel-group");
+		assert.equal(group?.children?.[0]?.id, "step-1-agent-0");
+		assert.equal(group?.children?.[0]?.flatIndex, 1);
+		assert.equal(group?.children?.[1]?.flatIndex, 2);
+		assert.equal(group?.children?.[1]?.status, "running");
+		assert.equal(graph.currentNodeId, "step-1-agent-1");
+		assert.deepEqual(graph.phases, [{ title: "Review", nodeIds: ["step-1-agent-0", "step-1-agent-1"] }]);
+	});
+
+	it("marks partially completed parallel groups as running", () => {
+		const graph = buildWorkflowGraphSnapshot({
+			runId: "run-3",
+			steps: [{ parallel: [{ agent: "first" }, { agent: "second" }] }],
+			results: [{ exitCode: 0 }],
+		});
+
+		assert.equal(graph.nodes[0]?.status, "running");
+		assert.equal(graph.nodes[0]?.children?.[0]?.status, "completed");
+		assert.equal(graph.nodes[0]?.children?.[1]?.status, "pending");
+	});
+
+	it("summarizes mixed terminal parallel group statuses with explicit precedence", () => {
+		const failedThenPaused = buildWorkflowGraphSnapshot({
+			runId: "run-4",
+			steps: [{ parallel: [{ agent: "first" }, { agent: "second" }] }],
+			results: [{ exitCode: 1 }, { exitCode: 1, interrupted: true }],
+		});
+		const pausedThenFailed = buildWorkflowGraphSnapshot({
+			runId: "run-5",
+			steps: [{ parallel: [{ agent: "first" }, { agent: "second" }] }],
+			results: [{ exitCode: 1, interrupted: true }, { exitCode: 1 }],
+		});
+
+		assert.equal(failedThenPaused.nodes[0]?.status, "failed");
+		assert.equal(pausedThenFailed.nodes[0]?.status, "failed");
+	});
+
+	it("uses dynamic group status overrides for empty or aggregate-failure fanout states", () => {
+		const steps = [{
+			expand: { from: { output: "targets", path: "/items" }, maxItems: 4 },
+			parallel: { agent: "reviewer", task: "Review {item}" },
+			collect: { as: "reviews" },
+		}];
+
+		const emptySkip = buildWorkflowGraphSnapshot({
+			runId: "run-dynamic-empty",
+			steps,
+			dynamicGroupStatuses: { 0: { status: "completed" } },
+		});
+		assert.equal(emptySkip.nodes[0]?.kind, "dynamic-parallel-group");
+		assert.equal(emptySkip.nodes[0]?.status, "completed");
+		assert.deepEqual(emptySkip.nodes[0]?.children, []);
+
+		const collectFailure = buildWorkflowGraphSnapshot({
+			runId: "run-dynamic-collect-fail",
+			steps,
+			dynamicChildren: { 0: [{ agent: "reviewer", flatIndex: 0, itemKey: "a" }] },
+			results: [{ exitCode: 0 }],
+			dynamicGroupStatuses: { 0: { status: "failed", error: "Collected output validation failed" } },
+		});
+		assert.equal(collectFailure.nodes[0]?.status, "failed");
+		assert.match(collectFailure.nodes[0]?.error ?? "", /Collected output validation failed/);
+		assert.equal(collectFailure.nodes[0]?.children?.[0]?.status, "completed");
+	});
+});

@@ -1,0 +1,5 @@
+.pi/todos/
+.DS_Store
+AGENTS.md
+node_modules/
+.fallow/

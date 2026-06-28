@@ -17,7 +17,77 @@ The loop should read issues, check whether they are clear and actionable, fix wh
 
 The local issue checker CLI is the first inspectable control surface and receipt generator. It is not the whole product, and it is not a thin wrapper around `gh`, Linear, or another issue tracker.
 
-Issues may come from Linear, GitHub, JSONL, or another source. Start with a short local path so the loop has proof boundaries, then make the loop real on a learner Mac with a LaunchAgent schedule path. Attach a tracker or Discord webhook only when auth/setup is low-friction; otherwise use a local adapter seam and notification outbox.
+Issues may come from Linear, GitHub, JSONL, Lakebed, or another source. Start with a short local path so the loop has proof boundaries. For the one-hour workshop, keep Lakebed, Pi, and Herdr central: Lakebed projects issue state, Pi becomes the operator harness, and Herdr keeps the operator pane and daemon/status pane visible. Launchd is a follow-up capability once the same safe command is worth repeating.
+
+## Experienced-guide context: how run 06 was built
+
+This skill should act like a guide who already watched run 06 happen once. Do not dump this whole section into learner-facing docs. Use it to choose the next prompt, explain the scar behind each tool choice, and keep lessons task-shaped.
+
+The run-06 arc was not a passive tour. Joel prompted a loop into existence and dogfooded it through issues/user stories:
+
+1. **Name the loop and write the first issue queue.** Grill the product goal, decide what the loop may change, define ready / approval-required / input-required gates, and create the first issue events.
+2. **Build the reliability floor.** Add `pnpm`, strict TypeScript/`tsgo`, `oxlint`, `oxfmt`, Ultracite, Effect schemas, an XState loop-check classifier, receipts, run logs, and memory.
+3. **Put the loop on Lakebed.** Add an `IssueStore` adapter so JSONL stays testable and Lakebed can become the operator surface with list, Kanban, and event-view projections.
+4. **Extend Pi into the control plane.** Add the bridge daemon, machine-readable status/check output, and a project-local Pi control surface. Use Herdr as the two-pane runtime: operator Pi pane plus daemon/status pane.
+5. **Make dispatch safe.** Route ready work through policy, claim first, dry-run dispatch, runtime seam, and a receipt before allowing implementation agents to mutate code.
+6. **Let the loop garden itself, then fix the scar.** Add gardener dry-run/apply, fully formed issue events, stop reasons, dirty-worktree guards, and duplicate-prevention after the gardener keeps recreating bad follow-up work.
+7. **Add specialists carefully.** Add loop-owned scout/reviewer roles behind a runtime seam. Disable generic/default agent swarms; specialists are non-mutating unless the loop explicitly grants a task.
+8. **Migrate to supervisor-owned runtime.** Move decisions from bridge glue into an XState actor tree: `IssueSetSupervisor`, per-issue lifecycle actors, dispatch-run actors, specialist packet actors, queue maintenance actor, shadow/on feature flag, and recovery drills.
+
+The teaching spine is down for reliability, up for leverage:
+
+```txt
+guardrails + typed events + explicit state + receipts
+  -> provider adapters + operator surface
+  -> Pi/Herdr control plane
+  -> claims + dispatch + worktrees
+  -> gardener + specialists + supervisor runtime
+```
+
+## Full-task lesson rule
+
+Lessons are not issues. Lessons are the rails; issues are the product data/control substrate the learner builds toward and eventually uses. By the end of the hour, the loop should be able to use its own issue queue/surface to progress work, but do not waste time treating each lesson as an issue ticket.
+
+Every lesson must give the learner something real to prompt, build, operate, inspect, or decide. Avoid “open the rig and observe” as a lesson unless it immediately leads to a challenge. Keep the path happy and on rails: skip the debugging friction that run 06 already paid for, but use those scars as the explanation for why the essential pieces exist.
+
+Use this card shape when steering the hour:
+
+```txt
+Challenge: what we prompt/build/control now
+Starter prompt: what to type into Pi
+Build/operate: files, command, Pi control, Herdr pane, or Lakebed surface
+Observe: receipt, event, status, board lane, or test output
+Discuss: concept/principle/talking point
+Checkpoint: evidence required before moving on
+Part-task drill: small repeated habit to practice
+Fade: what support is removed on the next pass
+```
+
+Useful starter prompt pattern:
+
+> We are building a local issue-progress loop. Do the next small pass only: <capability>. Keep it local, write receipts, stop for approval/input when needed, and explain the evidence before moving on.
+
+## Concepts, scars, and teaching moments
+
+- **Effect** is the boundary tool: parse issue events, return structured errors, and make sloppy input hard to ignore.
+- **XState** is the lifecycle tool: model gates, stop reasons, claims, dispatch, maintenance, and recovery explicitly instead of hiding them in booleans.
+- **Lakebed** is the operator projection: list/Kanban/event views make append-only issue facts visible.
+- **Pi extension/tooling** is the harness move: Pi should start/stop/check/inspect the loop, not merely chat about it.
+- **Herdr** is runtime visibility: one pane for the operator, one pane for the daemon/status output.
+- **Receipts and memory** are what make motion trustworthy: every lane move should have a receipt/event/log line that explains why.
+- **Claim before dispatch** is the safety move: no hidden agent work without ownership and policy.
+- **Worktree hygiene** is motivated by the dirty-worktree scar: the agent made the tree dirty and then automation stopped on its own mess.
+- **Gardener duplicate prevention** is motivated by the repeated obsolete follow-up issue. Use the scar to teach root-cause repair, not patching symptoms.
+- **Specialists** are leverage with boundaries: small scout/reviewer agents produce artifacts; they do not become an unbounded super-agent.
+- **Dynamic runtime** is the final leverage move: bridge glue becomes adapter-only, while an actor tree owns decisions and recovery.
+
+Anecdotes worth surfacing when they help:
+
+- “you are the loop bro” — the first human-driven loop before daemon autonomy.
+- “poke it / kick it” — why heartbeat, freshness, and durable controls matter.
+- “oh shit it picked up an issue automagically” — the payoff moment when the monitor finally advances work.
+- “THE AGENT MADE IT DIRTY” — why worktree hygiene and stop reasons are not optional.
+
 
 ## How to help
 
@@ -77,22 +147,22 @@ Do not treat tooling as invisible setup magic. Before installing a guardrail, ex
 
 ### Milestones the TA is steering toward
 
-1. Blank learner workspace with minimal handoff files.
-2. Guardrail foundation: `pnpm`, TypeScript/`tsgo`, `oxlint`, `oxfmt`, Ultracite, strict config.
-3. Git/Lefthook enforcement so the guardrails are hard to skip.
-4. Install a local `grill-with-docs` skill before product behavior.
-5. Use the grill to produce or revise `VISION.md` as product intent, decision boundaries, stop points, and non-goals for external agents and humans looping over this repo.
-6. Learner `AGENTS.md` captures only operational rules that future agents need for this product, after the learner has decided them.
-7. Local issue fixture and deterministic issue checking.
-8. Agent-recorded review result and local summary.
-9. One Mac LaunchAgent schedule path that repeats the same safe command.
-10. One notification sink: local outbox first, Discord webhook if setup is easy.
-11. One tracker adapter path, GitHub or Linear, only when auth is not the workshop.
-12. Autonomous workers only after the connected loop is trustworthy.
+Use these as the experienced-guide map, not as a rigid checklist:
+
+1. Product intent and first issue queue exist: `VISION.md`, initial issue events, and clear ready / approval-required / input-required gates.
+2. Reliability foundation is visible: package scripts, fast strict guardrails, Effect schemas, XState classifier, tests, receipts, run log, and memory.
+3. Provider boundary exists: JSONL remains testable and Lakebed reads issue events through an adapter.
+4. Operator surface is visible: Lakebed list/Kanban/event views explain issue movement.
+5. Pi/Herdr control plane exists: bridge daemon, Pi check/status/start/stop/inspect controls, and a visible daemon/status pane.
+6. Dispatch is safe: policy routes work, claims happen before dispatch, runtime adapters leave receipts, and risky work stops.
+7. Maintenance is bounded: gardener proposes/applies issue events and stops for ready work, active runtime, dirty worktree, input, or approval.
+8. Operational scars are repaired: dirty-worktree loops, stale bridge, duplicate gardener issues, and missing status are treated as design feedback.
+9. Specialist leverage is bounded: scout/reviewer roles are loop-owned, non-mutating by default, and produce artifacts.
+10. Runtime ownership is explicit: supervisor/actors own decisions in shadow/on mode, with recovery drills before trust.
 
 ### Current learner position
 
-Fresh template state: the learner has not installed guardrails yet. Start by explaining and adding the foundation visibly.
+Run 006 is the source run. This repo is run 07: the prepared but not finished learner rig. Normal Pi, Herdr panes, Lakebed shell, local skills, and source mirrors are preloaded to avoid install theater. The learner still performs real tasks that recreate the important capabilities. Do not pretend the repo starts blank; do not make the first half a passive tour. Start with `lessons/01-loop-contract.md`. The intended end state is a simplified happy path where the loop is starting to build/progress itself through the issue surface by the end of the hour.
 
 ### Learner docs rule
 
@@ -199,22 +269,20 @@ If asked “why bother with Effect for this?”, lead with that guardrail story,
 
 When source-backed coding examples become necessary, prefer real squashed git subtrees under `.agent_sources/<name>`, committed to the repo. Do not use untracked local clones, submodules, or one-off copied snapshots for the learner path. Record the upstream URL/ref and refresh command, usually `git subtree pull --prefix=.agent_sources/<name> <url> <ref> --squash`, and make agents inspect those files before writing source-backed patterns. For Effect specifically, use the entire upstream Effect repo under `.agent_sources/effect`; this is intentional because current APIs and cross-file idioms matter. Other mirrors can stay narrow when narrow context is enough.
 
-## Suggested early sequence
+## Suggested one-hour build sequence
 
-1. Establish package manager basics with `pnpm`.
-2. Explain the TypeScript/`tsgo` choice, then add TypeScript with the current/latest `tsgo` path the workshop chooses.
-3. Add one tiny test path.
-4. Explain the lint/format guardrail choice, then add `oxlint`, `oxfmt`, and Ultracite rules.
-5. Add Lefthook once lint, format, and typecheck commands exist.
-6. Install the local `grill-with-docs` skill from Matt Pocock’s `grill-me` pattern.
-7. Use the grill before product behavior: clarify who the autonomous loop serves, what it should safely do, when it must stop, and what the CLI controls.
-8. Write or revise `VISION.md` as the repo compass for external agents and humans: product intent, safe boundaries, stop points, and non-goals. Keep `AGENTS.md` limited to operational agent rules.
-9. Add local issue input, likely JSONL, behind a source interface.
-10. Build the first local spine quickly: issue fixture → review packet → agent review result → summary.
-11. Add the Mac launchd schedule path from the same safe command.
-12. Add a notification sink: local outbox first, Discord webhook if setup is easy.
-13. Attach one tracker path, GitHub or Linear, only when auth is not the workshop.
-14. Only later consider schedulers, background workers, or autonomous execution.
+Use these as lesson prompts. Each one should end with evidence, not vibes.
+
+1. **Loop contract pass**: prompt Pi to clarify the local issue-progress loop, write or revise the intent docs, and create the first issue events with gates.
+2. **Reliability pass**: add or inspect guardrails, Effect schemas, XState classifier, tests, receipts, run log, and memory.
+3. **Lakebed pass**: add or inspect the provider adapter and make Lakebed list/Kanban/event views explain the issue state.
+4. **Control-plane pass**: start the bridge, operate it from Pi, and keep Herdr’s daemon/status pane visible while a check runs.
+5. **Dispatch-safety pass**: claim ready work before dispatch, run a dry-run/runtime-adapter dispatch, and inspect the dispatch receipt.
+6. **Gardener pass**: make the loop propose/apply a bounded maintenance event, then verify stop reasons and duplicate prevention.
+7. **Specialist pass**: run a loop-owned scout/reviewer style specialist with a non-mutating contract and inspect the artifact.
+8. **Runtime pass**: shadow the supervisor/actor runtime against bridge decisions and run a recovery drill.
+
+When support should fade, remove the exact command first but keep the evidence gate. By the later passes the learner should know to ask: what event happened, what guard fired, what receipt proves it, and what should the operator do next?
 
 ## History
 

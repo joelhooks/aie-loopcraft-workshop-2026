@@ -1,0 +1,47 @@
+{
+  "name": "@xstate/store-svelte",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "XState Store for Svelte",
+  "keywords": [
+    "store",
+    "state",
+    "svelte"
+  ],
+  "author": "David Khourshid <davidkpiano@gmail.com>",
+  "homepage": "https://github.com/statelyai/xstate/tree/main/packages/xstate-store-svelte#readme",
+  "license": "MIT",
+  "exports": {
+    ".": "./dist/xstate-store-svelte.js",
+    "./package.json": "./package.json"
+  },
+  "types": "dist/xstate-store-svelte.cjs.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/statelyai/xstate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/statelyai/xstate/issues"
+  },
+  "dependencies": {
+    "@xstate/store": "workspace:^"
+  },
+  "peerDependencies": {
+    "svelte": "^3.0.0 || ^4.0.0 || ^5.0.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^4.0.0",
+    "@testing-library/svelte": "^5.2.6",
+    "svelte": "^5.0.0",
+    "zod": "^4.4.3"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "./index.ts"
+    ]
+  }
+}

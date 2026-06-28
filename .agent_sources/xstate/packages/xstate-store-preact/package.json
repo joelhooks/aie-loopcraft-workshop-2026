@@ -1,0 +1,48 @@
+{
+  "name": "@xstate/store-preact",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "XState Store for Preact",
+  "keywords": [
+    "store",
+    "state",
+    "preact"
+  ],
+  "author": "David Khourshid <davidkpiano@gmail.com>",
+  "homepage": "https://github.com/statelyai/xstate/tree/main/packages/xstate-store-preact#readme",
+  "license": "MIT",
+  "exports": {
+    ".": "./dist/xstate-store-preact.js",
+    "./package.json": "./package.json"
+  },
+  "types": "dist/xstate-store-preact.cjs.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/statelyai/xstate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/statelyai/xstate/issues"
+  },
+  "dependencies": {
+    "@xstate/store": "workspace:^"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.9.0",
+    "@testing-library/preact": "^3.2.4",
+    "jsdom": "^26.0.0",
+    "preact": "^10.24.0",
+    "zod": "^4.4.3"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "./index.ts"
+    ]
+  }
+}

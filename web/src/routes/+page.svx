@@ -77,6 +77,18 @@ pnpm run workshop:pi</code></pre>
 
   <pre><code>ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest</code></pre>
 
+  <p><a href="https://github.com/users/joelhooks/packages/container/package/aie-loopcraft-workshop-2026">Open the GHCR package page</a>.</p>
+
+  <p>Quick smoke test:</p>
+
+  <pre><code>docker run --rm ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest \
+  zsh -lc 'pi --version && codex --version && opencode --version && herdr --version'</code></pre>
+
+  <p>If GitHub still reports the package as private, authenticate before pulling:</p>
+
+  <pre><code>gh auth refresh -h github.com -s read:packages
+gh auth token | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin</code></pre>
+
   <p>In a second pane:</p>
 
   <pre><code>pnpm run workshop:daemon</code></pre>

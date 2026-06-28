@@ -24,6 +24,26 @@ Published image:
 ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest
 ```
 
+Package page:
+
+```txt
+https://github.com/users/joelhooks/packages/container/package/aie-loopcraft-workshop-2026
+```
+
+Quick smoke test:
+
+```sh
+docker run --rm ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest \
+  zsh -lc 'pi --version && codex --version && opencode --version && herdr --version'
+```
+
+If GitHub still reports the package as private, authenticate before pulling:
+
+```sh
+gh auth refresh -h github.com -s read:packages
+gh auth token | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+```
+
 Open a shell in the workshop computer:
 
 ```sh

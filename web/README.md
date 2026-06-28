@@ -2,18 +2,18 @@
 
 This is the Wzrrd/SvelteKit site for the public learner repo.
 
-It is copied from the teacher-surface hour-cut page so the workshop page can now live with the workshop code instead of depending on the parent repo.
+It started from the teacher-surface review page, but this is now the public workshop site: the root describes the workshop, and each lesson has its own MDSvX page with navigation.
 
 ## Slug
 
 ```txt
-loopcraft-hour-cut
+aie-loopcraft-workshop-2026
 ```
 
 Published URL:
 
 ```txt
-https://loopcraft-hour-cut.wzrrd.sh/
+https://aie-loopcraft-workshop-2026.wzrrd.sh/
 ```
 
 ## Develop
@@ -31,10 +31,10 @@ bun run build
 cd web
 bun run check
 bun run build
-wzrrd publish --file ./build --slug loopcraft-hour-cut --expires-in 7d
+wzrrd publish --file ./build --slug aie-loopcraft-workshop-2026
 ```
 
-Use the same slug while we migrate the source of truth into this public repo.
+The slug matches the public repo name so the site and source are easy to pair.
 
 ## Main files
 

@@ -1,0 +1,35 @@
+<script lang="ts">
+  import ReportLayout from "$lib/ReportLayout.svelte";
+  import WorkshopNav from "$lib/workshop-nav.svelte";
+  import { lessons, site } from "$lib/workshop-data";
+</script>
+
+<svelte:head>
+  <title>Lessons · {site.title}</title>
+  <meta name="description" content="The eight lesson pages for the AI Engineer Loopcraft Workshop 2026." />
+</svelte:head>
+
+<ReportLayout>
+  <WorkshopNav current="lessons" />
+
+  <p class="eyebrow"><span class="mascot">🧭</span><span class="eyebrow-stack"><span>Lesson Map</span><span>{site.title}</span></span></p>
+  <h1>Eight passes from vision to loop leverage.</h1>
+
+  <p class="lead">Work through these in order. Each page gives a challenge, starter prompt, build/operate target, observation point, checkpoint, tiny drill, and the run-06 scar behind the move.</p>
+
+  <ol class="lesson-index lesson-index-large">
+    {#each lessons as lesson}
+      <li>
+        <a href={lesson.href}>
+          <span>{lesson.number}</span>
+          <strong>{lesson.title}</strong>
+        </a>
+        <p>{lesson.challenge}</p>
+      </li>
+    {/each}
+  </ol>
+
+  <footer>
+    Lessons are rails. Issues are the product substrate the loop builds toward.
+  </footer>
+</ReportLayout>

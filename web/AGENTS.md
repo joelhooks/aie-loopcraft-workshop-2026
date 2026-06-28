@@ -9,20 +9,20 @@ Keep the workshop page useful as a learner-facing guide:
 1. explain the current lesson path;
 2. show the prepared rig honestly;
 3. keep receipts public-safe;
-4. publish the static build to the `loopcraft-hour-cut` Wzrrd slug.
+4. publish the static build to the `aie-loopcraft-workshop-2026` Wzrrd slug.
 
 ## Hard rules
 
 - No secrets, tokens, private paths, raw transcripts, customer data, or private operational details.
-- Keep `pageRef.slug` as `loopcraft-hour-cut` unless Joel explicitly changes the public URL.
-- Increment `pageRef.version` when paragraph text, lesson data, or diagram assets materially change.
-- Keep `feedbackParagraphs` synced with exported `FeedbackParagraph` ids.
+- Keep the public slug as `aie-loopcraft-workshop-2026` unless Joel explicitly changes the public URL.
+- Increment `site.version` in `src/lib/workshop-data.ts` when paragraph text, lesson data, routes, or diagram assets materially change.
+- Keep lesson navigation in sync with `lessons` in `src/lib/workshop-data.ts`.
 - Commit D2 sources and generated SVGs together.
 - Run `bun run check && bun run build` before publishing or claiming the site works.
 - Publish `build/`, not source files:
 
 ```sh
-wzrrd publish --file ./build --slug loopcraft-hour-cut --expires-in 7d
+wzrrd publish --file ./build --slug aie-loopcraft-workshop-2026
 ```
 
 ## Design taste

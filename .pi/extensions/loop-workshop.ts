@@ -1,14 +1,16 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
-const lessonOnePrompt = `We are building a local issue-progress loop.
+const lessonOnePrompt = `/skill:grill-with-docs
 
-Lesson 01: prompt the loop contract into existence.
+Tour this prepared Loopcraft repo with me before we build product behavior.
 
-Do the next small pass only: clarify the loop, write the first product intent, and create the first local issue-event queue with ready / approval-required / input-required gates. Keep it local, leave receipts, and explain the evidence before moving on.`;
+Inspect README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, .pi/extensions/loop-workshop.ts, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.
+
+Ask one question at a time to define the product vision, operator boundaries, stop rules, and first repo setup choices. Write the decisions into VISION.md. Update AGENTS.md or README.md only when a repo rule or command is clear. Create only the minimal repo setup needed for the next lesson. Do not build the loop yet.`;
 
 const widgetLines = [
   "Loopcraft 07 · ready for Lesson 01",
-  "1. Prompt the loop contract into existence",
+  "1. Tour the rig + define vision",
   "2. Build the reliability floor",
   "3. Project events into Lakebed",
   "4. Control the loop from Pi + Herdr",
@@ -32,7 +34,7 @@ export default function loopWorkshop(pi: ExtensionAPI) {
   });
 
   pi.registerCommand("loop-lesson-01", {
-    description: "Prefill the Lesson 01 starter prompt.",
+    description: "Prefill the Lesson 01 tour, vision, and repo setup prompt.",
     handler: async (_args, ctx) => {
       ctx.ui.setEditorText(lessonOnePrompt);
       ctx.ui.notify("Lesson 01 prompt loaded. Review, then send it.", "info");

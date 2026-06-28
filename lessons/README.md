@@ -6,9 +6,11 @@ Each lesson should end with evidence: a file, command output, receipt, event, UI
 
 Lessons are not issue tickets. The issue queue is the product substrate we build and eventually use.
 
+Lesson 01 is a tour plus a `grill-with-docs` pass. It defines the vision and minimal repo baseline before the loop starts building product behavior.
+
 ## Path
 
-1. [Loop contract](01-loop-contract.md)
+1. [Tour, vision, repo setup](01-tour-vision-repo.md)
 2. [Reliability floor](02-reliability-floor.md)
 3. [Lakebed projection](03-lakebed-projection.md)
 4. [Pi and Herdr control plane](04-pi-herdr-control.md)

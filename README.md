@@ -20,7 +20,7 @@ We are not pretending this starts from nothing. The heavy sources and harness pi
 
 The loop itself is still yours to build.
 
-Lesson 01 starts by creating the product intent and first issue-event queue. Later lessons add the reliability floor, Lakebed projection, Pi/Herdr control, safe dispatch, maintenance, specialists, and supervisor runtime shadowing.
+Lesson 01 starts with a tour, a `grill-with-docs` vision session, and minimal repo setup. Later lessons add the first issue-event queue, reliability floor, Lakebed projection, Pi/Herdr control, safe dispatch, maintenance, specialists, and supervisor runtime shadowing.
 
 Lessons are the rails. Issues are the product substrate we are building toward.
 
@@ -37,16 +37,18 @@ That command fills the editor with the starter prompt. Read it, adjust it if nee
 If the command is not loaded yet, reload Pi extensions or paste this prompt manually:
 
 ```txt
-We are building a local issue-progress loop.
+/skill:grill-with-docs
 
-Lesson 01: prompt the loop contract into existence.
+Tour this prepared Loopcraft repo with me before we build product behavior.
 
-Do the next small pass only: clarify the loop, write the first product intent, and create the first local issue-event queue with ready / approval-required / input-required gates. Keep it local, leave receipts, and explain the evidence before moving on.
+Inspect README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, .pi/extensions/loop-workshop.ts, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.
+
+Ask one question at a time to define the product vision, operator boundaries, stop rules, and first repo setup choices. Write the decisions into VISION.md. Update AGENTS.md or README.md only when a repo rule or command is clear. Create only the minimal repo setup needed for the next lesson. Do not build the loop yet.
 ```
 
 ## Useful files
 
-- `lessons/01-loop-contract.md` — first guided challenge
+- `lessons/01-tour-vision-repo.md` — first guided challenge
 - `WORKSHOP_RIG.md` — how Pi, Herdr, Lakebed, and persistence fit together
 - `agents/skills/loopcraft-ta/SKILL.md` — local guide context
 - `.agent_sources/README.md` — source mirrors already staged

@@ -2,19 +2,20 @@
 
 ## Challenge
 
-Turn the first issue-event queue into a typed, testable local loop check.
+Turn the vision from Lesson 01 into the first issue-event queue and a typed, testable local loop check.
 
 ## Starter prompt
 
 ```txt
-Use the issue-event queue from Lesson 01. Build the smallest reliability floor: package scripts, strict TypeScript, Effect schemas for issue events, an explicit loop-check classifier, tests, and a receipt for one check run. Keep it local and explain the evidence.
+Use VISION.md from Lesson 01. Create the first local issue-event queue, then build the smallest reliability floor: package scripts, strict TypeScript, Effect schemas for issue events, an explicit loop-check classifier, tests, and a receipt for one check run. Keep it local and explain the evidence.
 ```
 
 ## Build / operate
 
 Expected additions:
 
-- `package.json` with scripts for typecheck, lint, format, test, and check
+- `issues.jsonl` or `data/issue-events.jsonl` with ready / approval-required / input-required events
+- `package.json` upgraded with scripts for typecheck, lint, format, test, and check
 - strict TypeScript config using the prepared source guidance
 - fast lint/format guardrails
 - `src/issue-events.ts`

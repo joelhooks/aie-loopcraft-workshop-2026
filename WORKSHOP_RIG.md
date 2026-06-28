@@ -28,7 +28,7 @@ Until the real loop daemon exists, use the scaffold status process in the side p
 node scripts/loop-daemon-stub.mjs
 ```
 
-It exposes `GET /health`, `GET /status`, `POST /check-now`, and `GET /events` on port `8787`. It watches for `data/issue-events.jsonl` or `issues.jsonl` so Lesson 01 has something visible to wake up.
+It exposes `GET /health`, `GET /status`, `POST /check-now`, and `GET /events` on port `8787`. It watches for `data/issue-events.jsonl` or `issues.jsonl` so the issue-event lesson has something visible to wake up.
 
 From `/workspace` in the workshop computer, use the parent launcher for this scenario:
 
@@ -82,9 +82,9 @@ Project state belongs in this nested Git repo. Runtime receipts and generated fi
 ## Big lifts intentionally not done
 
 - No final loop implementation yet.
-- No product `package.json` yet.
-- No `VISION.md` yet.
-- No `issues.jsonl` yet.
+- No product `package.json` yet; Lesson 01 creates only the minimal repo baseline.
+- No `VISION.md` yet; Lesson 01 creates it through `grill-with-docs`.
+- No `issues.jsonl` yet; Lesson 02 creates the first issue-event queue.
 - No external tracker/auth setup.
 - No launchd scheduling yet.
 

@@ -12,6 +12,9 @@ ARG OPENCODE_VERSION=1.17.11
 ARG HERDR_VERSION=0.7.1
 ARG STARSHIP_VERSION=1.25.1
 ARG ATUIN_VERSION=18.16.1
+ARG OH_MY_ZSH_REF=65749801cf4c3b1f3c79a20001909d72dadd307f
+ARG ZSH_AUTOSUGGESTIONS_REF=85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5
+ARG ZSH_SYNTAX_HIGHLIGHTING_REF=1d85c692615a25fe2293bdd44b34c217d5d2bf04
 ARG TARGETARCH
 ARG USERNAME=workshop
 ARG USER_UID=1001
@@ -96,9 +99,17 @@ RUN case "${TARGETARCH:-$(dpkg --print-architecture)}" in \
 USER ${USERNAME}
 WORKDIR /workspace
 
-RUN git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git /home/${USERNAME}/.oh-my-zsh \
-  && git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git /home/${USERNAME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions \
-  && git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git /home/${USERNAME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+RUN install_git_ref() { \
+    repo="$1"; ref="$2"; dest="$3"; \
+    mkdir -p "${dest}"; \
+    git -C "${dest}" init -q; \
+    git -C "${dest}" remote add origin "${repo}"; \
+    git -C "${dest}" fetch --depth=1 origin "${ref}"; \
+    git -C "${dest}" checkout -q FETCH_HEAD; \
+  }; \
+  install_git_ref https://github.com/ohmyzsh/ohmyzsh.git "${OH_MY_ZSH_REF}" /home/${USERNAME}/.oh-my-zsh; \
+  install_git_ref https://github.com/zsh-users/zsh-autosuggestions.git "${ZSH_AUTOSUGGESTIONS_REF}" /home/${USERNAME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions; \
+  install_git_ref https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_SYNTAX_HIGHLIGHTING_REF}" /home/${USERNAME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
 COPY --chown=workshop:workshop docker/workshop.zshrc /home/workshop/.zshrc
 COPY --chown=workshop:workshop docker/zsh-completions/ /home/workshop/.zsh/completions/

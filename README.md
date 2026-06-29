@@ -9,7 +9,7 @@ This repo gives you a small project and a Docker-based workshop computer with Pi
 Prereqs:
 
 - Git
-- Docker Desktop or OrbStack with Docker Compose
+- Docker Desktop or OrbStack with Docker Compose (`docker compose version` or `docker-compose version`)
 - pnpm 11+ for the short command below
 
 ```sh

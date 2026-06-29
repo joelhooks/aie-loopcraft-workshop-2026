@@ -12,6 +12,14 @@ Recommended Docker path:
 - Docker Desktop or OrbStack with Docker Compose
 - pnpm 11+ for `pnpm run workshop`
 
+Check Docker Compose before the workshop:
+
+```sh
+docker compose version
+```
+
+If that fails but `docker-compose version` works, the repo helper scripts will use legacy `docker-compose` automatically. If both fail, install/update Docker Desktop, OrbStack, or the Docker Compose plugin before running the workshop.
+
 Optional for troubleshooting:
 
 - GitHub CLI, only if GHCR reports the image as private
@@ -63,12 +71,14 @@ This does not pre-create Pi or daemon panes. Herdr gives you the workspace; you 
 
 ## No-pnpm Docker commands
 
-If you do not want host pnpm, use Docker Compose directly:
+If you do not want host pnpm, use the repo scripts directly:
 
 ```sh
-docker compose pull workshop
-docker compose run --rm workshop zsh -lc 'cd /workspace && herdr integration install pi && herdr --session aie-loopcraft-workshop-2026'
+bash scripts/docker-compose.sh pull workshop
+bash scripts/start-workshop-herdr.sh
 ```
+
+`scripts/docker-compose.sh` tries `docker compose` first and falls back to legacy `docker-compose` when that is what the machine has.
 
 If you already have a local image and want to skip the pull behavior in the script:
 
@@ -112,7 +122,7 @@ pnpm run workshop
 No-pnpm version:
 
 ```sh
-docker compose build workshop
+bash scripts/docker-compose.sh build workshop
 LOOPCRAFT_SKIP_PULL=1 bash scripts/start-workshop-herdr.sh
 ```
 
@@ -130,7 +140,7 @@ Use this if Herdr is not cooperating but Docker works. This keeps the work insid
 Terminal 1:
 
 ```sh
-docker compose run --rm --name loopcraft-workshop workshop zsh
+bash scripts/docker-compose.sh run --rm --name loopcraft-workshop workshop zsh
 ```
 
 Inside that shell, start Pi when you are ready:
@@ -174,7 +184,7 @@ Auth is not baked into the image. Sign into each tool inside the container if yo
 To reset the container state, stop first and remove the named volumes:
 
 ```sh
-docker compose down --volumes
+bash scripts/docker-compose.sh down --volumes
 ```
 
 That deletes local container auth/state for this Compose project, so do it deliberately.

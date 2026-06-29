@@ -20,172 +20,243 @@
 
   const entries: GlossaryEntry[] = [
     {
-      id: "local-issue-progress-loop",
-      term: "Local issue-progress loop",
-      definition: "The small system you build here: it reads issue facts, decides the next safe move, stops when it needs you, and writes evidence.",
-      useItWhen: "Use this as the north star for every lesson. If a change does not help the loop read, decide, stop, show, or leave receipts, it can probably wait.",
-      links: [{ label: "Workshop home", href: "/" }],
-    },
-    {
-      id: "issue-event",
-      term: "Issue event",
-      definition: "A local JSONL record that describes something about an issue: new work, missing input, approval required, a claim, a result, or a status change.",
-      useItWhen: "Use issue events as the loop's source material before adding trackers, databases, or background workers.",
-      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
-    },
-    {
-      id: "reliability-floor",
-      term: "Reliability floor",
-      definition: "The first set of checks that makes bad input, type mistakes, and confusing output fail loudly.",
-      useItWhen: "Build this before giving the loop more power. The floor is what keeps later autonomy from turning into vibes.",
-      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
-    },
-    {
-      id: "receipt",
-      term: "Receipt",
-      definition: "A saved record of what the loop read, decided, refused, changed, checked, and what should happen next.",
-      useItWhen: "Write receipts whenever the loop classifies work, projects state, dispatches, asks a specialist, or compares supervisor decisions.",
-      links: [
-        { label: "Lesson 02", href: "/lessons/02-reliability-floor/" },
-        { label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" },
-      ],
-    },
-    {
-      id: "stop-rule",
-      term: "Stop rule",
-      definition: "A plain boundary that tells the agent when to pause instead of guessing or editing ahead.",
-      useItWhen: "Name stop rules before implementation work starts: missing input, required approval, dirty repo, broken checks, or unclear ownership.",
+      id: "agents-md",
+      term: "AGENTS.md",
+      definition: "The repo instruction file a coding agent should read before editing. It states the current lesson boundary and the standing habits for this project.",
+      useItWhen: "Use it before asking an agent to change files, especially when deciding what the current lesson allows and what must wait.",
       links: [{ label: "Lesson 01", href: "/lessons/01-tour-vision-repo/" }],
     },
     {
-      id: "guardrail",
-      term: "Guardrail",
-      definition: "A command, check, hook, schema, or policy that catches mistakes early and explains the failure.",
-      useItWhen: "Add guardrails one at a time so the loop learns from clear failures instead of burying errors in a long run.",
-      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
-    },
-    {
-      id: "lakebed",
-      term: "Lakebed",
-      definition: "The local view that shows issue state from the same facts the loop already trusts.",
-      useItWhen: "Use Lakebed to inspect the queue. Do not let the view become a second source of truth.",
-      links: [{ label: "Lesson 03", href: "/lessons/03-lakebed-projection/" }],
-    },
-    {
-      id: "pi",
-      term: "Pi",
-      definition: "The coding-agent shell used as the main request path for prompts, status checks, receipts, and small loop moves.",
-      useItWhen: "Use Pi when you need to ask for the next pass, inspect evidence, or decide whether the loop may continue.",
-      links: [{ label: "Lesson 04", href: "/lessons/04-pi-herdr-control/" }],
-    },
-    {
-      id: "herdr",
-      term: "Herdr",
-      definition: "The visible terminal workbench where Pi, commands, logs, status output, and runtime processes can sit side by side.",
-      useItWhen: "Use Herdr when you need to see whether the loop is alive, waiting, stale, running, failed, or finished.",
-      links: [{ label: "Lesson 04", href: "/lessons/04-pi-herdr-control/" }],
-    },
-    {
-      id: "safe-dispatch",
-      term: "Safe dispatch",
-      definition: "Moving one ready item toward execution only after policy, ownership, safe mode, and receipts are in place.",
-      useItWhen: "Use safe dispatch to separate 'this looks ready' from 'the loop is allowed to act now.'",
-      links: [{ label: "Lesson 05", href: "/lessons/05-safe-dispatch/" }],
-    },
-    {
-      id: "dispatch-policy",
-      term: "Dispatch policy",
-      definition: "The rule-based decision that says whether an issue may be claimed, must be refused, or needs approval first.",
-      useItWhen: "Use policy before any implementation pass so the loop can explain why work is safe or blocked.",
-      links: [{ label: "Lesson 05", href: "/lessons/05-safe-dispatch/" }],
-    },
-    {
-      id: "claim-event",
-      term: "Claim event",
-      definition: "A recorded event showing the loop took ownership before a dispatch attempt.",
-      useItWhen: "Write a claim before work starts so later receipts can explain who owned the move and when it happened.",
-      links: [{ label: "Lesson 05", href: "/lessons/05-safe-dispatch/" }],
-    },
-    {
-      id: "dry-run-mode",
-      term: "Dry-run mode",
-      definition: "A safe practice run that reports what would happen without changing product files.",
-      useItWhen: "Use dry-run mode before real dispatch, gardener apply, or supervisor promotion.",
+      id: "approval-required",
+      term: "Approval-required",
+      definition: "A status for work the loop should not continue on its own because a person needs to approve the next move.",
+      useItWhen: "Use it for product-file edits, dispatch, unclear scope, dirty repo state, or any action the current lesson says needs a human decision.",
       links: [
+        { label: "Lesson 02", href: "/lessons/02-reliability-floor/" },
         { label: "Lesson 05", href: "/lessons/05-safe-dispatch/" },
-        { label: "Lesson 06", href: "/lessons/06-bounded-gardener/" },
       ],
     },
     {
       id: "bounded-gardener",
       term: "Bounded gardener",
-      definition: "A maintenance pass that can propose cleanup work, but only inside clear limits and with visible stop reasons.",
-      useItWhen: "Use a gardener after the core loop has receipts and guards. It should never quietly invent or apply broad work.",
+      definition: "A cleanup pass that may propose one maintenance follow-up, then stops when the repo, queue, or approval state is not safe.",
+      useItWhen: "Use it after the checker can read issue state and you want maintenance suggestions without letting cleanup sprawl.",
       links: [{ label: "Lesson 06", href: "/lessons/06-bounded-gardener/" }],
     },
     {
-      id: "dirty-worktree-guard",
-      term: "Dirty-worktree guard",
-      definition: "A check that stops maintenance or dispatch when the repo already has uncommitted changes.",
-      useItWhen: "Use it to avoid mixing old work, new work, and generated follow-up tasks in one confusing pile.",
-      links: [{ label: "Lesson 06", href: "/lessons/06-bounded-gardener/" }],
+      id: "check-command",
+      term: "Check command",
+      definition: "The command a fresh reader or agent can run to prove the loop read the event file and produced the expected output.",
+      useItWhen: "Use it whenever a lesson asks for proof. Name the command, what file it read, what it printed, and what receipt it wrote.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
     },
     {
-      id: "specialist-review",
-      term: "Specialist review",
-      definition: "A narrow read-only help pass from another agent that returns evidence or critique without taking over implementation.",
-      useItWhen: "Use specialists when the main loop owns the question, packet, artifact, and decision about what happens next.",
-      links: [{ label: "Lesson 07", href: "/lessons/07-specialist-review/" }],
-    },
-    {
-      id: "work-packet",
-      term: "Work packet",
-      definition: "A small bundle of issue context, acceptance criteria, files, and questions handed to a specialist or agent pass.",
-      useItWhen: "Use a packet to keep delegated work bounded, reviewable, and tied to the current issue.",
-      links: [{ label: "Lesson 07", href: "/lessons/07-specialist-review/" }],
-    },
-    {
-      id: "supervisor-runtime",
-      term: "Supervisor runtime",
-      definition: "A small state machine that names lifecycle states and compares decisions before it is allowed to drive execution.",
-      useItWhen: "Use a supervisor only after the existing path has enough evidence to compare against.",
-      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
-    },
-    {
-      id: "shadow-mode",
-      term: "Shadow mode",
-      definition: "A safe rollout mode where the supervisor makes a decision beside the current path, but the current path stays in charge.",
-      useItWhen: "Use shadow mode until comparison receipts stay boring enough to earn promotion.",
-      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
-    },
-    {
-      id: "lifecycle-state",
-      term: "Lifecycle state",
-      definition: "A named condition such as idle, checking, waiting for input, waiting for approval, claimed, dispatched, failed, or stopped.",
-      useItWhen: "Use lifecycle states when the loop needs retries, cancellation, approval gates, stale detection, or recovery.",
-      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
+      id: "claim-event",
+      term: "Claim event",
+      definition: "A local event saying one ready issue has been claimed for work. It is proof of intent, not permission to edit product files.",
+      useItWhen: "Use it in the dispatch lesson to show which issue was picked while keeping the run safe and reviewable.",
+      links: [{ label: "Lesson 05", href: "/lessons/05-safe-dispatch/" }],
     },
     {
       id: "comparison-receipt",
       term: "Comparison receipt",
-      definition: "A saved record comparing the existing decision path with the supervisor's decision.",
-      useItWhen: "Use it to prove shadow mode agrees, find mismatches, and decide whether the supervisor needs more work.",
+      definition: "A saved record comparing the current checker decision with the supervisor check decision for the same input event.",
+      useItWhen: "Use it in Lesson 08 to show agreement, mismatch, reason, and whether the current checker stayed in charge.",
       links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
+    },
+    {
+      id: "docker-workshop-computer",
+      term: "Docker workshop computer",
+      definition: "The prepared container that runs the pinned tools and mounts this repo at /workspace.",
+      useItWhen: "Use it for the normal workshop path so setup is repeatable and host-machine auth or config does not leak into the lesson.",
+      links: [
+        { label: "Setup", href: "https://github.com/joelhooks/aie-loopcraft-workshop-2026/blob/main/docs/setup.md" },
+        { label: "Local setup appendix", href: "/appendix/full-setup-without-docker/" },
+      ],
+    },
+    {
+      id: "dry-run-mode",
+      term: "Dry-run mode",
+      definition: "A run that reports what it would do without changing product files or calling external services.",
+      useItWhen: "Use it before dispatch or cleanup gets write power. The receipt should prove product files did not change.",
+      links: [{ label: "Lesson 05", href: "/lessons/05-safe-dispatch/" }],
+    },
+    {
+      id: "event-file",
+      term: "Event file",
+      definition: "The local JSONL file the loop reads, such as data/issue-events.jsonl or issues.jsonl.",
+      useItWhen: "Use it as the source of issue facts before adding trackers, databases, schedulers, or APIs.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
+    },
+    {
+      id: "grill-with-docs",
+      term: "grill-with-docs",
+      definition: "The question pass used in Lesson 01 to turn vague intent into VISION.md and repo boundaries before code starts.",
+      useItWhen: "Use it when the repo needs a clear purpose, allowed file list, approval rule, or out-of-scope line before implementation.",
+      links: [{ label: "Lesson 01", href: "/lessons/01-tour-vision-repo/" }],
+    },
+    {
+      id: "guardrail",
+      term: "Guardrail",
+      definition: "A check or rule that makes unsafe work stop loudly instead of silently drifting ahead.",
+      useItWhen: "Use it for schema checks, test commands, dirty-repo checks, approval checks, and stop messages.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
+    },
+    {
+      id: "herdr",
+      term: "Herdr",
+      definition: "The terminal workbench used to keep Pi, commands, and runtime output visible side by side.",
+      useItWhen: "Use it when a lesson asks for a Pi pane plus a status, log, or daemon pane.",
+      links: [
+        { label: "Lesson 04", href: "/lessons/04-pi-herdr-control/" },
+        { label: "Herdr", href: "https://herdr.dev/" },
+      ],
+    },
+    {
+      id: "input-required",
+      term: "Input-required",
+      definition: "A status for work that cannot continue because the issue facts are missing, unclear, or contradictory.",
+      useItWhen: "Use it when the loop should ask for more detail instead of guessing.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
+    },
+    {
+      id: "issue-event",
+      term: "Issue event",
+      definition: "One JSONL record describing an issue fact: new work, missing input, approval required, claim, result, or status change.",
+      useItWhen: "Use it as the small durable unit the checker, Lakebed, dispatch, gardener, reviewer, and supervisor all read.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
+    },
+    {
+      id: "lakebed",
+      term: "Lakebed",
+      definition: "The local view that shows issue events as list, board, and event state without becoming the source of truth.",
+      useItWhen: "Use it to compare what the loop thinks with what a person can see on screen.",
+      links: [{ label: "Lesson 03", href: "/lessons/03-lakebed-projection/" }],
+    },
+    {
+      id: "local-issue-progress-loop",
+      term: "Local issue-progress loop",
+      definition: "The small system you build in this repo: it reads issue facts, decides the next safe move, stops when needed, shows state, and writes receipts.",
+      useItWhen: "Use it as the north star. If a change does not help the loop read, decide, stop, show, or leave proof, it can wait.",
+      links: [{ label: "Workshop home", href: "/" }],
+    },
+    {
+      id: "loop-daemon-stub",
+      term: "Loop daemon stub",
+      definition: "The temporary status process at scripts/loop-daemon-stub.mjs. It exposes health, status, check-now, and event output while the real loop is still being built.",
+      useItWhen: "Use it when a lesson asks for the runtime/status pane before the full runtime exists.",
+      links: [{ label: "Lesson 04", href: "/lessons/04-pi-herdr-control/" }],
+    },
+    {
+      id: "pi",
+      term: "Pi",
+      definition: "The coding-agent shell used in the workshop to ask for the next small pass, inspect files, run commands, and stop before risky work.",
+      useItWhen: "Use it from the repo root. Start Lesson 01 with /loop-lesson-01 when that helper is available.",
+      links: [
+        { label: "Lesson 01", href: "/lessons/01-tour-vision-repo/" },
+        { label: "Pi docs", href: "https://github.com/earendil-works/pi/tree/main/packages/coding-agent" },
+      ],
+    },
+    {
+      id: "product-files",
+      term: "Product files",
+      definition: "Files that change the project being checked, not just receipts, docs, or dry-run output.",
+      useItWhen: "Use this boundary when a lesson says to prove no product files changed or to ask before edits that affect the app.",
+      links: [{ label: "Lesson 05", href: "/lessons/05-safe-dispatch/" }],
+    },
+    {
+      id: "read-only-review",
+      term: "Read-only review",
+      definition: "A reviewer pass that can inspect a work packet and suggest changes but cannot edit the repo.",
+      useItWhen: "Use it when you want help from another agent without handing over write access.",
+      links: [{ label: "Lesson 07", href: "/lessons/07-specialist-review/" }],
+    },
+    {
+      id: "ready",
+      term: "Ready",
+      definition: "A status for an issue that has enough input and no current stop reason, so the next local step can be considered.",
+      useItWhen: "Use it only after the checker has also ruled out input-required and approval-required states.",
+      links: [
+        { label: "Lesson 02", href: "/lessons/02-reliability-floor/" },
+        { label: "Lesson 05", href: "/lessons/05-safe-dispatch/" },
+      ],
+    },
+    {
+      id: "receipt",
+      term: "Receipt",
+      definition: "A saved record of what the loop read, decided, refused, changed, checked, and what should happen next.",
+      useItWhen: "Use it at every checkpoint where a future reader should be able to verify the run without trusting chat history.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
     },
     {
       id: "recovery-drill",
       term: "Recovery drill",
-      definition: "A deliberate test of what happens when work is stale, failed, running too long, or interrupted.",
-      useItWhen: "Run a recovery drill before trusting a runtime to handle bad states on its own.",
+      definition: "A deliberate test of stale, failed, interrupted, or long-running work so the loop proves it stops safely.",
+      useItWhen: "Use it before trusting a supervisor or runtime to handle bad states on its own.",
       links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
     },
+    {
+      id: "safe-dispatch",
+      term: "Safe dispatch",
+      definition: "The step where the loop picks one ready issue and proves the claim path without changing product files yet.",
+      useItWhen: "Use it after local checks and Lakebed state exist, but before real external issue APIs or product edits.",
+      links: [{ label: "Lesson 05", href: "/lessons/05-safe-dispatch/" }],
+    },
+    {
+      id: "shadow-mode",
+      term: "Shadow mode",
+      definition: "A compare-only mode where the supervisor check makes a decision beside the current checker, but the current checker stays in charge.",
+      useItWhen: "Use it when testing a new decision path without letting it write, dispatch, or control execution.",
+      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
+    },
+    {
+      id: "specialist-review",
+      term: "Specialist review",
+      definition: "A focused reviewer pass for one question or work packet, not a second agent taking over the repo.",
+      useItWhen: "Use it after dispatch is safe and you need targeted critique while keeping one writer in control.",
+      links: [{ label: "Lesson 07", href: "/lessons/07-specialist-review/" }],
+    },
+    {
+      id: "state",
+      term: "State",
+      definition: "The named condition the loop is in right now, such as ready, input-required, approval-required, claimed, failed, or stopped.",
+      useItWhen: "Use it when the next move depends on more than one boolean flag. Name the state, the event read, and the reason.",
+      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
+    },
+    {
+      id: "stop-rule",
+      term: "Stop rule",
+      definition: "A plain boundary that tells the agent or loop to pause instead of guessing or editing ahead.",
+      useItWhen: "Use it for missing input, required approval, dirty repo, broken checks, unclear ownership, or future-lesson work.",
+      links: [{ label: "Lesson 01", href: "/lessons/01-tour-vision-repo/" }],
+    },
+    {
+      id: "supervisor-check",
+      term: "Supervisor check",
+      definition: "The plain TypeScript decision table or function in Lesson 08 that returns nextState and reason for one issue event.",
+      useItWhen: "Use it beside the current checker to compare decisions before any supervisor is allowed to drive the loop.",
+      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
+    },
+    {
+      id: "vision-md",
+      term: "VISION.md",
+      definition: "The human-owned project intent file created in Lesson 01. It says what the loop is for, what it may change, what needs approval, and what is out of scope.",
+      useItWhen: "Use it before implementation and before changing strategic direction. Ask before rewriting the intent once it exists.",
+      links: [{ label: "Lesson 01", href: "/lessons/01-tour-vision-repo/" }],
+    },
+    {
+      id: "work-packet",
+      term: "Work packet",
+      definition: "A small bundle for review: the issue event, relevant files, commands run, receipts, and the one question the reviewer should answer.",
+      useItWhen: "Use it before specialist review so the reviewer does not need broad repo access or guesswork.",
+      links: [{ label: "Lesson 07", href: "/lessons/07-specialist-review/" }],
+    },
   ];
-
 </script>
 
 <svelte:head>
   <title>Glossary · {site.title}</title>
-  <meta name="description" content="Plain-language glossary for the Loopcraft workshop lessons." />
+  <meta name="description" content="Alphabetical plain-language glossary for the real terms used in the Loopcraft workshop lessons." />
 </svelte:head>
 
 <ReportLayout>
@@ -195,12 +266,12 @@
   <h1>Glossary</h1>
 
   <FeedbackSection id="glossary-intro">
-    <p class="lead">Use this when a lesson names a tool, guardrail, or loop concept and you want the plain version fast.</p>
-    <p>Each term links back to the lesson where it matters most. When a lesson introduces a new term, add it here and link both directions.</p>
+    <p class="lead">Alphabetical terms from the actual lesson pages, setup notes, prompts, and repo files.</p>
+    <p>This is not a theory dictionary. Use it when a workshop page names a tool, file, status, receipt, or stop condition and you want the plain version fast.</p>
   </FeedbackSection>
 
   <FeedbackSection id="glossary-linking-rule">
-    <p class="glossary-rule">Two-way rule: glossary entries link to the lesson that uses them, and lesson pages should link back here when a term becomes important enough to slow someone down.</p>
+    <p class="glossary-rule">Rule: add terms here only when the public workshop actually uses them. Keep entries alphabetical, plain, and linked to the lesson or setup page where the term matters.</p>
   </FeedbackSection>
 
   <FeedbackSection id="glossary-terms">
@@ -224,7 +295,7 @@
   <FeedbackExportGate run="glossary" slug={`${site.slug}-glossary`} url={`${site.url}glossary/`} version={site.version} />
 
   <footer>
-    <a href={href("/")}>Workshop home</a> · <a href={href("/lessons/")}>All lessons</a> · <a href={site.repo}>Public repo</a>
+    <a href={href("/")}>Workshop home</a> · <a href={href("/lessons/")}>All lessons</a> · <a href={href("/appendix/full-setup-without-docker/")}>Local setup</a> · <a href={site.repo}>Public repo</a>
   </footer>
 </ReportLayout>
 

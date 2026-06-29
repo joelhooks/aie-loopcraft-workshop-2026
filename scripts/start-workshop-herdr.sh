@@ -19,16 +19,23 @@ if [[ "${LOOPCRAFT_SKIP_PULL:-0}" != "1" ]]; then
     echo "Pulling the Loopcraft workshop image..."
     if ! "${compose[@]}" pull workshop; then
       cat >&2 <<'EOF'
-Could not pull the workshop image.
+Could not pull the workshop image. Building it locally instead.
+
+This is slower than pulling the prebuilt image, but it keeps the workshop moving when GHCR is private, unavailable, or blocked by network policy.
+EOF
+      if ! "${compose[@]}" build workshop; then
+        cat >&2 <<'EOF'
+Local image build failed.
 
 Common fixes:
-- If GHCR says the package is private, authenticate with GitHub Packages.
-- If you need to work offline or the image is unavailable, run: pnpm run workshop:build
-- After a local build, retry this command.
+- Make sure Docker Desktop or OrbStack is running.
+- Make sure Docker Compose works: docker compose version OR docker-compose version.
+- If GHCR says the package is private and you want the faster pull path, authenticate with GitHub Packages.
 
 More details: docs/setup.md
 EOF
-      exit 1
+        exit 1
+      fi
     fi
   fi
 fi

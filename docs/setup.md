@@ -66,7 +66,7 @@ Start the workshop computer:
 pnpm run workshop
 ```
 
-That command runs `scripts/start-workshop-herdr.sh`. It pulls the workshop image when needed, starts the Compose service, installs the Herdr Pi integration inside the container, and opens a Herdr session named `aie-loopcraft-workshop-2026` from `/workspace`.
+That command runs `scripts/start-workshop-herdr.sh`. It pulls the workshop image when possible, builds it locally if the pull is unauthorized or unavailable, starts the Compose service, installs the Herdr Pi integration inside the container, and opens a Herdr session named `aie-loopcraft-workshop-2026` from `/workspace`.
 
 When Herdr opens:
 
@@ -112,7 +112,7 @@ Package page:
 https://github.com/users/joelhooks/packages/container/package/aie-loopcraft-workshop-2026
 ```
 
-If Docker says the package is private or unauthorized, authenticate to GitHub Packages:
+If Docker says the package is private or unauthorized, the start script now falls back to a local image build. If you want the faster prebuilt-image path, authenticate to GitHub Packages:
 
 ```sh
 gh auth refresh -h github.com -s read:packages

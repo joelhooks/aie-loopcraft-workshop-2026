@@ -52,6 +52,7 @@ jobs:
           file: docker/workshop.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
+          provenance: false
           tags: |
             ghcr.io/${{ github.repository_owner }}/aie-loopcraft-workshop-2026:latest
             ghcr.io/${{ github.repository_owner }}/aie-loopcraft-workshop-2026:${{ github.sha }}

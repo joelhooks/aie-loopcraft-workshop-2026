@@ -1,6 +1,8 @@
 # Setup
 
-Use Docker Compose if you want the workshop computer. Use your host only if you already have the tools and do not mind doing the setup yourself.
+The normal path is Docker Compose plus Herdr inside the container. Host Herdr is not required.
+
+Use the host-machine path only if you already have the tools installed and want to manage the environment yourself.
 
 ## Prereqs
 
@@ -8,8 +10,11 @@ Recommended Docker path:
 
 - Git
 - Docker Desktop or OrbStack with Docker Compose
-- pnpm 11+ for the convenience scripts
-- GitHub CLI only if the GHCR package still shows as private
+- pnpm 11+ for `pnpm run workshop`
+
+Optional for troubleshooting:
+
+- GitHub CLI, only if GHCR reports the image as private
 
 Host-machine path adds:
 
@@ -17,10 +22,9 @@ Host-machine path adds:
 - Bun, for the workshop site scripts
 - Pi
 - Herdr
+- Claude Code, Codex, and OpenCode if you want the comparison agent shells
 
-## Docker Compose path
-
-This is the recommended path for a live workshop. It keeps the tool versions boring and avoids leaking anyone's local machine setup into the lesson.
+## Happy path: Docker + Herdr
 
 Clone the repo:
 
@@ -29,30 +33,50 @@ git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
 cd aie-loopcraft-workshop-2026
 ```
 
-If you do not have pnpm yet:
+Enable pnpm through Corepack if needed:
 
 ```sh
 corepack enable
 corepack prepare pnpm@11.9.0 --activate
 ```
 
-Pull the published image:
+Start the workshop computer:
 
 ```sh
-pnpm run workshop:pull
+pnpm run workshop
 ```
 
-Or without pnpm:
+That command runs `scripts/start-workshop-herdr.sh`. It pulls the workshop image when needed, starts the Compose service, installs the Herdr Pi integration inside the container, and opens a Herdr session named `aie-loopcraft-workshop-2026` from `/workspace`.
+
+When Herdr opens:
+
+1. Start `pi` from a Herdr pane.
+2. Sign into your provider if Pi asks.
+3. Use `/loop-lesson-01` to load the Lesson 01 starter prompt.
+4. When a lesson asks for the status process, split a Herdr pane and run:
+
+```sh
+node scripts/loop-daemon-stub.mjs
+```
+
+This does not pre-create Pi or daemon panes. Herdr gives you the workspace; you start the panes when the lesson asks for them.
+
+## No-pnpm Docker commands
+
+If you do not want host pnpm, use Docker Compose directly:
 
 ```sh
 docker compose pull workshop
+docker compose run --rm workshop zsh -lc 'cd /workspace && herdr integration install pi && herdr --session aie-loopcraft-workshop-2026'
 ```
 
-If you want to build locally instead of pulling:
+If you already have a local image and want to skip the pull behavior in the script:
 
 ```sh
-pnpm run workshop:build
+LOOPCRAFT_SKIP_PULL=1 bash scripts/start-workshop-herdr.sh
 ```
+
+## GHCR private-image troubleshooting
 
 Published image:
 
@@ -66,45 +90,77 @@ Package page:
 https://github.com/users/joelhooks/packages/container/package/aie-loopcraft-workshop-2026
 ```
 
-If GitHub still reports the package as private, authenticate before pulling:
+If Docker says the package is private or unauthorized, authenticate to GitHub Packages:
 
 ```sh
 gh auth refresh -h github.com -s read:packages
 gh auth token | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+pnpm run workshop
 ```
 
-Quick smoke test:
+If pull still fails during the workshop, build locally instead.
+
+## Local image build
+
+Build the image from this repo:
+
+```sh
+pnpm run workshop:build
+pnpm run workshop
+```
+
+No-pnpm version:
+
+```sh
+docker compose build workshop
+LOOPCRAFT_SKIP_PULL=1 bash scripts/start-workshop-herdr.sh
+```
+
+Quick smoke test for the published image:
 
 ```sh
 docker run --rm ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest \
   zsh -lc 'pi --version && codex --version && opencode --version && herdr --version'
 ```
 
-Open a shell in the workshop computer:
+## Fallback terminal mode
+
+Use this if Herdr is not cooperating but Docker works. This keeps the work inside the container and avoids requiring host Herdr.
+
+Terminal 1:
+
+```sh
+docker compose run --rm --name loopcraft-workshop workshop zsh
+```
+
+Inside that shell, start Pi when you are ready:
+
+```sh
+pi
+```
+
+Terminal 2, while Terminal 1 is still running:
+
+```sh
+docker exec -it loopcraft-workshop zsh -lc 'cd /workspace && node scripts/loop-daemon-stub.mjs'
+```
+
+If you only need a container shell or Pi:
 
 ```sh
 pnpm run workshop:shell
-```
-
-Start Pi inside the container:
-
-```sh
 pnpm run workshop:pi
 ```
 
-Start Herdr inside the container:
-
-```sh
-pnpm run workshop:herdr
-```
-
-Run the temporary status daemon from a second shell or Herdr pane:
+The daemon helper is mainly for host-machine fallback:
 
 ```sh
 pnpm run workshop:daemon
 ```
 
-The Compose file mounts this repo into `/workspace` and stores harness state in Docker volumes:
+## Docker state and reset
+
+The Compose file mounts this repo into `/workspace` and stores tool state in Docker named volumes:
 
 - Pi: `workshop-pi`
 - Claude Code: `workshop-claude`
@@ -113,11 +169,19 @@ The Compose file mounts this repo into `/workspace` and stores harness state in 
 - Herdr: `workshop-herdr`
 - pnpm store: `pnpm-store`
 
-Auth is not baked into the image. Sign into each harness inside the container if you need it.
+Auth is not baked into the image. Sign into each tool inside the container if you need it.
 
-## Host path
+To reset the container state, stop first and remove the named volumes:
 
-Use this if you already have the tools installed.
+```sh
+docker compose down --volumes
+```
+
+That deletes local container auth/state for this Compose project, so do it deliberately.
+
+## Host-machine path
+
+Use this only if you already have the tools installed and do not want the Docker workshop computer.
 
 Start from a fresh clone:
 
@@ -126,28 +190,28 @@ git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
 cd aie-loopcraft-workshop-2026
 ```
 
-Helpful during later lessons:
+Install or verify the host tools you plan to use:
 
-- Claude Code
-- Codex
-- OpenCode
-- Effect source mirror in `.agent_sources/effect`
-- XState source mirror in `.agent_sources/xstate`
-- pi-subagents source mirror in `.agent_sources/pi-subagents`
+- Node 22+
+- pnpm 11+
+- Bun, for the workshop site scripts
+- Pi
+- Herdr, if you want the same two-pane shape without Docker
+- Claude Code, Codex, and OpenCode if you want the optional comparison agent shells
 
-Start from the repo root:
+Start Pi from the repo root:
 
 ```sh
 pi
 ```
 
-In another terminal:
+In another terminal, start the temporary status daemon:
 
 ```sh
 node scripts/loop-daemon-stub.mjs
 ```
 
-For the site:
+For the site source:
 
 ```sh
 pnpm run web:install
@@ -157,12 +221,6 @@ pnpm run web:publish
 ```
 
 The site is MDSvX-driven. Root, lesson index, and lesson pages live in `web/src/routes/**/*.svx`; shared lesson data lives in `web/src/lib/workshop-data.ts`.
-
-Add `?feedback=1` to any published site URL to turn on the Tufte-style feedback affordances:
-
-```txt
-https://aie-loopcraft-workshop-2026.wzrrd.sh/?feedback=1
-```
 
 ## What not to do
 

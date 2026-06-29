@@ -3,3 +3,8 @@ node_modules/
 dist/
 build/
 .pnpm-store/
+
+# Local agent/runtime scratch
+.pi/git/
+.pi/notes-bridge/
+subagent-output/

@@ -1,14 +1,14 @@
 # Agent Notes
 
-You are in the Loopcraft 07 learner rig.
+You are in the Loopcraft workshop project.
 
-Build the local issue-progress loop in this folder. Do not manage the course, parent repo, slides, or teacher Brain.
+Build the local issue-progress loop in this folder. Do not manage anything outside this project folder.
 
-## Current rule
+## Lesson boundary
 
-Lessons are the rails. Issues are the product substrate we are building toward.
+Lessons are the path. Issue events are the project data we are building toward.
 
-Start with Lesson 01 in `lessons/01-loop-contract.md`: create the loop contract and first local issue-event queue. Do not jump ahead to dispatch, schedulers, GitHub, Linear, or background workers.
+Start with Lesson 01 in `lessons/01-tour-vision-repo.md`: create `VISION.md` and the first repo boundaries only. Lesson 02 creates the local issue-event queue and first checks. Do not jump ahead to Lakebed code, dispatch, schedulers, GitHub, Linear, or background workers.
 
 ## Standing habits
 
@@ -19,16 +19,9 @@ Start with Lesson 01 in `lessons/01-loop-contract.md`: create the loop contract 
 - Run the checks that exist. If no checks exist yet, say that plainly.
 - Commit useful checkpoints.
 
-## Prepared context
-
-- Source mirrors are already in `.agent_sources`; do not spend workshop time setting up subtrees.
-- Matt Pocock skills are already available through `.agents/skills` and `.claude/skills`.
-- Pi has a small helper extension in `.pi/extensions/loop-workshop.ts`.
-- Lakebed has a capsule shell in `surface/lakebed`.
-
 ## Boundaries
 
-- Keep `VISION.md` operator-owned. Ask before changing strategic intent once it exists.
+- Keep `VISION.md` human-owned. Ask before changing strategic intent once it exists.
 - Keep this file short and operational.
-- Do not put lesson planning, teacher notes, or run-06 archaeology here.
+- Do not put planning notes or old-run archaeology here.
 - Do not add external auth or services until the local loop proves the shape.

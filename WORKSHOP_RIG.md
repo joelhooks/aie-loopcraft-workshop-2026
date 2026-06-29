@@ -1,12 +1,31 @@
 # Workshop Rig
 
-This repo is prepared so the hour starts on the important work instead of install/debugging sludge.
+This repo is prepared so you can start on the important work instead of install/debugging sludge.
 
-## Surfaces
+## Start path
+
+Use Docker Compose. The normal start command opens Herdr inside the workshop container, not on your host machine:
+
+```sh
+pnpm run workshop
+```
+
+No-pnpm version:
+
+```sh
+docker compose pull workshop
+docker compose run --rm workshop zsh -lc 'cd /workspace && herdr integration install pi && herdr --session aie-loopcraft-workshop-2026'
+```
+
+Herdr opens the Loopcraft workspace at `/workspace`. Pi is installed in the container. Start `pi` from a Herdr pane, sign into your provider if prompted, and use `/loop-lesson-01` to load the first prompt.
+
+Detailed setup, image troubleshooting, local build, and host-machine fallback live in `docs/setup.md`.
+
+## Pieces
 
 ### Pi
 
-Pi is the operator harness. It should help you prompt the next small pass, inspect evidence, and control the loop.
+Pi is the agent shell you use for this workshop. It should help you prompt the next small pass, inspect evidence, and control the loop.
 
 Project-local helper:
 
@@ -17,31 +36,26 @@ Project-local helper:
 
 ### Herdr
 
-Herdr gives us the two-pane workshop surface:
+Herdr gives us a two-pane workspace once the lesson asks for it:
 
-- left/operator pane: Pi
-- right/runtime pane: daemon or status output
+- Pi pane: chat and prompts
+- runtime pane: daemon or status output
 
-Until the real loop daemon exists, use the scaffold status process in the side pane:
+This rig does not pre-create those panes. In Herdr, start Pi when you are ready. When the lesson calls for a side pane, split a pane and run:
 
 ```sh
 node scripts/loop-daemon-stub.mjs
 ```
 
-It exposes `GET /health`, `GET /status`, `POST /check-now`, and `GET /events` on port `8787`. It watches for `data/issue-events.jsonl` or `issues.jsonl` so the issue-event lesson has something visible to wake up.
+Until the real loop daemon exists, that scaffold process exposes `GET /health`, `GET /status`, `POST /check-now`, and `GET /events` on port `8787`. It watches for `data/issue-events.jsonl` or `issues.jsonl` so the issue-event lesson has something visible to wake up.
 
-From this public repo, use Docker Compose:
-
-```sh
-pnpm run workshop:pull
-pnpm run workshop:pi
-```
-
-For a shell or Herdr session:
+Fallback helpers:
 
 ```sh
 pnpm run workshop:shell
+pnpm run workshop:pi
 pnpm run workshop:herdr
+pnpm run workshop:daemon
 ```
 
 Local image rebuild:
@@ -52,7 +66,7 @@ pnpm run workshop:build
 
 ### Lakebed
 
-Lakebed is the operator projection surface. It should show the same issue facts in list, board, and event views.
+Lakebed is the projection view. It should show the same issue facts in list, board, and event views.
 
 The capsule shell lives at:
 
@@ -64,27 +78,34 @@ The lesson path should use Lakebed once the local issue events exist. Do not mak
 
 ### Persistence
 
-The workshop container persists user harness state through parent-mounted folders:
+The workshop container persists tool state through Docker named volumes:
 
 ```txt
-.workshop/home/.pi
-.workshop/home/.claude
-.workshop/home/.codex
-.workshop/home/.opencode
-.workshop/home/.config/herdr
-.workshop/pi-sessions
+workshop-pi
+workshop-claude
+workshop-codex
+workshop-opencode
+workshop-herdr
+pnpm-store
 ```
 
 Project state belongs in this nested Git repo. Runtime receipts and generated files should be inspectable and committed when they become useful evidence.
 
+To reset tool state, run:
+
+```sh
+docker compose down --volumes
+```
+
+That deletes local container auth/state for this Compose project.
+
 ## Big lifts already done
 
 - Source mirrors are preloaded in `.agent_sources`.
-- Matt Pocock skills are preloaded.
-- Pi/Claude skill symlinks are wired.
+- Local guide skills are wired for Pi and Claude Code.
 - Lakebed capsule shell is present.
 - Pi helper extension is present.
-- Loop-owned scout/reviewer subagent definitions are present in `.pi/agents` for the later specialist lesson.
+- Loop-owned scout/reviewer definitions are present in `.pi/agents` for the later specialist lesson.
 
 ## Big lifts intentionally not done
 

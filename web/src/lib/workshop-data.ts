@@ -3,7 +3,7 @@ export const site = {
   title: "AI Engineer Loopcraft Workshop 2026",
   url: "https://aie-loopcraft-workshop-2026.wzrrd.sh/",
   repo: "https://github.com/joelhooks/aie-loopcraft-workshop-2026",
-  version: "0.8.4",
+  version: "0.8.5",
 };
 
 export type Lesson = {

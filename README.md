@@ -18,16 +18,42 @@ By the end, you will have a small local loop that can:
 
 The repo starts prepared, not finished. The harness and source mirrors are here. The product loop is still yours to build.
 
-## Start fast
+## Get started
 
-Recommended container path:
+Prereqs:
+
+- Git
+- Docker Desktop or OrbStack with Docker Compose
+- pnpm 11+ for the convenience scripts
+- GitHub CLI only if the GHCR package still shows as private
+
+Clone the repo:
+
+```sh
+git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
+cd aie-loopcraft-workshop-2026
+```
+
+If you do not have pnpm yet:
+
+```sh
+corepack enable
+corepack prepare pnpm@11.9.0 --activate
+```
+
+Pull the published workshop image:
 
 ```sh
 pnpm run workshop:pull
-pnpm run workshop:pi
 ```
 
-Build locally instead of pulling:
+Or without pnpm:
+
+```sh
+docker compose pull workshop
+```
+
+If you want to build locally instead of pulling:
 
 ```sh
 pnpm run workshop:build
@@ -45,13 +71,6 @@ Package page:
 https://github.com/users/joelhooks/packages/container/package/aie-loopcraft-workshop-2026
 ```
 
-Quick smoke test:
-
-```sh
-docker run --rm ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest \
-  zsh -lc 'pi --version && codex --version && opencode --version && herdr --version'
-```
-
 If GitHub still reports the package as private, authenticate before pulling:
 
 ```sh
@@ -59,17 +78,29 @@ gh auth refresh -h github.com -s read:packages
 gh auth token | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
 ```
 
-In a second pane:
+Quick smoke test:
+
+```sh
+docker run --rm ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest \
+  zsh -lc 'pi --version && codex --version && opencode --version && herdr --version'
+```
+
+Start Pi inside the workshop computer:
+
+```sh
+pnpm run workshop:pi
+```
+
+In a second terminal, run the temporary status daemon:
 
 ```sh
 pnpm run workshop:daemon
 ```
 
-Host path if you already have the tools:
+Then open Lesson 01:
 
-```sh
-pi
-node scripts/loop-daemon-stub.mjs
+```txt
+https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/01-tour-vision-repo/
 ```
 
 Full setup notes live in [`docs/setup.md`](docs/setup.md).
@@ -131,6 +162,10 @@ Lessons are rails. Issues are the product substrate we build toward.
 
 ## Workshop site
 
+The site is MDSvX-driven. Root, lesson index, and lesson pages live in `web/src/routes/**/*.svx`; shared lesson data lives in `web/src/lib/workshop-data.ts`.
+
+Add `?feedback=1` to any site URL to turn on the Tufte-style feedback affordances and copy a compact JSON feedback packet.
+
 ```sh
 pnpm run web:install
 pnpm run web:check
@@ -142,6 +177,7 @@ Published site:
 
 ```txt
 https://aie-loopcraft-workshop-2026.wzrrd.sh/
+https://aie-loopcraft-workshop-2026.wzrrd.sh/?feedback=1
 ```
 
 ## Repo map
@@ -155,7 +191,7 @@ agents/skills/grill-with-docs    vision/session grilling skill
 lessons/                         lesson rails
 surface/lakebed/                 Lakebed capsule shell
 scripts/loop-daemon-stub.mjs     temporary status daemon
-web/                             Wzrrd workshop site
+web/                             MDSvX workshop site
 ```
 
 ## Public boundary

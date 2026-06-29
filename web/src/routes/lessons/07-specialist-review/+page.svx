@@ -1,62 +1,8 @@
 <script lang="ts">
-  import LessonNavigation from "$lib/lesson-navigation.svelte";
-  import ReportLayout from "$lib/ReportLayout.svelte";
-  import WorkshopNav from "$lib/workshop-nav.svelte";
-  import { lessons, site } from "$lib/workshop-data";
+  import LessonPage from "$lib/lesson-page.svelte";
+  import { lessons } from "$lib/workshop-data";
 
   const lesson = lessons[6];
 </script>
 
-<svelte:head>
-  <title>{lesson.number} · {lesson.title} · {site.title}</title>
-  <meta name="description" content={lesson.challenge} />
-</svelte:head>
-
-<ReportLayout>
-  <WorkshopNav current={lesson.id} />
-
-  <p class="eyebrow"><span class="mascot">🧪</span><span class="eyebrow-stack"><span>Lesson {lesson.number}</span><span>{site.title}</span></span></p>
-  <h1>{lesson.title}</h1>
-
-  <p class="lead">{lesson.challenge}</p>
-
-  <LessonNavigation {lesson} />
-
-  <h2>Starter prompt</h2>
-
-  <pre><code>{lesson.starterPrompt}</code></pre>
-
-  <h2>Build / operate</h2>
-
-  <p>{lesson.buildOperate}</p>
-
-  <h2>Observe</h2>
-
-  <p>{lesson.observe}</p>
-
-  <h2>Discuss</h2>
-
-  <p>{lesson.discuss}</p>
-
-  <h2>Checkpoint</h2>
-
-  <p>{lesson.checkpoint}</p>
-
-  <h2>Small drill</h2>
-
-  <p>{lesson.drill}</p>
-
-  <h2>Next</h2>
-
-  <p>{lesson.next}</p>
-
-  <h2>Run-06 scar</h2>
-
-  <p>{lesson.receipt}</p>
-
-  <LessonNavigation {lesson} />
-
-  <footer>
-    <a href="/lessons/">All lessons</a> · <a href={site.repo}>Public repo</a>
-  </footer>
-</ReportLayout>
+<LessonPage {lesson} />

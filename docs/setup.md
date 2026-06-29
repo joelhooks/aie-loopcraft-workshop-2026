@@ -1,10 +1,40 @@
 # Setup
 
-Use Docker Compose if you want the workshop computer. Use your host if you already have the tools and do not mind doing the setup yourself.
+Use Docker Compose if you want the workshop computer. Use your host only if you already have the tools and do not mind doing the setup yourself.
+
+## Prereqs
+
+Recommended Docker path:
+
+- Git
+- Docker Desktop or OrbStack with Docker Compose
+- pnpm 11+ for the convenience scripts
+- GitHub CLI only if the GHCR package still shows as private
+
+Host-machine path adds:
+
+- Node 22+
+- Bun, for the workshop site scripts
+- Pi
+- Herdr
 
 ## Docker Compose path
 
 This is the recommended path for a live workshop. It keeps the tool versions boring and avoids leaking anyone's local machine setup into the lesson.
+
+Clone the repo:
+
+```sh
+git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
+cd aie-loopcraft-workshop-2026
+```
+
+If you do not have pnpm yet:
+
+```sh
+corepack enable
+corepack prepare pnpm@11.9.0 --activate
+```
 
 Pull the published image:
 
@@ -12,7 +42,13 @@ Pull the published image:
 pnpm run workshop:pull
 ```
 
-Or build the container locally:
+Or without pnpm:
+
+```sh
+docker compose pull workshop
+```
+
+If you want to build locally instead of pulling:
 
 ```sh
 pnpm run workshop:build
@@ -30,18 +66,18 @@ Package page:
 https://github.com/users/joelhooks/packages/container/package/aie-loopcraft-workshop-2026
 ```
 
-Quick smoke test:
-
-```sh
-docker run --rm ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest \
-  zsh -lc 'pi --version && codex --version && opencode --version && herdr --version'
-```
-
 If GitHub still reports the package as private, authenticate before pulling:
 
 ```sh
 gh auth refresh -h github.com -s read:packages
 gh auth token | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+```
+
+Quick smoke test:
+
+```sh
+docker run --rm ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest \
+  zsh -lc 'pi --version && codex --version && opencode --version && herdr --version'
 ```
 
 Open a shell in the workshop computer:
@@ -83,15 +119,12 @@ Auth is not baked into the image. Sign into each harness inside the container if
 
 Use this if you already have the tools installed.
 
-Required:
+Start from a fresh clone:
 
-- Node 22+
-- pnpm 11+
-- Bun, for the workshop site scripts
-- Git
-- Pi
-- Herdr
-- Docker only if you want to compare with the container path
+```sh
+git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
+cd aie-loopcraft-workshop-2026
+```
 
 Helpful during later lessons:
 
@@ -121,6 +154,14 @@ pnpm run web:install
 pnpm run web:check
 pnpm run web:build
 pnpm run web:publish
+```
+
+The site is MDSvX-driven. Root, lesson index, and lesson pages live in `web/src/routes/**/*.svx`; shared lesson data lives in `web/src/lib/workshop-data.ts`.
+
+Add `?feedback=1` to any published site URL to turn on the Tufte-style feedback affordances:
+
+```txt
+https://aie-loopcraft-workshop-2026.wzrrd.sh/?feedback=1
 ```
 
 ## What not to do

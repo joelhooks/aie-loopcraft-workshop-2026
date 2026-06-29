@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { page } from "$app/state";
+  import FeedbackExportGate from "$lib/feedback-export-gate.svelte";
+  import FeedbackMode from "$lib/feedback-mode.svelte";
+  import { isFeedbackEnabled, withFeedback } from "$lib/feedback";
   import FlowChart from "$lib/flow-chart.svelte";
   import ReportLayout from "$lib/ReportLayout.svelte";
   import StatLine from "$lib/stat-line.svelte";
@@ -18,6 +22,18 @@
     { name: "Guardrails", icon: "guard", text: "pnpm, TypeScript, tsgo, oxlint, oxfmt, Ultracite, tests, and hooks are introduced as lesson work." },
     { name: "Matt Pocock skills", icon: "spark", text: "The reference for clear lesson progression. The core work here is Loopcraft through Pi." },
   ] as const;
+
+  const feedbackEnabled = $derived(isFeedbackEnabled(page.url));
+  const href = $derived((value: string) => withFeedback(value, feedbackEnabled));
+  const feedbackParagraphs = [
+    "home-lead",
+    "home-outcome",
+    "home-get-started",
+    "home-tools",
+    "home-lesson-path",
+    "home-site",
+    "home-repo-map",
+  ];
 </script>
 
 <svelte:head>
@@ -37,21 +53,25 @@
   <p class="eyebrow"><span class="mascot">🧶</span><span class="eyebrow-stack"><span>Loopcraft Workshop</span><span>AI Engineer · 2026</span></span></p>
   <h1>Build a local issue-progress loop you can trust.</h1>
 
-  <p class="lead">This is a hands-on workshop about developing loop systems with a customized Pi harness. We use Pi, Herdr, Lakebed, typed issue events, receipts, and a small local repo to make agent work visible instead of magical.</p>
+  <FeedbackMode id="home-lead" note="Does the first paragraph say what this is and who it is for without internal course-design language?">
+    <p class="lead">This is a hands-on workshop about developing loop systems with a customized Pi harness. We use Pi, Herdr, Lakebed, typed issue events, receipts, and a small local repo to make agent work visible instead of magical.</p>
+  </FeedbackMode>
 
   <StatLine items={stats} />
 
   <div class="action-row">
-    <a class="primary-action" href="/lessons/01-tour-vision-repo/">Start Lesson 01</a>
-    <a href="/lessons/">Browse lessons</a>
+    <a class="primary-action" href={href("/lessons/01-tour-vision-repo/")}>Start Lesson 01</a>
+    <a href={href("/lessons/")}>Browse lessons</a>
     <a href={site.repo}>Open the public repo</a>
   </div>
 
   <h2>Outcome</h2>
 
-  <p>By the end, you will have a small local loop that can read its own issue events, decide what is ready or blocked, stop for approval, write receipts, show state in Lakebed, and run through Pi and Herdr controls.</p>
+  <FeedbackMode id="home-outcome" note="Does this outcome feel concrete enough for someone deciding whether to take the workshop?">
+    <p>By the end, you will have a small local loop that can read its own issue events, decide what is ready or blocked, stop for approval, write receipts, show state in Lakebed, and run through Pi and Herdr controls.</p>
 
-  <p>The repo starts prepared, not finished. The harness and source mirrors are here. The product loop is still yours to build.</p>
+    <p>The repo starts prepared, not finished. The harness and source mirrors are here. The product loop is still yours to build.</p>
+  </FeedbackMode>
 
   <FlowChart
     src="/workshop-system.svg"
@@ -62,74 +82,99 @@
     wide={true}
   />
 
-  <h2>Start fast</h2>
+  <h2>Get started</h2>
 
-  <p>Recommended container path:</p>
+  <FeedbackMode id="home-get-started" note="Do these steps feel like a true first-run path for someone arriving cold?">
+    <p>Prereqs: Git, Docker Desktop or OrbStack with Docker Compose, pnpm 11+, and GitHub CLI only if the GHCR package still shows as private.</p>
 
-  <pre><code>pnpm run workshop:pull
-pnpm run workshop:pi</code></pre>
+    <p>Clone the repo:</p>
 
-  <p>Build locally instead of pulling:</p>
+    <pre><code>git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
+cd aie-loopcraft-workshop-2026</code></pre>
 
-  <pre><code>pnpm run workshop:build</code></pre>
+    <p>If you do not have pnpm yet:</p>
 
-  <p>Published image:</p>
+    <pre><code>corepack enable
+corepack prepare pnpm@11.9.0 --activate</code></pre>
 
-  <pre><code>ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest</code></pre>
+    <p>Pull the published workshop image:</p>
 
-  <p><a href="https://github.com/users/joelhooks/packages/container/package/aie-loopcraft-workshop-2026">Open the GHCR package page</a>.</p>
+    <pre><code>pnpm run workshop:pull</code></pre>
 
-  <p>Quick smoke test:</p>
+    <p>Or without pnpm:</p>
 
-  <pre><code>docker run --rm ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest \
-  zsh -lc 'pi --version && codex --version && opencode --version && herdr --version'</code></pre>
+    <pre><code>docker compose pull workshop</code></pre>
 
-  <p>If GitHub still reports the package as private, authenticate before pulling:</p>
+    <p>If you want to build locally instead of pulling:</p>
 
-  <pre><code>gh auth refresh -h github.com -s read:packages
+    <pre><code>pnpm run workshop:build</code></pre>
+
+    <p>Published image:</p>
+
+    <pre><code>ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest</code></pre>
+
+    <p><a href="https://github.com/users/joelhooks/packages/container/package/aie-loopcraft-workshop-2026">Open the GHCR package page</a>.</p>
+
+    <p>If GitHub still reports the package as private, authenticate before pulling:</p>
+
+    <pre><code>gh auth refresh -h github.com -s read:packages
 gh auth token | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin</code></pre>
 
-  <p>In a second pane:</p>
+    <p>Quick smoke test:</p>
 
-  <pre><code>pnpm run workshop:daemon</code></pre>
+    <pre><code>docker run --rm ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest \
+  zsh -lc 'pi --version && codex --version && opencode --version && herdr --version'</code></pre>
 
-  <p>Host path if you already have the tools:</p>
+    <p>Start Pi inside the workshop computer:</p>
 
-  <pre><code>pi
-node scripts/loop-daemon-stub.mjs</code></pre>
+    <pre><code>pnpm run workshop:pi</code></pre>
 
-  <p>Full setup notes live in <a href={`${site.repo}/blob/main/docs/setup.md`}>docs/setup.md</a>.</p>
+    <p>In a second terminal, run the temporary status daemon:</p>
+
+    <pre><code>pnpm run workshop:daemon</code></pre>
+
+    <p>Full setup notes live in <a href={`${site.repo}/blob/main/docs/setup.md`}>docs/setup.md</a>.</p>
+  </FeedbackMode>
 
   <h2>Tools we use</h2>
 
-  <ToolGrid tools={[...tools]} />
+  <FeedbackMode id="home-tools" note="Are the tool descriptions clear and separated from product guardrails?">
+    <ToolGrid tools={[...tools]} />
+  </FeedbackMode>
 
   <h2>Lesson path</h2>
 
-  <p>Each lesson is its own page. Lessons are rails. Issues are the product substrate we build toward.</p>
+  <FeedbackMode id="home-lesson-path" note="Does the lesson path make the progression feel Matt-style and step-by-step enough?">
+    <p>Each lesson is its own MDSvX page. Lessons are rails. Issues are the product substrate we build toward.</p>
 
-  <ol class="lesson-index">
-    {#each lessons as lesson}
-      <li>
-        <a href={lesson.href}>
-          <span>{lesson.number}</span>
-          <strong>{lesson.title}</strong>
-        </a>
-        <p>{lesson.challenge}</p>
-      </li>
-    {/each}
-  </ol>
+    <ol class="lesson-index">
+      {#each lessons as lesson}
+        <li>
+          <a href={href(lesson.href)}>
+            <span>{lesson.number}</span>
+            <strong>{lesson.title}</strong>
+          </a>
+          <p>{lesson.challenge}</p>
+        </li>
+      {/each}
+    </ol>
+  </FeedbackMode>
 
   <h2>Workshop site</h2>
 
-  <pre><code>pnpm run web:install
+  <FeedbackMode id="home-site" note="Does this make the editing surface obvious enough?">
+    <p>The site is MDSvX-driven so the workshop copy stays easy to edit. Add <code>?feedback=1</code> to any site URL to turn on the Tufte-style feedback affordances.</p>
+
+    <pre><code>pnpm run web:install
 pnpm run web:check
 pnpm run web:build
 pnpm run web:publish</code></pre>
+  </FeedbackMode>
 
   <h2>Repo map</h2>
 
-  <pre><code>agents/skills/loopcraft-ta       local guide skill
+  <FeedbackMode id="home-repo-map" note="Does this map help someone find the right file without explaining internal teacher-surface history?">
+    <pre><code>agents/skills/loopcraft-ta       local guide skill
 agents/skills/grill-with-docs    vision/session grilling skill
 .agent_sources/                  source mirrors for Effect, XState, pi-subagents
 .pi/extensions/loop-workshop.ts  Pi helper commands
@@ -137,7 +182,10 @@ agents/skills/grill-with-docs    vision/session grilling skill
 lessons/                         lesson rails
 surface/lakebed/                 Lakebed capsule shell
 scripts/loop-daemon-stub.mjs     temporary status daemon
-web/                             Wzrrd workshop site</code></pre>
+web/                             MDSvX workshop site</code></pre>
+  </FeedbackMode>
+
+  <FeedbackExportGate paragraphs={feedbackParagraphs} run="workshop-home" slug={site.slug} url={site.url} version={site.version} />
 
   <footer>
     No secrets. No raw transcripts. No private machine paths. No hidden auth. If a tool needs auth, sign into it locally or inside the container.

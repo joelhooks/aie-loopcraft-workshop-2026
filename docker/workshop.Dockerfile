@@ -11,6 +11,7 @@ ARG CODEX_VERSION=0.142.3
 ARG OPENCODE_VERSION=1.17.11
 ARG HERDR_VERSION=0.7.1
 ARG STARSHIP_VERSION=1.25.1
+ARG ATUIN_VERSION=18.16.1
 ARG TARGETARCH
 ARG USERNAME=workshop
 ARG USER_UID=1001
@@ -27,9 +28,11 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
+    fzf \
     git \
     jq \
     less \
+    nano \
     locales \
     openssh-client \
     ripgrep \
@@ -75,12 +78,37 @@ RUN case "${TARGETARCH:-$(dpkg --print-architecture)}" in \
   && rm /tmp/starship.tar.gz \
   && starship --version
 
+RUN case "${TARGETARCH:-$(dpkg --print-architecture)}" in \
+    amd64) atuin_target="x86_64-unknown-linux-musl" ;; \
+    arm64) atuin_target="aarch64-unknown-linux-musl" ;; \
+    *) echo "Unsupported Atuin architecture: ${TARGETARCH:-$(dpkg --print-architecture)}" >&2; exit 1 ;; \
+  esac \
+  && cd /tmp \
+  && atuin_archive="atuin-${atuin_target}.tar.gz" \
+  && curl -fsSLO "https://github.com/atuinsh/atuin/releases/download/v${ATUIN_VERSION}/${atuin_archive}" \
+  && curl -fsSLO "https://github.com/atuinsh/atuin/releases/download/v${ATUIN_VERSION}/${atuin_archive}.sha256" \
+  && sha256sum -c "${atuin_archive}.sha256" \
+  && tar -xzf "${atuin_archive}" \
+  && install -m 0755 "atuin-${atuin_target}/atuin" /usr/local/bin/atuin \
+  && rm -rf "${atuin_archive}" "${atuin_archive}.sha256" "atuin-${atuin_target}" \
+  && atuin --version
+
 USER ${USERNAME}
 WORKDIR /workspace
 
-RUN mkdir -p /home/${USERNAME}/.config/herdr /home/${USERNAME}/.local/bin /home/${USERNAME}/.local/share/pnpm/store /home/${USERNAME}/.pi/agent/extensions /home/${USERNAME}/.pi/agent/sessions /home/${USERNAME}/.claude /home/${USERNAME}/.codex /home/${USERNAME}/.opencode \
+RUN git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git /home/${USERNAME}/.oh-my-zsh \
+  && git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git /home/${USERNAME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions \
+  && git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git /home/${USERNAME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+COPY --chown=workshop:workshop docker/workshop.zshrc /home/workshop/.zshrc
+COPY --chown=workshop:workshop docker/zsh-completions/ /home/workshop/.zsh/completions/
+
+RUN mkdir -p /home/${USERNAME}/.cache /home/${USERNAME}/.config/atuin /home/${USERNAME}/.config/herdr /home/${USERNAME}/.local/bin /home/${USERNAME}/.local/share/opencode /home/${USERNAME}/.local/share/pnpm/store /home/${USERNAME}/.local/state /home/${USERNAME}/.pi/agent/extensions /home/${USERNAME}/.pi/agent/sessions /home/${USERNAME}/.claude /home/${USERNAME}/.codex /home/${USERNAME}/.opencode \
   && starship preset pure-preset -o /home/${USERNAME}/.config/starship.toml \
   && pnpm config set store-dir /home/${USERNAME}/.local/share/pnpm/store --location=user \
-  && printf '%s\n' 'eval "$(starship init zsh)"' 'cd /workspace' > /home/${USERNAME}/.zshrc
+  && codex completion zsh > /home/${USERNAME}/.zsh/completions/_codex \
+  && pnpm completion zsh > /home/${USERNAME}/.zsh/completions/_pnpm \
+  && atuin gen-completions --shell zsh > /home/${USERNAME}/.zsh/completions/_atuin \
+  && printf '%s\n' 'auto_sync = false' 'update_check = false' 'style = "compact"' 'inline_height = 20' 'show_preview = true' 'enter_accept = true' > /home/${USERNAME}/.config/atuin/config.toml
 
 CMD ["zsh"]

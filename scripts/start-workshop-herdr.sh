@@ -4,6 +4,8 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 session_name="${LOOPCRAFT_HERDR_SESSION:-aie-loopcraft-workshop-2026}"
+workspace_label="${LOOPCRAFT_HERDR_WORKSPACE_LABEL:-Loopcraft Workshop}"
+tab_label="${LOOPCRAFT_HERDR_TAB_LABEL:-Start Here}"
 image="${LOOPCRAFT_WORKSHOP_IMAGE:-ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest}"
 compose=(bash scripts/docker-compose.sh)
 
@@ -42,8 +44,12 @@ fi
 
 echo "Starting Herdr inside the Loopcraft workshop container..."
 echo "Herdr session: ${session_name}"
+echo "Herdr workspace: ${workspace_label}"
+echo "Herdr tab: ${tab_label}"
 
 exec "${compose[@]}" run --rm \
   -e HERDR_SESSION="${session_name}" \
+  -e HERDR_WORKSPACE_LABEL="${workspace_label}" \
+  -e HERDR_TAB_LABEL="${tab_label}" \
   workshop \
   zsh -lc 'cd /workspace && bash scripts/workshop-container-herdr.sh'

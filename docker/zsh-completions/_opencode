@@ -1,0 +1,14 @@
+#compdef opencode
+
+_opencode() {
+  local -a commands
+  commands=(run auth serve upgrade mcp)
+  _arguments -C \
+    '(-h --help)'{-h,--help}'[Show help]' \
+    '(-v --version)'{-v,--version}'[Show version]' \
+    '1:command:->command' \
+    '*:file:_files'
+  [[ "$state" == command ]] && _describe 'opencode command' commands
+}
+
+_opencode "$@"

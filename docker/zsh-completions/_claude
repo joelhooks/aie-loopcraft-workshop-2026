@@ -1,0 +1,25 @@
+#compdef claude
+
+_claude() {
+  local -a commands
+  commands=(agents config doctor help login logout mcp plugin update)
+
+  _arguments -C \
+    '--add-dir[Additional directories]:dir:_files -/' \
+    '--model[Model]:model:' \
+    '--agent[Agent name]:agent:' \
+    '(-p --print)'{-p,--print}'[Non-interactive output]' \
+    '(-c --continue)'{-c,--continue}'[Continue recent conversation]' \
+    '(-d --debug)'{-d,--debug}'[Enable debug mode]' \
+    '--dangerously-skip-permissions[Bypass permissions]' \
+    '--allowedTools[Allowed tools]:tools:' \
+    '--disallowedTools[Disallowed tools]:tools:' \
+    '(-h --help)'{-h,--help}'[Show help]' \
+    '(-v --version)'{-v,--version}'[Show version]' \
+    '1:command:->command' \
+    '*:file:_files'
+
+  [[ "$state" == command ]] && _describe 'claude command' commands
+}
+
+_claude "$@"

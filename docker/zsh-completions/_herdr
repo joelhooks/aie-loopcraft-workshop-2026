@@ -1,0 +1,60 @@
+#compdef herdr
+
+_herdr() {
+  local -a commands workspace_cmds tab_cmds pane_cmds agent_cmds session_cmds integration_cmds wait_cmds status_cmds server_cmds
+  commands=(
+    'status:show client/server status'
+    'server:run or manage the headless server'
+    'workspace:manage workspaces'
+    'tab:manage tabs'
+    'pane:manage panes'
+    'agent:manage detected agents'
+    'session:manage named sessions'
+    'integration:manage agent integrations'
+    'wait:block until output or agent status changes'
+    'config:manage config'
+    'channel:manage update channel'
+    'update:update Herdr'
+  )
+  workspace_cmds=(list create get focus rename close)
+  tab_cmds=(list create get focus rename close)
+  pane_cmds=(list current get layout process-info neighbor edges focus resize zoom rename read split swap move close send-text send-keys report-agent report-agent-session release-agent report-metadata run)
+  agent_cmds=(list get read send rename focus wait attach start explain)
+  session_cmds=(list attach stop delete)
+  integration_cmds=(list install uninstall)
+  wait_cmds=(output agent-status)
+  status_cmds=(server client)
+  server_cmds=(stop live-handoff reload-config agent-manifests update-agent-manifests reload-agent-manifests)
+
+  _arguments -C \
+    '--session[Use or create a named persistent session]:session:' \
+    '--remote[Attach through SSH to a remote Herdr server]:target:' \
+    '--remote-keybindings[Keybindings for remote attach]:(local server)' \
+    '--handoff[Opt into live handoff]' \
+    '--no-session[Run monolithically]' \
+    '--default-config[Print default config]' \
+    '(-V --version)'{-V,--version}'[Print version]' \
+    '(-h --help)'{-h,--help}'[Show help]' \
+    '1:command:->command' \
+    '*::arg:->args'
+
+  case "$state" in
+    command)
+      _describe 'herdr command' commands ;;
+    args)
+      case "$words[2]" in
+        workspace) _describe 'workspace command' workspace_cmds ;;
+        tab) _describe 'tab command' tab_cmds ;;
+        pane) _describe 'pane command' pane_cmds ;;
+        agent) _describe 'agent command' agent_cmds ;;
+        session) _describe 'session command' session_cmds ;;
+        integration) _describe 'integration command' integration_cmds ;;
+        wait) _describe 'wait command' wait_cmds ;;
+        status) _describe 'status target' status_cmds ;;
+        server) _describe 'server command' server_cmds ;;
+        *) _files ;;
+      esac ;;
+  esac
+}
+
+_herdr "$@"

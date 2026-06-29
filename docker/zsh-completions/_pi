@@ -1,0 +1,36 @@
+#compdef pi
+
+_pi() {
+  local -a commands models
+  commands=(
+    'install:install an extension source'
+    'remove:remove an extension source'
+    'uninstall:alias for remove'
+    'update:update pi or extensions'
+    'list:list installed extensions'
+    'config:open config TUI'
+  )
+  models=(openai-codex/gpt-5.5 anthropic/claude-opus-4.6)
+
+  _arguments -C \
+    '--provider[Provider name]:provider:' \
+    '--model[Model id]:model:($models)' \
+    '(-p --print)'{-p,--print}'[Non-interactive mode]' \
+    '(-c --continue)'{-c,--continue}'[Continue previous session]' \
+    '(-r --resume)'{-r,--resume}'[Resume session picker]' \
+    '--session[Use specific session]:session:_files' \
+    '--session-id[Use exact project session id]:id:' \
+    '--fork[Fork a session]:session:_files' \
+    '--name[Set session display name]:name:' \
+    '(-a --approve)'{-a,--approve}'[Trust project-local files]' \
+    '(-na --no-approve)'{-na,--no-approve}'[Ignore project-local files]' \
+    '--offline[Disable startup network operations]' \
+    '(-h --help)'{-h,--help}'[Show help]' \
+    '(-v --version)'{-v,--version}'[Show version]' \
+    '1:command:->command' \
+    '*:file:_files'
+
+  [[ "$state" == command ]] && _describe 'pi command' commands
+}
+
+_pi "$@"

@@ -1,29 +1,29 @@
 # Lessons
 
-These lessons are the guided rail for rebuilding the essential run-06 loop without repeating the wasted friction.
+These lessons build a local issue checker one visible step at a time.
 
 Each lesson should end with evidence: a file, command output, receipt, event, UI state, or commit.
 
-Lessons are not issue tickets. The issue queue is the product substrate we build and eventually use.
+Lessons are the path. The issue queue is the project data we build and eventually use.
 
-Lesson 01 is a tour plus a `grill-with-docs` pass. It defines the vision and minimal repo baseline before the loop starts building product behavior.
+Lesson 01 is a tour plus a `grill-with-docs` question pass. It defines the vision and the first repo rules before product behavior starts.
 
 ## Path
 
-1. [Tour, vision, repo setup](01-tour-vision-repo.md)
-2. [Reliability floor](02-reliability-floor.md)
-3. [Lakebed projection](03-lakebed-projection.md)
-4. [Pi and Herdr control plane](04-pi-herdr-control.md)
-5. [Safe dispatch seam](05-safe-dispatch.md)
-6. [Bounded gardener](06-bounded-gardener.md)
-7. [Specialist review](07-specialist-review.md)
-8. [Supervisor runtime shadow](08-supervisor-runtime.md)
+1. [Tour the repo and write the rules](01-tour-vision-repo.md)
+2. [Make bad input fail loudly](02-reliability-floor.md)
+3. [Show issue events in Lakebed](03-lakebed-projection.md)
+4. [See and control the check from Pi and Herdr](04-pi-herdr-control.md)
+5. [Claim one ready issue without changing files](05-safe-dispatch.md)
+6. [Let cleanup propose one follow-up](06-bounded-gardener.md)
+7. [Ask for review without handing over the repo](07-specialist-review.md)
+8. [Run the supervisor beside the current path](08-supervisor-runtime.md)
 
 ## Repeated checkpoint questions
 
 Ask these before moving on:
 
 - What event or input changed?
-- What guard or rule decided the next state?
+- What rule decided the next state?
 - What receipt proves it?
-- What should the operator do next?
+- What should happen next?

@@ -1,44 +1,73 @@
-# Lesson 03: Project issue state into Lakebed
+# 03 · Show issue events in Lakebed
 
 ## Challenge
 
-Add Lakebed as the operator surface while keeping the loop core behind a provider boundary.
+Read the same local event file from Lesson 02 and show the queue in Lakebed.
+
+## What we're trying to build
+
+Lesson 02 gave the checker a local event file, tests, and a receipt. Now make those facts visible. Lakebed should show the same ready, approval-required, and input-required work the local check sees.
+
+If Lakebed disagrees with the check output, fix the Lakebed view, not the event file.
+
+## What you should see
+
+- The local event parser/check still runs without Lakebed.
+- Lakebed can read the same issue events through one small endpoint or module.
+- List, board, and event views show status, stop reason, and next action for each issue.
+- A receipt records the event file checked, the Lakebed route opened, and any mismatch found.
 
 ## Starter prompt
 
 ```txt
-Use the local issue events and loop check from the previous lessons. Add a Lakebed provider/projection path: the core should read issue events through an adapter, and Lakebed should show list, board, and event views. Keep JSONL/local files testable.
+Use the local events and check command from Lesson 02. Add the smallest endpoint or module that reads the same event file and returns issue cards for Lakebed. Show list, board, and event views with status, stop reason, and next action. Run the local check, open the Lakebed route, compare the results, and save a receipt. If the view disagrees with the check output, fix the view path, not the event file. Do not add writes, schedulers, external trackers, or background workers yet.
 ```
 
 ## Build / operate
 
-Expected work:
+Add the smallest Lakebed read path:
 
-- `IssueStore` or equivalent provider port
-- local JSONL adapter remains the test path
-- Lakebed `/api/issue-events` read/write seam
-- list/Kanban/event viewer shell connected to the same facts
+- the local event loader stays in charge;
+- one endpoint or module returns issue cards;
+- list, board, and event history show clear stop reasons;
+- the Lakebed cards can be compared against the local check.
+
+## Step checklist
+
+1. **Keep the file in charge.** Do not move issue decisions into the UI. Reuse the event loader/parser from Lesson 02 or wrap it with one small module.
+2. **Return issue cards.** Add the smallest endpoint or module Lakebed needs to read issue id, title, status, stop reason, next action, and recent events.
+3. **Render useful views.** Show a list, board columns, and event history that explain why each issue has its current status.
+4. **Compare and save evidence.** Run the local check, open the Lakebed view, compare counts/statuses, and save a receipt for the comparison.
 
 ## Observe
 
-Compare the local issue-event file and Lakebed event view. The UI should explain the same state the loop check sees.
+Run the local check, open Lakebed, and compare event count, statuses, stop reasons, and next action. The screen should make the same decision the command made.
+
+## Receipt template
+
+- `eventFile`: local event file used
+- `localCheck`: command and result
+- `lakebedRoute`: route or screen inspected
+- `issueCounts`: command vs Lakebed counts
+- `mismatches`: any card/event disagreement
+- `nextAllowedAction`: what you can inspect or fix next
 
 ## Discuss
 
-Lakebed is the projection, not the domain model. A useful UI explains state movement from append-only facts.
+A useful view is not new evidence. It is a window into the event file the checker already trusts. That keeps the screen useful: you can point to the event behind every card.
 
 ## Checkpoint
 
-One issue appears in the correct Lakebed lane, and the event viewer explains why.
+One issue appears in the correct Lakebed column, the event view explains why, and a receipt proves Lakebed matched the local check.
 
 ## Small drill
 
-Pick one card and trace it back to the event that put it there.
+Pick one card, name the event that created its current status, and say what you can do next.
 
-## Fade for next lesson
+## Next lesson
 
-Next lesson starts controlling the loop from Pi and Herdr instead of only inspecting files/UI.
+Control the checker from Pi and Herdr instead of only reading files and UI state.
 
-## Run-06 scar
+## Why this step exists
 
-Joel chose the Lakebed endpoint over a DB dump. The seam matters because providers speak their own API; the core validates before trusting them.
+This step teaches the checker to show its work. If you cannot trace a card back to an event, you cannot debug the system.

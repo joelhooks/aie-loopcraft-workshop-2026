@@ -1,84 +1,97 @@
-# Lesson 01: Tour the rig, define the vision, set up the repo
+# Lesson 01: Tour the repo and write the rules
 
 ## Challenge
 
-Start by understanding the prepared workshop rig instead of pretending this repo is empty.
+Tell Pi what this project is allowed to do before it writes code.
 
-Then run a short `grill-with-docs` session to define what this issue-progress loop is for, what it may change, when it must stop, and what repo setup is needed before product behavior begins.
+We are building a local issue checker. It will read a few issue events, decide what is ready, stop when approval or input is missing, and write down what happened. This lesson names the goal, the allowed files, and the stop points before any product code exists.
 
-The goal is not to build the loop yet. The goal is to set the course and leave a repo baseline the rest of the lessons can trust.
+The goal is not to build the checker yet. The goal is to leave `VISION.md` and any repo rule worth keeping.
+
+## What we're trying to build
+
+The first version should answer three plain questions:
+
+- which issue is ready;
+- which issue needs approval;
+- which issue needs more input.
+
+Later lessons add commands, a Lakebed view, Pi/Herdr status, and safe claim steps. Right now, write the human judgment that tells the checker when to move and when to stop.
 
 ## Starter prompt
 
-Paste or use `/loop-lesson-01` in Pi:
+Paste this into Pi, or use `/loop-lesson-01` if it is available.
+
+If `/skill:grill-with-docs` is unavailable, copy the prompt and do the same thing manually: inspect first, ask one question at a time, and save the decisions.
 
 ```txt
 /skill:grill-with-docs
 
-Tour this prepared Loopcraft repo with me before we build product behavior.
+Help me define a small local issue checker before we write code.
 
-Inspect README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, .pi/extensions/loop-workshop.ts, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.
+Read README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.
 
-Ask one question at a time to define the product vision, operator boundaries, stop rules, and first repo setup choices. Write the decisions into VISION.md. Update AGENTS.md or README.md only when a repo rule or command is clear. Create only the minimal repo setup needed for the next lesson. Do not build the loop yet.
+Ask one question at a time. Capture what the checker should do, which files it may edit, what needs approval, what is out of scope, and when it must stop. Write the answers into VISION.md. Update AGENTS.md or README.md only if we agree on a clear repo rule. Do not create issue events, checks, Lakebed code, claim commands, or product code yet.
 ```
 
 ## Build / operate
 
 Expected files by the end of this lesson:
 
-- `VISION.md` — product intent, safe boundaries, stop points, and non-goals
-- `package.json` — review the existing workshop scripts; add only minimal metadata if the grill session proves it is needed. Product guardrail scripts come next.
-- `AGENTS.md` — updated only if the grill session produces a clear operating rule
-- optionally `docs/decisions/0001-loop-vision.md` — only if there is a decision that would surprise a future reader
+- `VISION.md` — what the checker is for, which files it may edit, what needs approval, and non-goals
+- `AGENTS.md` — updated only if the question session produces a clear rule for future agents
+- `README.md` — updated only if a clear command or repo rule becomes worth keeping
+
+Do not create issue events, check commands, Lakebed code, claim commands, or product code yet.
 
 ## Tour path
 
-Before asking Pi to edit, point at the prepared surfaces:
+Before asking Pi to edit, point at the files it should understand:
 
-- `README.md` — what is already prepared and what is not built yet
-- `WORKSHOP_RIG.md` — Pi, Herdr, Lakebed, persistence, and intentionally missing pieces
-- `lessons/` — the rails for this hour
-- `.pi/extensions/loop-workshop.ts` — helper commands for the operator pane
+- `README.md` — current project promise and first-run notes
+- `AGENTS.md` — rules the agent must follow
+- `WORKSHOP_RIG.md` — starter files and intentionally unfinished pieces
+- `lessons/` — the steps for this project
 - `agents/skills/loopcraft-ta` — local guide context
-- `agents/skills/grill-with-docs` — decision-grilling skill for vision and repo rules
-- `surface/lakebed` — operator projection shell
+- `agents/skills/grill-with-docs` — the skill that asks questions before writing
+- `surface/lakebed` — where issue state will become visible later
 
 ## Observe
 
 After the pass, inspect:
 
-- what `VISION.md` says the loop is for;
-- what `VISION.md` says the loop must not do;
-- what repo setup exists, including Docker Compose and workshop scripts, and what is intentionally deferred;
-- whether `AGENTS.md` contains only operational rules, not lesson notes.
+- what `VISION.md` says the checker is for;
+- which files `VISION.md` says the checker may edit;
+- what requires approval or more input;
+- what is out of scope;
+- whether `AGENTS.md` and `README.md` changes are rules or commands, not lesson notes.
 
 ## Discuss
 
-The first move is orientation plus decision capture. We are not asking an agent to improvise a product from vibes. We tour the surfaces, grill the intent, write down the boundaries, and set up only enough repo shape for the reliability lesson.
+This step gives Pi the goal and file boundaries before it edits. The checker will only be useful if it knows when to stop.
 
 ## Checkpoint
 
 You can answer:
 
 - What are we building?
-- What is the loop allowed to change?
-- What must stop for a human?
-- What repo setup exists now?
-- Which scripts are workshop operations rather than product guardrails?
-- What setup is deliberately waiting for Lesson 02?
+- Which files can the checker edit?
+- What requires human approval?
+- What is not in scope?
+- What waits until Lesson 02?
 
 ## Small drill
 
 Read one sentence from `VISION.md` and classify it:
 
 ```txt
-This sentence is product intent / safety boundary / non-goal / next setup need.
+This sentence is goal / allowed file / approval point / non-goal / stop rule.
 ```
 
-## Fade for next lesson
+## Next lesson
 
-Next lesson removes the tour support. You will ask Pi to turn the vision into a typed, testable local issue-event check with fast guardrails.
+Next lesson turns the vision into a local event file, a check command, tests, and one saved receipt.
 
-## Run-06 scar
+## Why this step exists
 
-Run 06 worked because the gates were named before autonomy got fancy: pre-approved work may progress; ambiguous or risky work stops. Run 07 keeps that scar, but starts with a guided tour and `grill-with-docs` so the repo has a clear course before implementation begins.
+Agents behave better when the rules are written down before implementation starts. Name the approvals and stop points first, then add code.

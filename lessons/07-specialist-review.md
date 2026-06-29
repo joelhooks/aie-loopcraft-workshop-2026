@@ -1,45 +1,75 @@
-# Lesson 07: Add specialist review carefully
+# 07 · Ask for review without handing over the repo
 
 ## Challenge
 
-Ask a small specialist agent for help without giving a generic agent swarm the keys.
+Ask a small reviewer for help without letting another agent edit the app files.
+
+## What we're trying to build
+
+A reviewer is useful when your main script decides what to ask, writes the input file, saves the review note, and waits for you before changing anything.
+
+It is dangerous when it becomes a second implementation path. This lesson keeps the reviewer read-only until you approve what happens next.
+
+## What you should see
+
+- A role contract says what the reviewer may read, produce, and refuse.
+- An input file is generated from issue state and acceptance criteria.
+- The reviewer run or saved fake output writes a review note, not product changes.
+- A receipt links issue id, input file path, review output path, model/tool used, changed files, and next decision.
 
 ## Starter prompt
 
 ```txt
-Add a loop-owned specialist review seam. Define one non-mutating scout/reviewer role, produce a work packet from issue state, run or simulate the specialist, and save the artifact. Do not let the specialist mutate product state by default.
+Add one read-only reviewer path controlled by the main script. Create a small input file from the issue and acceptance criteria, run or fake the reviewer, save its output, and write a receipt that links the issue, input file, output file, changed files, and next decision. By default, the reviewer must not edit product files.
 ```
 
 ## Build / operate
 
-Expected work:
+Add a read-only review path:
 
-- loop-owned specialist role definition
-- work packet shape
-- read-only scout/reviewer artifact
-- runtime seam that can later use pi-subagents or another provider
-- receipt linking issue, packet, and artifact
+- role contract;
+- input file shape;
+- saved review output;
+- a command that runs the reviewer or a saved fake reviewer output for this step;
+- receipt linking issue, input file, review output, changed files, and next decision.
+
+## Step checklist
+
+1. **Pick one role.** Use scout or reviewer first. Do not add implementer as the default role.
+2. **Generate an input file.** Create a small file from issue state, relevant files, constraints, and acceptance criteria.
+3. **Run or fake read-only help.** Save the review output under a predictable path. Do not let it edit product files.
+4. **Review before action.** Compare the review output to the issue and record what you can approve, reject, or ask next.
 
 ## Observe
 
-Inspect the specialist artifact and compare it to the issue acceptance criteria.
+Inspect the review output and compare it to the issue acceptance criteria. Confirm product files did not change.
+
+## Receipt template
+
+- `issueId`: issue reviewed
+- `role`: scout or reviewer
+- `inputPath`: reviewer input file saved
+- `outputPath`: review output saved
+- `changedFiles`: should be none
+- `decisionNeeded`: approve / reject / ask more
+- `nextAllowedAction`: what may happen after review
 
 ## Discuss
 
-Multi-agent review is leverage only when the loop owns roles, artifacts, and stop rules.
+A second agent is useful only when your main script chooses the role, writes the input file, saves the output file, and stops before any file changes.
 
 ## Checkpoint
 
-One specialist artifact exists, and it did not mutate product state.
+One review note exists, is linked to one issue, and did not change product files.
 
 ## Small drill
 
-Classify a specialist request as scout, reviewer, implementer, or “do not run.”
+Classify a request as scout, reviewer, implementer, or do-not-run, then explain why.
 
-## Fade for next lesson
+## Next lesson
 
-Next lesson moves decision ownership into an explicit supervisor runtime.
+Next, make one supervisor step decide what happens after the review.
 
-## Run-06 scar
+## Why this step exists
 
-Joel preferred small task-oriented specialists over an omnibus super-agent. The specialist is useful because it is narrow.
+This step shows how to ask for help without losing ownership. The reviewer contributes evidence; the checker shows evidence and you still decide.

@@ -78,7 +78,7 @@ RUN case "${TARGETARCH:-$(dpkg --print-architecture)}" in \
 USER ${USERNAME}
 WORKDIR /workspace
 
-RUN mkdir -p /home/${USERNAME}/.config /home/${USERNAME}/.local/bin /home/${USERNAME}/.pi/agent/extensions /home/${USERNAME}/.pi/agent/sessions /home/${USERNAME}/.claude /home/${USERNAME}/.codex /home/${USERNAME}/.opencode \
+RUN mkdir -p /home/${USERNAME}/.config/herdr /home/${USERNAME}/.local/bin /home/${USERNAME}/.local/share/pnpm/store /home/${USERNAME}/.pi/agent/extensions /home/${USERNAME}/.pi/agent/sessions /home/${USERNAME}/.claude /home/${USERNAME}/.codex /home/${USERNAME}/.opencode \
   && starship preset pure-preset -o /home/${USERNAME}/.config/starship.toml \
   && pnpm config set store-dir /home/${USERNAME}/.local/share/pnpm/store --location=user \
   && printf '%s\n' 'eval "$(starship init zsh)"' 'cd /workspace' > /home/${USERNAME}/.zshrc

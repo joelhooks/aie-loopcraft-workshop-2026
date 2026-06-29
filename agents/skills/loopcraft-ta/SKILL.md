@@ -1,6 +1,6 @@
 ---
 name: loopcraft-ta
-description: Local teaching assistant for a Loopcraft learner workspace. Use when building the connected issue-progress loop, shaping the local issue checker control surface, choosing the next step, setting up pnpm/TypeScript/tsgo/oxlint/oxfmt/Ultracite, Git/Lefthook guardrails, or translating between Pi, Claude Code, Codex, and other agent harnesses.
+description: Local teaching assistant for a Loopcraft learner workspace. Use when building the connected issue-progress loop, shaping the local issue checker control surface, choosing the next step, setting up pnpm/TypeScript/tsgo/oxlint/oxfmt/Ultracite and Git/Lefthook guardrails, steering idiomatic Effect and XState usage from the .agent_sources mirrors, or translating between Pi, Claude Code, Codex, and other agent harnesses.
 ---
 
 # Loopcraft TA
@@ -9,7 +9,7 @@ You are local to this learner project. Help the learner build the project in thi
 
 ## TA context: what we are building
 
-This section is for the TA. Do not dump it into learner `AGENTS.md` or `README.md`. Use it to ask better questions and keep the product altitude right.
+This section is for the TA. Do not dump it into learner `AGENTS.md` or `README.md`. Use it to ask better questions and keep the product altitude right. The tool stack itself — Effect, XState, `tsgo`, `oxlint`, `oxfmt`, Ultracite — is named openly in the lesson prompts; what stays out of learner docs is this run-06 archaeology and the instructor framing around it.
 
 We are building toward a connected issue-progress loop.
 
@@ -152,7 +152,7 @@ Use these as the experienced-guide map, not as a rigid checklist:
 
 1. Tour, vision, and repo baseline exist: `VISION.md`, Docker Compose / workshop scripts are understood, and any clear repo rules are captured in `AGENTS.md`.
 2. Product intent becomes an issue queue: initial issue events exist with clear ready / approval-required / input-required gates.
-3. Reliability foundation is visible: package scripts, fast strict guardrails, Effect schemas, XState classifier, tests, receipts, run log, and memory.
+3. Reliability foundation is visible: package scripts, fast strict guardrails, Effect schemas, a typed loop-check classifier, tests, receipts, run log, and memory. (The explicit XState machine is paced to the supervisor-runtime milestone; see the lifecycle-pacing note.)
 4. Provider boundary exists: JSONL remains testable and Lakebed reads issue events through an adapter.
 5. Operator surface is visible: Lakebed list/Kanban/event views explain issue movement.
 6. Pi/Herdr control plane exists: bridge daemon, Pi check/status/start/stop/inspect controls, and a visible daemon/status pane.
@@ -164,7 +164,7 @@ Use these as the experienced-guide map, not as a rigid checklist:
 
 ### Current learner position
 
-Run 006 is the source run. This repo is run 07: the prepared but not finished learner rig. Normal Pi, Herdr panes, Lakebed shell, local skills, and source mirrors are preloaded to avoid install theater. The learner still performs real tasks that recreate the important capabilities. Do not pretend the repo starts blank. Lesson 01 is a short active tour plus `grill-with-docs` vision/repo setup, not a passive sightseeing pass. Start with `lessons/01-tour-vision-repo.md`. The intended end state is a simplified happy path where the loop is starting to build/progress itself through the issue surface by the end of the hour.
+Run 006 is the source run. This repo is run 07: the prepared but not finished learner rig. Normal Pi, Herdr panes, Lakebed shell, local skills, and source mirrors are preloaded to avoid install theater. The learner still performs real tasks that recreate the important capabilities. Do not pretend the repo starts blank. Lesson 01 is a short active tour plus `grill-with-docs` vision/repo setup, not a passive sightseeing pass. Start with `/loop-lesson-01` (or `web/static/lessons/01-tour-vision-repo/prompt.txt`); the full lesson is at <https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/01-tour-vision-repo/>. The intended end state is a simplified happy path where the loop is starting to build/progress itself through the issue surface by the end of the hour.
 
 ### Learner docs rule
 
@@ -174,7 +174,7 @@ Validation and commits are standing repo behavior. The teacher prompt does not n
 
 Pacing matters. One-at-a-time HITL turns are for decisions, risky pivots, and teaching moments. Do not turn obvious local implementation steps into a tedious ceremony.
 
-Do not use learner `AGENTS.md` as a TA milestone tracker, instructor scratchpad, or place to smuggle the workshop thesis. Product intent and decision boundaries belong in `VISION.md`; operational repo rules belong in `AGENTS.md`; TA guidance belongs in this skill.
+Do not use learner `AGENTS.md` as a TA milestone tracker, instructor scratchpad, or dumping ground for run-06 archaeology. The tool stack itself — Effect, XState, `tsgo`, `oxlint`, `oxfmt`, Ultracite — is named openly in the lesson prompts and earns its place in `AGENTS.md` once the learner builds it; what stays out is the pedagogical narrative and milestone tracking. Product intent and decision boundaries belong in `VISION.md`; operational repo rules belong in `AGENTS.md`; TA guidance belongs in this skill.
 
 ### Hook setup background behavior
 
@@ -243,8 +243,6 @@ Learner prompt shape:
 
 > Install a local `grill-with-docs` skill before we add product behavior. Base it on Matt Pocock’s `grill-me` pattern: ask one good question at a time, check the repo before asking, and save decisions into the right docs. Put the canonical skill in `agents/skills/grill-with-docs` and expose it through `.agents/skills/grill-with-docs` and `.claude/skills/grill-with-docs`. Keep it small.
 
-## Effect rationale and lifecycle pacing
-
 ## launchd source pattern
 
 Use [Scheduled Local AI Jobs on macOS with launchd](https://wizardshit.ai/launchd-ai-scheduler) as the source-backed pattern when adding the schedule loop. Pull the small pieces that serve this project:
@@ -259,24 +257,26 @@ Use [Scheduled Local AI Jobs on macOS with launchd](https://wizardshit.ai/launch
 Do not import the whole generic scheduler course. For this repo, the launchd capability wraps the issue-gardener command. Skip dashboard/platform work unless the local loop already proves it needs that surface.
 
 
+## Effect rationale and lifecycle pacing
+
 Joel's rationale: Effect is not a fancy dependency trophy. It provides guardrails, type safety, and determinism because its best practices, idioms, and architecture force clearer boundaries.
 
 For this project, explain Effect as a boundary tool first: schemas for issue input and review packet output, typed parsing instead of hand-rolled object checks, structured errors with file/line context, and explicit effects instead of hidden side effects. The value is that the architecture makes sloppy agent code harder to write.
 
-Do not bring up state-machine tooling by name in learner prompts or issue fixtures until the product has a real lifecycle to model. When the issue loop has modes like packet prepared, judged, ready, needs clarity, blocked, acted, or escalated, then evaluate an explicit state machine.
+Pace the tool reveal to the moment each one becomes real, then name it openly and point at its source mirror. Effect lands at the reliability floor (Lesson 02), where the check command must parse every issue row into typed values; the Lesson 02 prompt names Effect Schema and sends the learner to `.agent_sources/effect`. XState lands when the loop has a real lifecycle to model — modes like packet prepared, judged, ready, needs clarity, blocked, acted, or escalated — which is the Lesson 08 supervisor-runtime shadow check; that prompt names XState directly and sends the learner to `.agent_sources/xstate`. A plain transition table is the on-ramp toward that machine, not a reason to avoid the library. Do not front-load XState into the early lessons before there is a lifecycle worth modeling. (Run 06 wired XState into its loop-check classifier earlier; the lessons pace the explicit machine to Lesson 08 so it arrives when the lifecycle is real.)
 
 If asked “why bother with Effect for this?”, lead with that guardrail story, then map it to the JSONL boundary and the local Effect source files. Also name the overkill risk: a tiny CLI does not need Effect ceremony unless it improves schemas, parse errors, or future loop reliability.
 
 ## Source mirrors
 
-When source-backed coding examples become necessary, prefer real squashed git subtrees under `.agent_sources/<name>`, committed to the repo. Do not use untracked local clones, submodules, or one-off copied snapshots for the learner path. Record the upstream URL/ref and refresh command, usually `git subtree pull --prefix=.agent_sources/<name> <url> <ref> --squash`, and make agents inspect those files before writing source-backed patterns. For Effect specifically, use the entire upstream Effect repo under `.agent_sources/effect`; this is intentional because current APIs and cross-file idioms matter. Other mirrors can stay narrow when narrow context is enough.
+When source-backed coding examples become necessary, prefer real squashed git subtrees under `.agent_sources/<name>`, committed to the repo. Do not use untracked local clones, submodules, or one-off copied snapshots for the learner path. Record the upstream URL/ref and refresh command, usually `git subtree pull --prefix=.agent_sources/<name> <url> <ref> --squash`, and make agents inspect those files before writing source-backed patterns. For Effect specifically, use the entire upstream Effect repo under `.agent_sources/effect`; this is intentional because current APIs and cross-file idioms matter. XState lives under `.agent_sources/xstate` for the same reason: idiomatic `setup`, actors, and transitions should come from current source, not memory. The Lesson 02 and Lesson 08 prompts now send learners straight at these mirrors, so steer source-backed Effect and XState usage instead of guessed APIs. Other mirrors can stay narrow when narrow context is enough.
 
 ## Suggested one-hour build sequence
 
 Use these as lesson prompts. Each one should end with evidence, not vibes.
 
 1. **Tour / vision / repo pass**: tour the prepared rig, run `grill-with-docs`, write `VISION.md`, and create the minimal repo baseline.
-2. **Reliability pass**: create the first issue events, then add guardrails, Effect schemas, XState classifier, tests, receipts, run log, and memory.
+2. **Reliability pass**: create the first issue events, then add guardrails, Effect schemas, a typed loop-check classifier, tests, receipts, run log, and memory.
 3. **Lakebed pass**: add or inspect the provider adapter and make Lakebed list/Kanban/event views explain the issue state.
 4. **Control-plane pass**: start the bridge, operate it from Pi, and keep Herdr’s daemon/status pane visible while a check runs.
 5. **Dispatch-safety pass**: claim ready work before dispatch, run a dry-run/runtime-adapter dispatch, and inspect the dispatch receipt.

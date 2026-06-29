@@ -31,8 +31,8 @@ For setup and public guidance:
 - `README.md`
 - `docs/setup.md`
 - `docs/full-setup-without-docker.md` when Docker is not being used
-- `lessons/01-tour-vision-repo.md`
-- `lessons/02-reliability-floor.md`
+- `lessons/README.md` — index pointing to the published lessons
+- `web/static/lessons/01-tour-vision-repo/prompt.txt` — Lesson 01 starter prompt
 
 For local agent guidance when present:
 

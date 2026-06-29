@@ -10,7 +10,7 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("bounded-gardener");
-  const promptContext = "The cleanup command may inspect a short list of maintenance facts and create at most one issue event. If the repo is dirty, the checker is running, or a matching follow-up already exists, it prints the reason and exits without editing product files.";
+  const promptContext = "This is the first command that can create work — which makes it the first that can quietly bury you in bad work. So its job is deliberately tiny: scan a short list of maintenance signals and propose at most one issue event, with hard stops everywhere it might do damage. It is not a little product agent. If the repo is dirty, the loop is already running, or a matching follow-up exists, it prints why and quits. Stopping is part of the feature, not a failure of it.";
   const proofItems = [
     "A dry-run cleanup command prints the issue event it would write without changing files.",
     "Apply mode can write one fully formed maintenance event when every stop check passes.",
@@ -33,7 +33,7 @@
     {
       "title": "Pass 2: guarded apply",
       "items": [
-        "Apply writes one event only when jj status is clean, the checker is idle, no matching follow-up exists, no event waits for approval, and no event asks for more input."
+        "Apply writes one event only when git status is clean, the checker is idle, no matching follow-up exists, no event waits for approval, and no event asks for more input."
       ]
     },
     {
@@ -55,13 +55,13 @@
       ],
       "stop": [
           "Scanning broadly or proposing more than one maintenance event.",
-          "Applying when jj status is dirty, the checker is running, the follow-up already exists, or any event needs approval/input.",
+          "Applying when git status is dirty, the checker is running, the follow-up already exists, or any event needs approval/input.",
           "Editing product files as part of cleanup."
       ],
       "exampleTitle": "Tiny two-pass cleanup shape",
       "example": "pass: dry-run\ncandidate: stale receipt link\nwouldWrite: MAINT-001 update receipt link\nwrittenEvents: []\n\npass: apply\nstopChecks: clean repo, checker idle, no duplicate, no approval/input blockers\nwrittenEvents: [MAINT-001]\nduplicateCheck: refused — matching follow-up already exists"
   };
-  const starterPrompt = "Add a cleanup command that can propose at most one maintenance issue event. Keep it as two passes: first dry-run one allowed maintenance event and print the exact event it would write; then allow apply to write one event only after every stop check passes. Refuse to apply when jj status is dirty, the checker process is running, the queue already has a matching follow-up, an event needs approval, or an event needs more input. Save a receipt with inspected files, proposed event id, written event id if any, duplicate check result, and the exact printed stop message.";
+  const starterPrompt = "Add a cleanup command that can propose at most one maintenance issue event. Keep it as two passes: first dry-run one allowed maintenance event and print the exact event it would write; then allow apply to write one event only after every stop check passes. Refuse to apply when git status is dirty, the checker process is running, the queue already has a matching follow-up, an event needs approval, or an event needs more input. Save a receipt with inspected files, proposed event id, written event id if any, duplicate check result, and the exact printed stop message.";
   const explorationPrompts = [
     {
       label: "Find boring maintenance",

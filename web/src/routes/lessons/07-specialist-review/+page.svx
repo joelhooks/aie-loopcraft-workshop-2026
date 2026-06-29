@@ -10,7 +10,7 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("specialist-review");
-  const promptContext = "A reviewer is useful when your main script decides what to ask, writes the input file, saves the review note, and waits for you before changing anything. It is dangerous when it becomes a second implementation path. This lesson keeps the reviewer read-only until you approve what happens next.";
+  const promptContext = "A second agent is leverage right up until it becomes a second, unsupervised path into your files. A reviewer is useful when your main script decides what to ask, writes the input, saves the note, and waits for you before anything changes. It is dangerous the moment it turns into a quiet implementer. So this lesson keeps the reviewer strictly read-only: it contributes evidence, the checker shows that evidence, and you still make the call. Asking for help should not cost you ownership.";
   const proofItems = [
     "A role contract says what the reviewer may read, produce, and refuse.",
     "An input file is generated from issue state and acceptance criteria.",

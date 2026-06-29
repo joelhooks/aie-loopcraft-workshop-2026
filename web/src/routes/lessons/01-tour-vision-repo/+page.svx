@@ -10,7 +10,7 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("tour-vision-repo");
-  const promptContext = "Start by writing the rules for a local issue checker. It should say what the checker will do, which files it may edit, what needs approval, and the exact point where it must stop. No issue events, checks, UI work, or product edits yet.";
+  const promptContext = "An agent with no rules will write code fast — the wrong code, in the wrong files, past the point where you wanted it to stop and ask. So before any product code exists, we name the job, the files it may touch, and the moments it must stop for you. We are building a local issue checker: something that reads a few issue events, decides what is ready, what needs approval, and what needs more input, and writes down what happened. Not today, though — today the only outputs are VISION.md and any repo rule worth keeping. Agents behave better when the rules are written down before the first line of code.";
   const proofItems = [
     "VISION.md names the local issue checker goal, allowed files, approval points, non-goals, and stop rules.",
     "AGENTS.md or README.md changes are durable repo rules or commands, not lesson notes.",

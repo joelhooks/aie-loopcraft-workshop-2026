@@ -1,23 +1,24 @@
 # Lessons
 
-These lessons build a local issue checker one visible step at a time.
+The lessons live on the workshop site, not as Markdown in this folder.
 
-Each lesson should end with evidence: a file, command output, receipt, event, UI state, or commit.
+- Read them at <https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/>
+- Lesson source: `web/src/routes/lessons/NN-*/+page.svx`
+- Pasteable starter prompts: `web/static/lessons/NN-*/prompt.txt` (also served at `/lessons/NN-*/prompt.txt`)
+- In Pi, `/loop-lesson-01` loads the first starter prompt.
 
-Lessons are the path. The issue queue is the project data we build and eventually use.
-
-Lesson 01 is a tour plus a `grill-with-docs` question pass. It defines the vision and the first repo rules before product behavior starts.
+The lessons build a local issue checker one visible step at a time. Each one ends with evidence: a file, command output, receipt, event, UI state, or commit.
 
 ## Path
 
-1. [Tour the repo and write the rules](01-tour-vision-repo.md)
-2. [Make bad input fail loudly](02-reliability-floor.md)
-3. [Show issue events in Lakebed](03-lakebed-projection.md)
-4. [See and control the check from Pi and Herdr](04-pi-herdr-control.md)
-5. [Claim one ready issue without changing product files](05-safe-dispatch.md)
-6. [Let cleanup propose one follow-up](06-bounded-gardener.md)
-7. [Ask for review without handing over the repo](07-specialist-review.md)
-8. [Run the supervisor beside the current check](08-supervisor-runtime.md)
+1. [Set the rules before the first line of code](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/01-tour-vision-repo/)
+2. [Make bad input fail loudly](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/02-reliability-floor/)
+3. [Make the queue visible and traceable](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/03-lakebed-projection/)
+4. [Operate the check, and always know its state](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/04-pi-herdr-control/)
+5. [Claim work without letting the agent touch your code](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/05-safe-dispatch/)
+6. [Let the loop create work — and stop itself](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/06-bounded-gardener/)
+7. [Get a second opinion without giving up the repo](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/07-specialist-review/)
+8. [Shadow the next decision before you trust it](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/08-supervisor-runtime/)
 
 ## Repeated checkpoint questions
 

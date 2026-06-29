@@ -85,6 +85,20 @@
       ],
     },
     {
+      id: "effect",
+      term: "Effect",
+      definition: "The boundary tool used in this workshop. Effect schemas parse issue events into typed values and turn bad input into structured errors instead of hand-rolled object checks.",
+      useItWhen: "Use it at the reliability floor when the check command must parse every row and fail loudly on malformed input.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
+    },
+    {
+      id: "guardrails",
+      term: "Guardrails",
+      definition: "The fast, strict checks the reliability floor adds: tsgo for typechecking, oxlint and oxfmt for fast lint and format, Ultracite for strict automatic rules, and a Matt Pocock-style strict tsconfig. They are chosen so feedback stays inside the agent loop and sloppy edits fail early.",
+      useItWhen: "Use them as the first product checks in Lesson 02, before Lakebed, dispatch, or review.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
+    },
+    {
       id: "herdr",
       term: "Herdr",
       definition: "The terminal workbench used here to keep Pi, status commands, logs, and checks visible side by side.",
@@ -196,6 +210,13 @@
       definition: "The boundary for a helper agent: what it may read, what it should produce, what it must refuse, and whether it may edit files.",
       useItWhen: "Use it before specialist review so a reviewer does not accidentally become an implementer.",
       links: [{ label: "Lesson 07", href: "/lessons/07-specialist-review/" }],
+    },
+    {
+      id: "state-machine",
+      term: "State machine (XState)",
+      definition: "The lifecycle tool used in this workshop. An XState machine models gates, stop reasons, claims, dispatch, and recovery as explicit states and transitions instead of hidden booleans.",
+      useItWhen: "Use it when one path owns the next decision, such as the Lesson 08 candidate check shadowed beside the current checker.",
+      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
     },
     {
       id: "stop-rule",

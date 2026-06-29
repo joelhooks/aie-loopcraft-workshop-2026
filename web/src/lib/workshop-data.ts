@@ -19,7 +19,7 @@ export const lessons: Lesson[] = [
   {
     "id": "tour-vision-repo",
     "number": "01",
-    "title": "Tour the repo and set the course",
+    "title": "Set the rules before the first line of code",
     "shortTitle": "Tour + vision",
     "href": "/lessons/01-tour-vision-repo/",
     "challenge": "Use Pi plus grill-with-docs to write VISION.md: what the local issue checker should do, which files it may edit, and when it must stop."
@@ -35,7 +35,7 @@ export const lessons: Lesson[] = [
   {
     "id": "lakebed-projection",
     "number": "03",
-    "title": "Show issue events in Lakebed",
+    "title": "Make the queue visible and traceable",
     "shortTitle": "Lakebed view",
     "href": "/lessons/03-lakebed-projection/",
     "challenge": "Read the same local event file from Lesson 02 and show matching issue cards in Lakebed."
@@ -43,7 +43,7 @@ export const lessons: Lesson[] = [
   {
     "id": "pi-herdr-control",
     "number": "04",
-    "title": "See and control the check from Pi and Herdr",
+    "title": "Operate the check, and always know its state",
     "shortTitle": "Pi/Herdr status",
     "href": "/lessons/04-pi-herdr-control/",
     "challenge": "Add a visible way to ask for status, run the local check, and see what happened."
@@ -51,7 +51,7 @@ export const lessons: Lesson[] = [
   {
     "id": "safe-dispatch",
     "number": "05",
-    "title": "Claim one ready issue without changing product files",
+    "title": "Claim work without letting the agent touch your code",
     "shortTitle": "Claim + dry-run",
     "href": "/lessons/05-safe-dispatch/",
     "challenge": "Pick one ready issue, write a claim, run a dry-run, and prove no product files changed."
@@ -59,7 +59,7 @@ export const lessons: Lesson[] = [
   {
     "id": "bounded-gardener",
     "number": "06",
-    "title": "Let cleanup propose one follow-up",
+    "title": "Let the loop create work — and stop itself",
     "shortTitle": "Cleanup guard",
     "href": "/lessons/06-bounded-gardener/",
     "challenge": "Let the checker propose one maintenance event, then prove it stops when the repo or queue is not safe to touch."
@@ -67,7 +67,7 @@ export const lessons: Lesson[] = [
   {
     "id": "specialist-review",
     "number": "07",
-    "title": "Ask for review without handing over the repo",
+    "title": "Get a second opinion without giving up the repo",
     "shortTitle": "Read-only review",
     "href": "/lessons/07-specialist-review/",
     "challenge": "Ask a small reviewer for help without letting another agent edit the app files."
@@ -75,10 +75,10 @@ export const lessons: Lesson[] = [
   {
     "id": "supervisor-runtime",
     "number": "08",
-    "title": "Compare a candidate check beside the current check",
+    "title": "Shadow the next decision before you trust it",
     "shortTitle": "Compare-only check",
     "href": "/lessons/08-supervisor-runtime/",
-    "challenge": "Use the same event file and check command while a small TypeScript candidate check says the next state and reason. The current checker still decides."
+    "challenge": "Use the same event file and check command while a small XState candidate machine says the next state and reason. The current checker still decides."
   }
 ];
 

@@ -10,7 +10,7 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("lakebed-projection");
-  const promptContext = "Read the same local event file from Lesson 02 and show issue cards in Lakebed. The cards should match the check command output. If the view disagrees with the local check, fix the view code, not the event file.";
+  const promptContext = "A screen full of cards is worthless if you cannot point at the event behind each one. The moment you cannot trace a card back to its event, you cannot debug the system — you are just trusting a UI. Lesson 02 gave the checker local events, tests, and a receipt; now we make those facts visible without inventing new ones. Lakebed reads the same event file the check reads and shows the same ready, approval-required, and input-required work — and if the view ever disagrees with the check, you fix the view, never the events.";
   const proofItems = [
     "The local event parser and check command still run without Lakebed.",
     "A small endpoint or module reads the same event file and returns issue cards.",

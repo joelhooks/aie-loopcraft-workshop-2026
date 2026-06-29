@@ -10,7 +10,7 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("safe-dispatch");
-  const promptContext = "A ready issue is not permission to change product files. First, the script checks the issue state, writes one claim event, runs only dry-run or memory mode, and saves a receipt that proves what happened.";
+  const promptContext = "This is where people get sloppy. Ready is not permission to turn an unsupervised agent loose on your files — it is permission to claim the work and prove you can hold the line. So the script checks that the issue is actually ready, writes a claim before any work attempt, runs only a dry-run or memory-mode step, and saves evidence that nothing in the product changed. The checker earns the right to ask for work by proving it can refuse work first.";
   const proofItems = [
     "A rule check says whether an issue may be claimed and why.",
     "A claim event is written before any work attempt.",

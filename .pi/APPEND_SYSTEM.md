@@ -35,7 +35,7 @@ Use parallel subagents for broad read/review work:
 Good review child prompt shape:
 
 ```txt
-Review only these files: web/src/routes/lessons/03-lakebed-projection/+page.svx and lessons/03-lakebed-projection.md.
+Review only these files: web/src/routes/lessons/03-lakebed-projection/+page.svx.
 Find copy that sounds like backstage workshop planning instead of direct guidance for the person building the loop.
 Return exact path, line, quote, and a suggested replacement. Do not edit files.
 ```
@@ -43,7 +43,7 @@ Return exact path, line, quote, and a suggested replacement. Do not edit files.
 Good lesson-editor prompt shape:
 
 ```txt
-Edit only these files: web/src/routes/lessons/03-lakebed-projection/+page.svx and lessons/03-lakebed-projection.md.
+Edit only these files: web/src/routes/lessons/03-lakebed-projection/+page.svx.
 Remove backstage/meta language and make the lesson read as direct guidance for the person building the loop. Preserve feedback IDs, prompt blocks, receipt/checkpoint structure, and technical intent. Run a narrow meta-language search on those files and `pnpm run web:check` after editing.
 ```
 

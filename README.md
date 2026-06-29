@@ -51,14 +51,16 @@ The repo starts prepared, not finished. The product loop is still yours to build
 
 ## Lesson path
 
-1. [Tour the rig and set the course](lessons/01-tour-vision-repo.md)
-2. [Build the reliability floor](lessons/02-reliability-floor.md)
-3. [Project issue state into Lakebed](lessons/03-lakebed-projection.md)
-4. [Control the loop from Pi and Herdr](lessons/04-pi-herdr-control.md)
-5. [Make dispatch safe](lessons/05-safe-dispatch.md)
-6. [Add a bounded gardener](lessons/06-bounded-gardener.md)
-7. [Add specialist review carefully](lessons/07-specialist-review.md)
-8. [Shadow the supervisor runtime](lessons/08-supervisor-runtime.md)
+1. [Set the rules before the first line of code](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/01-tour-vision-repo/)
+2. [Make bad input fail loudly](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/02-reliability-floor/)
+3. [Make the queue visible and traceable](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/03-lakebed-projection/)
+4. [Operate the check, and always know its state](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/04-pi-herdr-control/)
+5. [Claim work without letting the agent touch your code](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/05-safe-dispatch/)
+6. [Let the loop create work — and stop itself](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/06-bounded-gardener/)
+7. [Get a second opinion without giving up the repo](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/07-specialist-review/)
+8. [Shadow the next decision before you trust it](https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/08-supervisor-runtime/)
+
+Lesson source lives in `web/src/routes/lessons/NN-*/+page.svx`; pasteable starter prompts in `web/static/lessons/NN-*/prompt.txt`.
 
 Lessons are step-by-step checkpoints. Issues are the product data you build toward.
 
@@ -70,7 +72,7 @@ agents/skills/grill-with-docs    guided vision/session questions
 .agent_sources/                  source mirrors for Effect, XState, pi-subagents
 .pi/extensions/loop-workshop.ts  Pi helper commands for status and Lesson 01
 .pi/agents/                      scout/reviewer definitions for later lessons
-lessons/                         step-by-step lesson pages
+lessons/                         pointer to the published lesson pages
 surface/lakebed/                 local projection surface shell
 scripts/loop-daemon-stub.mjs     temporary status daemon
 web/                             published workshop site source

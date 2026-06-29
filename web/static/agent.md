@@ -27,8 +27,8 @@ If you are working in a cloned repo, read these files too:
 - `docs/setup.md`
 - `docs/full-setup-without-docker.md` if the person explicitly chooses host-machine setup
 - `WORKSHOP_RIG.md` — what is prepared and intentionally unfinished
-- `lessons/01-tour-vision-repo.md`
-- `lessons/02-reliability-floor.md`
+- `lessons/README.md` — index pointing to the published lessons
+- `web/static/lessons/01-tour-vision-repo/prompt.txt` — Lesson 01 starter prompt
 - `agents/skills/loopcraft-ta/SKILL.md` if present
 - `agents/skills/grill-with-docs/SKILL.md` if present
 
@@ -67,7 +67,7 @@ Read README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, agents/skills/loopcraft-ta
 Ask one question at a time. Capture what the loop should do, what it may change, what needs human approval, and what we are not building yet. Write the answers into VISION.md. Update AGENTS.md or README.md only if we agree on a clear repo rule. Do not create issue events, checks, Lakebed code, dispatch, or product code yet.
 ```
 
-This prompt matches the Lesson 01 page and `lessons/01-tour-vision-repo.md` in the repo. The same text is served at `/lessons/01-tour-vision-repo/prompt.txt` if you would rather fetch than paste.
+This prompt matches the Lesson 01 page. The same text is served at `/lessons/01-tour-vision-repo/prompt.txt` and lives in the repo at `web/static/lessons/01-tour-vision-repo/prompt.txt` if you would rather fetch than paste.
 
 ## Allowed changes by lesson
 

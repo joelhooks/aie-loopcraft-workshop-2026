@@ -10,7 +10,7 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("reliability-floor");
-  const promptContext = "Create one local event file and one check command. The command should read every row, fail loudly on bad input, print ready / approval-required / input-required items, and save enough output that the next pass can trust what happened.";
+  const promptContext = "Agents get slippery fast when inputs, decisions, stop messages, and next actions are only implied. Give one room to guess and it will — confidently, in the wrong direction. So this lesson turns VISION.md into one local event file and one strict check command you can actually trust: it reads every row, fails loudly on bad input, shows what is ready, what needs approval, and what needs more input, and saves a receipt the next pass can believe. By the end the repo can prove something, not just explain itself.";
   const proofItems = [
     "A local event file exists at issues.jsonl or data/issue-events.jsonl with ready, approval-required, and input-required examples.",
     "The check command runs from the repo root and prints the file read, event count, classifications, stop reasons, next action, and refused action.",
@@ -34,13 +34,13 @@
       "title": "Add fast checks",
       "items": [
         "Add package scripts for typecheck, lint, format, test, and the issue check while preserving the workshop web scripts.",
-        "Use strict TypeScript and fast lint/format checks so sloppy edits fail early."
+        "Use a fast, strict toolchain: tsgo for typechecking, oxlint and oxfmt for fast lint and format, Ultracite for strict automatic rules, and vitest for tests. Use a strict Matt Pocock-style tsconfig so sloppy edits fail early."
       ]
     },
     {
       "title": "Validate and classify",
       "items": [
-        "Add src/issue-events.ts for the event parser and src/loop-check.ts for the check command.",
+        "Add src/issue-events.ts for the event parser and src/loop-check.ts for the check command. Use an Effect Schema to parse each row so bad input fails with a typed, structured error instead of a hand-rolled check, and read .agent_sources/effect for idiomatic Schema usage before writing it.",
         "Add tests for ready, approval-required, input-required, and one bad row that must fail."
       ]
     },
@@ -58,7 +58,7 @@
       ],
       "add": [
           "One local JSONL event file with ready, approval-required, and input-required examples.",
-          "One check command that validates every row, prints classifications and stop reasons, and saves a receipt from real output.",
+          "One check command — strict TypeScript toolchain (tsgo, oxlint, oxfmt, Ultracite) plus an Effect Schema parser — that validates every row, prints classifications and stop reasons, and saves a receipt from real output.",
           "Tests that prove good rows classify and malformed rows fail with a useful error."
       ],
       "stop": [
@@ -68,7 +68,7 @@
       "exampleTitle": "Tiny check output shape",
       "example": "file: data/issue-events.jsonl\ncommand: pnpm run check:issues\nread: 3 events\nready: ISSUE-001\napproval-required: ISSUE-002 — needs human approval\ninput-required: ISSUE-003 — missing acceptance criteria\nrefused: ISSUE-002, ISSUE-003\nreceipt: receipts/issue-check-001.json"
   };
-  const starterPrompt = "Use VISION.md from Lesson 01. Create issues.jsonl or data/issue-events.jsonl with ready, approval-required, and input-required examples. Add the smallest local check command that validates every row, fails loudly on bad input, prints the file read, event count, classifications, stop reasons, next allowed action, and refused action. Add tests, run the commands from the repo root, and save one receipt from real output. Keep it local; do not add auth, external issue APIs, GitHub writes, schedulers, or background workers yet.";
+  const starterPrompt = "Use VISION.md from Lesson 01. Create issues.jsonl or data/issue-events.jsonl with ready, approval-required, and input-required examples. Add the smallest local check command that validates every row, fails loudly on bad input, prints the file read, event count, classifications, stop reasons, next allowed action, and refused action. Build it on a strict Matt Pocock-style TypeScript config with tsgo, oxlint, oxfmt, and Ultracite for fast strict checks, and use an Effect Schema to parse each row so bad input fails with a typed error — read .agent_sources/effect for idiomatic Schema usage first. Add tests, run the commands from the repo root, and save one receipt from real output. Keep it local; do not add auth, external issue APIs, GitHub writes, schedulers, or background workers yet.";
   const explorationPrompts = [
     {
       "label": "Design event examples",

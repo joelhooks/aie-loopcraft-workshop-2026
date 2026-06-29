@@ -10,9 +10,9 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("supervisor-runtime");
-  const promptContext = "Use the same event file and check command from earlier lessons. First add a plain TypeScript candidate check that returns the next state and reason for one issue. Then compare its answer with the current checker: the current checker still decides, and any mismatch stops here.";
+  const promptContext = "You do not hand the next decision to code you have never watched decide. By now the checker can read events, build the issue summary, show state, claim ready work, clean up after itself, and ask for review — but one path still owns the next state, and that ownership should be earned in the open. So we add a small candidate check and run it in shadow mode beside the current one: same input, same checks, its own answer, and a receipt that shows where the two agree or disagree. The current code stays in charge until the receipts keep matching. Only then does the candidate get to decide for real.";
   const proofItems = [
-    "A plain TypeScript function, data table, or transition table returns the next state and reason from one issue event.",
+    "A small XState machine (or a transition table on the way to one) returns the next state and reason from one issue event.",
     "The compare command runs the current checker and candidate check against the same input.",
     "A compare-only receipt shows inputEvent, currentDecision, candidateDecision, agreement, reason, and current checker still in charge.",
     "One recovery drill proves stale, running, failed, or interrupted work stops with a reason."
@@ -21,7 +21,7 @@
     {
       "title": "Write the candidate check",
       "items": [
-        "Start with plain TypeScript data or one function, not a library. Name the events it accepts, then return next state and reason."
+        "Model the next-state decision as a small XState machine: name the events it accepts as explicit states and transitions instead of scattered booleans, then return the next state and reason. Read .agent_sources/xstate for idiomatic setup and actor usage before writing it."
       ]
     },
     {
@@ -49,7 +49,7 @@
           "Enough evidence to compare a new decision path without letting it drive the loop."
       ],
       "add": [
-          "A plain TypeScript candidate check that returns the next state and reason for one issue event.",
+          "A small XState candidate machine (or transition table on the way to one) that returns the next state and reason for one issue event.",
           "A compare command that runs the current checker and candidate check against the same input.",
           "One normal comparison receipt and one recovery drill receipt."
       ],
@@ -61,11 +61,11 @@
       "exampleTitle": "Tiny compare-only receipt shape",
       "example": "mode: compare-only\ninputEvent: ISSUE-001 ready\ncurrentDecision: ready -> dry-run claim allowed\ncandidateDecision: ready -> dry-run claim allowed\nagreement: yes\ncurrentCheckerStillInCharge: true\nrecoveryDrill: stale claim -> stopped with reason"
   };
-  const starterPrompt = "Use the event file and check command from earlier lessons. Add a plain TypeScript candidate check that returns the next state and reason for one issue. Run it beside the current checker as a compare-only check. Save a receipt with inputEvent, currentDecision, candidateDecision, agreement, reason, current checker still in charge, and one stale/failed/interrupted recovery case. Do not let the candidate check write to GitHub, APIs, product files, timers, or parallel worktrees yet.";
+  const starterPrompt = "Use the event file and check command from earlier lessons. Add a small XState candidate machine — explicit states and transitions, not scattered booleans — that returns the next state and reason for one issue; read .agent_sources/xstate for idiomatic setup and actor usage first. Run it beside the current checker as a compare-only check. Save a receipt with inputEvent, currentDecision, candidateDecision, agreement, reason, current checker still in charge, and one stale/failed/interrupted recovery case. Do not let the candidate machine write to GitHub, APIs, product files, timers, or parallel worktrees yet.";
   const explorationPrompts = [
     {
       "label": "Name the candidate check",
-      "text": "List the events, checks, actions, command, and receipt path. Start with a TypeScript table or function, then say which current checker code remains in charge."
+      "text": "List the events, checks, actions, command, and receipt path. Model it as a small XState machine — states, events, transitions — then say which current checker code remains in charge."
     },
     {
       "label": "Compare decisions",

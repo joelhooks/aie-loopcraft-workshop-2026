@@ -10,7 +10,7 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("pi-herdr-control");
-  const promptContext = "The checker now has a local event file, tests, receipts, and a Lakebed view. Add one status command and one Pi command so a person can see whether the check is running, stale, waiting, or done before any claim step exists.";
+  const promptContext = "A check you cannot see is a check you cannot trust to be current. If the process is invisible, you will miss the moment it goes stale, gets stuck, or quietly waits for input you never gave it. The checker already has events, tests, receipts, and a Lakebed view; the missing piece is operation. This lesson adds one place to ask the only question that matters while it runs: is it running, stale, waiting, or done? Pi gives the request path, Herdr keeps the process visible, and receipts keep both honest — all before any real claim step exists.";
   const proofItems = [
     "A named Herdr pane runs the status/check command and keeps the latest logs visible.",
     "A status command reports state, checkedAt, lastCommand, lastReceipt, and waitingReason.",

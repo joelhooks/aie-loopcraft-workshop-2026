@@ -12,6 +12,8 @@ Prereqs:
 - Docker Desktop or OrbStack with Docker Compose (`docker compose version` or `docker-compose version`)
 - pnpm 11+ for the short command below
 
+> **Fast track requires Docker Compose.** Before running the start command, make sure either `docker compose version` or `docker-compose version` works. If both fail, install or update Docker Desktop / OrbStack first.
+
 ```sh
 git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
 cd aie-loopcraft-workshop-2026

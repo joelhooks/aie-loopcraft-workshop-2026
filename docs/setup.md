@@ -32,6 +32,18 @@ Host-machine path adds:
 - Herdr
 - Claude Code, Codex, and OpenCode if you want the comparison agent shells
 
+## Fast-track prerequisite: Docker Compose
+
+The fast track starts inside the Docker workshop computer. Before cloning or running the start command, confirm one of these works:
+
+```sh
+docker compose version
+# or
+docker-compose version
+```
+
+If both fail, install or update Docker Desktop / OrbStack first. Host Herdr is not required, but Docker Compose is.
+
 ## Happy path: Docker + Herdr
 
 Clone the repo:

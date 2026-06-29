@@ -215,6 +215,10 @@ Stop rules: do not edit files before Lesson 01 asks. Lesson 01 stops at VISION.m
   />
 <h2>Get started</h2>
 <p>Use Docker as the main path. You need Git, Docker Desktop or OrbStack, and Corepack for the pinned pnpm command. Herdr opens inside the container, so you do not need Herdr installed on your host machine.</p>
+<div class="fast-track-callout">
+  <strong>Fast track requires Docker Compose.</strong>
+  <p>Before you run the start command, make sure either <code>docker compose version</code> or <code>docker-compose version</code> works. If both fail, install or update Docker Desktop / OrbStack first.</p>
+</div>
 <ol class="start-steps">
       <li>
         <span>Clone the repo.</span>
@@ -355,6 +359,29 @@ pnpm run workshop:herdr</code></pre>
   .agent-links {
     font-family: var(--font-sans);
     margin: 14px 0 0;
+  }
+
+  .fast-track-callout {
+    background: #fffdf8;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    margin: 18px 0;
+    padding: 14px 16px;
+  }
+
+  .fast-track-callout strong {
+    color: var(--text);
+    display: block;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .fast-track-callout p {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.45;
+    margin: 0;
   }
 
   .start-steps {

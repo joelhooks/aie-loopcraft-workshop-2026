@@ -8,3 +8,4 @@ build/
 .pi/git/
 .pi/notes-bridge/
 subagent-output/
+.wzrrd/

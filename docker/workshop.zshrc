@@ -18,7 +18,7 @@ DISABLE_AUTO_UPDATE="true"
 COMPLETION_WAITING_DOTS="true"
 HYPHEN_INSENSITIVE="true"
 
-if [[ -d "$ZSH" ]]; then
+if [[ -d "$ZSH" && -o interactive && -t 0 && -t 1 ]]; then
   plugins=(git)
   for plugin in npm node pnpm docker docker-compose zsh-autosuggestions zsh-syntax-highlighting; do
     if [[ -d "$ZSH/plugins/$plugin" || -d "$ZSH_CUSTOM/plugins/$plugin" ]]; then

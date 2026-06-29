@@ -1,4 +1,4 @@
-# 08 · Run the supervisor beside the current path
+# 08 · Run the supervisor beside the current check
 
 ## Challenge
 

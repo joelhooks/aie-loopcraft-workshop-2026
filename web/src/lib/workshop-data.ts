@@ -3,7 +3,7 @@ export const site = {
   title: "AI Engineer Loopcraft Workshop 2026",
   url: "https://aie-loopcraft-workshop-2026.wzrrd.sh/",
   repo: "https://github.com/joelhooks/aie-loopcraft-workshop-2026",
-  version: "0.8.9",
+  version: "0.8.10",
 };
 
 export type Lesson = {
@@ -51,7 +51,7 @@ export const lessons: Lesson[] = [
   {
     "id": "safe-dispatch",
     "number": "05",
-    "title": "Claim one ready issue without changing files",
+    "title": "Claim one ready issue without changing product files",
     "shortTitle": "Claim + dry-run",
     "href": "/lessons/05-safe-dispatch/",
     "challenge": "Pick one ready issue, write a claim, run a dry-run, and prove no product files changed."
@@ -75,10 +75,10 @@ export const lessons: Lesson[] = [
   {
     "id": "supervisor-runtime",
     "number": "08",
-    "title": "Run the supervisor beside the current path",
+    "title": "Run the supervisor beside the current check",
     "shortTitle": "Supervisor check",
     "href": "/lessons/08-supervisor-runtime/",
-    "challenge": "Run a small supervisor beside the current check so it says the next state and why before it is allowed to take over."
+    "challenge": "Use the same event file and check command while a small TypeScript decision check says the next state and reason. The current checker still decides."
   }
 ];
 

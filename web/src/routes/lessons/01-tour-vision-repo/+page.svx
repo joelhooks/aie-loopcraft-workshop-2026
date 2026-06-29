@@ -35,7 +35,7 @@
       ]
     }
   ];
-  const starterPrompt = "Use grill-with-docs to help me define a small local issue checker before we write code.\n\nRead README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.\n\nAsk one question at a time. Capture what the checker should do, which files it may edit, what needs approval, what is out of scope, and when it must stop. Write the answers into VISION.md. Update AGENTS.md or README.md only if we agree on a clear repo rule. Do not create issue events, checks, UI code, background workers, external tracker setup, or product code yet.";
+  const starterPrompt = "Use grill-with-docs to help me define a small local issue checker before we write code.\n\nRead README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.\n\nAsk one question at a time. Capture what the checker should do, which files it may edit, what needs approval, what is out of scope, and when it must stop. Write the answers into VISION.md. Update AGENTS.md or README.md only if we agree on a clear repo rule. Do not create issue events, checks, UI code, background workers, external tracker setup, or product code yet. End by reporting the VISION.md sections changed and confirming no event, check, UI, or product files were created.";
   const explorationPrompts = [
     {
       "label": "Clarify boundaries",

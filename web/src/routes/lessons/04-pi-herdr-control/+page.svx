@@ -9,11 +9,11 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("pi-herdr-control");
-  const promptContext = "The checker now has local events, tests, receipts, and a Lakebed view. The next problem is operation: can you see whether the check is running, stale, waiting, or done? This lesson keeps the status path small and visible before any real claim step exists.";
+  const promptContext = "The checker now has a local event file, tests, receipts, and a Lakebed view. Add one status command and one Pi command so a person can see whether the check is running, stale, waiting, or done before any claim step exists.";
   const proofItems = [
-    "A named Herdr pane runs the status process, watcher, or check script.",
+    "A named Herdr pane runs the status/check command and keeps the latest logs visible.",
     "A status command reports state, checkedAt, lastCommand, lastReceipt, and waitingReason.",
-    "Pi can inspect status and run the local check.",
+    "Pi can run status and check-now against the local event file.",
     "Pi output, Herdr output, Lakebed state, and the latest receipt name the same issue and latest check."
   ];
   const phases = [
@@ -42,11 +42,11 @@
       ]
     }
   ];
-  const starterPrompt = "Add the smallest local status path for the checker. Keep Herdr visible with a Pi pane and a status/check pane. Add status output with state, checkedAt, lastCommand, lastReceipt, and waitingReason. Add a Pi command or prompt that can inspect status and run the local check. Prove Pi output, Herdr output, Lakebed state, and the receipt name the same issue and latest check. Do not add claim commands or background scheduling yet.";
+  const starterPrompt = "Add the smallest local status command for the checker. Keep Herdr visible with a Pi pane and a status/check pane. Print state, checkedAt, lastCommand, lastReceipt, and waitingReason. Add a Pi command or prompt for status and check-now. Prove Pi output, Herdr output, Lakebed state, and the receipt name the same issue and latest check. Do not add claim commands or background scheduling yet.";
   const explorationPrompts = [
     {
       label: "Check status visibility",
-      text: "Inspect the Pi command, Herdr pane setup, Lakebed status, and local check command. Tell me whether a person can see if the checker is alive, waiting, or failed without reading code."
+      text: "Inspect the Pi command, Herdr pane setup, Lakebed status, and local check command. Tell me whether a person can see if the checker is running, stale, waiting, done, or failed without reading code."
     },
     {
       label: "Make status boring",
@@ -78,7 +78,7 @@
 <LessonEvidence items={proofItems} />
 <ReceiptTemplate fields={receiptFields} />
 <h2>Done when</h2>
-<p>You can start, inspect, and rerun the local check from Pi while Herdr shows what happened and the latest receipt proves it.</p>
+<p>Pi can run status/check-now, Herdr shows the run, and the latest receipt names the same issue, command, and checkedAt value.</p>
 <h2>Why it matters</h2>
 <ul>
   <li><strong>Risk reduced:</strong> you can tell whether the checker is running, stale, waiting, or done.</li>

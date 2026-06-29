@@ -14,10 +14,10 @@ Lesson 01 is a tour plus a `grill-with-docs` question pass. It defines the visio
 2. [Make bad input fail loudly](02-reliability-floor.md)
 3. [Show issue events in Lakebed](03-lakebed-projection.md)
 4. [See and control the check from Pi and Herdr](04-pi-herdr-control.md)
-5. [Claim one ready issue without changing files](05-safe-dispatch.md)
+5. [Claim one ready issue without changing product files](05-safe-dispatch.md)
 6. [Let cleanup propose one follow-up](06-bounded-gardener.md)
 7. [Ask for review without handing over the repo](07-specialist-review.md)
-8. [Run the supervisor beside the current path](08-supervisor-runtime.md)
+8. [Run the supervisor beside the current check](08-supervisor-runtime.md)
 
 ## Repeated checkpoint questions
 

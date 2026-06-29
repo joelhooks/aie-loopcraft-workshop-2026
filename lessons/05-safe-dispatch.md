@@ -1,4 +1,4 @@
-# 05 · Claim one ready issue without changing files
+# 05 · Claim one ready issue without changing product files
 
 ## Challenge
 
@@ -20,7 +20,7 @@ First, the script must check that the issue is ready, write the claim, run only 
 ## Starter prompt
 
 ```txt
-Use one ready issue from the local check. Add rules that say yes/no for the selected issue, write a claim event before any work attempt, run only in dry-run or memory mode, and save a receipt that links the rule decision, claim event, dry-run result, refused actions, and next action. Prove zero product files changed. Do not call an LLM API, GitHub API, or any network service yet.
+Use one ready issue from the local check. Add rules that say yes/no for the selected issue, write a claim event before any work attempt, run only in dry-run or memory mode, and save a receipt that links the rule decision, claim event, dry-run result, refused actions, productChangedFiles, and next action. Prove productChangedFiles is empty. Do not call an LLM API, GitHub API, or any network service yet.
 ```
 
 ## Build / operate

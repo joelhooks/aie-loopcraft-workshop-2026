@@ -85,7 +85,7 @@
 <LessonEvidence items={proofItems} />
 <ReceiptTemplate fields={receiptFields} />
 <h2>Done when</h2>
-<p>The check command reads the local event file, prints clear classifications, fails on malformed input, and leaves a receipt from a real run.</p>
+<p>A fresh reader can run the typecheck, tests, and issue check from the repo root, see clear classifications, watch malformed input fail, and find the saved receipt.</p>
 <h2>Why it matters</h2>
 <ul>
   <li><strong>Risk reduced:</strong> bad input fails before an agent can build on it.</li>

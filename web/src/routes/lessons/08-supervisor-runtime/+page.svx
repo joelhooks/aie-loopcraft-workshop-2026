@@ -9,59 +9,59 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("supervisor-runtime");
-  const promptContext = "By now the checker can read event files, build the issue summary, add page controls, preview work, clean up old receipts, and ask for review. The last move is to show which code decides the next state. First the supervisor only compares answers. Later, after the receipts match, it can make the real choice.";
+  const promptContext = "Use the same event file and check command from earlier lessons. Add a plain TypeScript decision table or function that returns nextState and reason for one issue. Run that check beside the current checker as a supervisor comparison: the current checker still decides, and any mismatch stops here.";
   const proofItems = [
-    "A small state machine, XState actor, or one small function returns the next issue state.",
-    "The supervisor decision runs beside the current check/write path, but does not take over.",
-    "A comparison receipt shows where the two paths agree or disagree.",
-    "One recovery drill proves stale/running/failed state is handled deliberately."
+    "A TypeScript function, data table, or transition table returns nextState and reason from one issue event.",
+    "The compare command runs the current checker and the new decision check against the same input.",
+    "A comparison receipt shows inputEvent, currentDecision, supervisorDecision, agreement, reason, and current checker still in charge.",
+    "One recovery drill proves stale, running, failed, or interrupted work stops with a reason."
   ];
   const phases = [
     {
-      title: "Name the states",
+      title: "Write the next-state check",
       items: [
-        "Model states such as idle, checking, waiting-for-input, waiting-for-approval, claimed, dispatched, failed, and stopped."
+        "Start with plain TypeScript data or one function, not a library. Name the states and events it accepts, then return nextState and reason."
       ]
     },
     {
-      title: "Run beside the current path",
+      title: "Run beside the current checker",
       items: [
-        "Keep the current path in charge. The supervisor makes the same decision in parallel and records its answer."
+        "Use the same event file and check command. Keep the current checker in charge; the supervisor answer is for comparison only."
       ]
     },
     {
       title: "Compare decisions",
       items: [
-        "Write a receipt that includes input event, current decision, supervisor decision, agreement, and reason."
+        "Write a receipt that includes inputEvent, currentDecision, supervisorDecision, agreement, reason, and current checker still in charge."
       ]
     },
     {
       title: "Drill recovery",
       items: [
-        "Simulate stale, failed, or interrupted work and show the supervisor's next state."
+        "Simulate stale, failed, or interrupted work and show the nextState, reason, and stop message."
       ]
     }
   ];
-  const starterPrompt = "Run the supervisor beside the current local check and GitHub-write code. Save a receipt that shows the input, the current code's answer, the supervisor's answer, whether they match, and one stale/failed/interrupted recovery case. Keep the current code in charge; the supervisor must not write to GitHub yet.";
+  const starterPrompt = "Use the event file and check command from earlier lessons. Add a plain TypeScript decision table or function that returns nextState and reason for one issue. Run it beside the current checker as a supervisor comparison. Save a receipt with inputEvent, currentDecision, supervisorDecision, agreement, reason, and one stale/failed/interrupted recovery case. Keep the current checker in charge; the supervisor must not write to GitHub, APIs, or product files yet.";
   const explorationPrompts = [
     {
-      label: "Name the state machine",
-      text: "List the supervisor states, events, checks, and actions for the current issue checker. Keep it beside the current path and say which code remains in charge."
+      label: "Name the next-state check",
+      text: "List the states, events, checks, actions, command, and receipt path. Start with a TypeScript table or function, then say which current checker code remains in charge."
     },
     {
       label: "Compare decisions",
-      text: "Run or simulate one issue through the current check path and the supervisor path. Write a comparison table: input, current decision, supervisor decision, agreement, and receipt path."
+      text: "Run or simulate one issue through the current checker and the TypeScript decision check. Write a comparison table: input, currentDecision, supervisorDecision, agreement, reason, and receipt path."
     },
     {
       label: "Practice recovery",
-      text: "Pick one bad state: stale claim, failed check, interrupted run, or missing receipt. Describe the recovery event, owner, next safe action, and proof that the checker stopped safely."
+      text: "Pick one bad state: stale claim, failed check, interrupted run, or missing receipt. Describe the recovery event, next safe action, stop message, and proof that the checker stopped safely."
     }
   ];
   const receiptFields = [
-    "mode: off / shadow / on",
+    "mode: compare-only; current checker stays in charge",
     "inputEvent: event or issue inspected",
-    "currentDecision: current path result",
-    "supervisorDecision: supervisor result",
+    "currentDecision: current checker result",
+    "supervisorDecision: supervisor comparison result",
     "agreement: yes / no plus reason",
     "recoveryDrill: scenario and result",
     "nextAction: keep comparing, fix mismatch, or promote later"
@@ -75,19 +75,19 @@
 <h2>Build checklist</h2>
 <PhaseChecklist lessonId={lesson.id} phases={phases} />
 <h2>Proof to save</h2>
-<p>Save proof that the supervisor can compare one normal decision and one recovery case without taking over.</p>
+<p>Save proof that the TypeScript next-state check matches one normal decision and one recovery case without taking over.</p>
 <LessonEvidence items={proofItems} />
 <ReceiptTemplate fields={receiptFields} />
 <h2>Done when</h2>
-<p>A comparison receipt proves the supervisor agrees on one normal decision, and a recovery drill handles one bad state on purpose.</p>
+<p>One comparison receipt shows the current checker and supervisor agree for a normal issue, and one recovery receipt shows stale, failed, or interrupted work stops safely.</p>
 <h2>Why it matters</h2>
 <ul>
-  <li><strong>Risk reduced:</strong> every next state, stop, recovery, and receipt is visible before the supervisor takes over.</li>
-  <li><strong>Temptation avoided:</strong> replacing the current path before the comparison receipts stay boring.</li>
+  <li><strong>Risk reduced:</strong> the code that suggests nextState and reason is visible before it can decide anything.</li>
+  <li><strong>Temptation avoided:</strong> swapping in a new controller before it matches the current checker.</li>
   <li><strong>Do not automate yet:</strong> parallel worktrees, timers, provider switching, or real reviewer launches.</li>
 </ul>
 <h2>Try this 🔨</h2>
-<p>For one issue, name the current state, the event that moves it, and which code owns the next decision.</p>
+<p>For one issue, name the current state, the event read, the current checker decision, and the TypeScript check decision.</p>
 <h2>Exploration prompts</h2>
 <ExplorationPrompts lessonId={lesson.id} prompts={explorationPrompts} />
 </LessonShell>

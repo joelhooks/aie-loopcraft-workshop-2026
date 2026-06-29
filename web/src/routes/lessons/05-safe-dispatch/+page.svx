@@ -9,12 +9,12 @@
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("safe-dispatch");
-  const promptContext = "This is where people get sloppy. A ready issue is not permission to let an unsupervised agent change files in the repo. First, the script must check that the issue is ready, write the claim, run only a dry-run or memory-mode step, and save evidence.";
+  const promptContext = "A ready issue is not permission to change product files. First, the script checks the issue state, writes one claim event, runs only dry-run or memory mode, and saves a receipt that proves what happened.";
   const proofItems = [
     "A rule check says whether an issue may be claimed and why.",
     "A claim event is written before any work attempt.",
     "The run stays in dry-run or memory mode and does not change product files.",
-    "The receipt links the rule decision, claim event, dry-run result, refused actions, and next action."
+    "The receipt links the rule decision, claim event, dry-run result, refused actions, productChangedFiles, and next action."
   ];
   const phases = [
     {
@@ -42,7 +42,7 @@
       ]
     }
   ];
-  const starterPrompt = "Use one ready issue from the local check. Add rules that say yes/no for the selected issue, write a claim event before any work attempt, run only in dry-run or memory mode, and save a receipt that links the rule decision, claim event, dry-run result, refused actions, and next action. Prove zero product files changed. Do not call an LLM API, GitHub API, or any network service yet.";
+  const starterPrompt = "Use one ready issue from the local check. Add rules that say yes/no for the selected issue, write a claim event before any work attempt, run only in dry-run or memory mode, and save a receipt that links the rule decision, claim event, dry-run result, refused actions, productChangedFiles, and next action. Prove productChangedFiles is empty. Do not call an LLM API, GitHub API, or any network service yet.";
   const explorationPrompts = [
     {
       label: "Check whether it can be claimed",
@@ -62,7 +62,7 @@
     "decision: claim allowed / refused plus reason",
     "claimEvent: event id or file offset",
     "mode: dry-run or memory",
-    "changedFiles: should be none",
+    "productChangedFiles: []",
     "receiptPath: saved receipt",
     "nextAllowedAction: decision after dry-run"
   ];
@@ -79,7 +79,7 @@
 <LessonEvidence items={proofItems} />
 <ReceiptTemplate fields={receiptFields} />
 <h2>Done when</h2>
-<p>One ready issue has a yes/no decision, claim event, dry-run result, and receipt with no hidden file changes.</p>
+<p>One ready issue has a yes/no decision, claim event, dry-run result, saved receipt, and <code>productChangedFiles: []</code>.</p>
 <h2>Why it matters</h2>
 <ul>
   <li><strong>Risk reduced:</strong> ready work cannot skip the claim and dry-run checks.</li>

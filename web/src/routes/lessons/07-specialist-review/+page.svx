@@ -14,7 +14,7 @@
     "A role contract says what the reviewer may read, produce, and refuse.",
     "An input file is generated from issue state and acceptance criteria.",
     "The reviewer run or saved fake output writes a review note, not product changes.",
-    "A receipt links issue id, input file path, review output path, model/tool used, changed files, and next decision."
+    "A receipt links issue id, input file path, review output path, model/tool used, productChangedFiles, and next decision."
   ];
   const phases = [
     {
@@ -42,7 +42,7 @@
       ]
     }
   ];
-  const starterPrompt = "Add one read-only reviewer path controlled by the main script. Create a small input file from the issue and acceptance criteria, run or fake the reviewer, save its output, and write a receipt that links the issue, input file, output file, changed files, and next decision. By default, the reviewer must not edit product files.";
+  const starterPrompt = "Add one read-only reviewer path controlled by the main script. Create a small input file from the issue and acceptance criteria, run or fake the reviewer, save its output, and write a receipt that links the issue, input file, output file, productChangedFiles, and next decision. By default, the reviewer must not edit product files.";
   const explorationPrompts = [
     {
       label: "Shape the input file",
@@ -62,7 +62,7 @@
     "role: scout or reviewer",
     "inputPath: reviewer input file saved",
     "outputPath: review output saved",
-    "changedFiles: should be none",
+    "productChangedFiles: []",
     "decisionNeeded: approve / reject / ask more",
     "nextAllowedAction: what may happen after review"
   ];
@@ -79,10 +79,10 @@
 <LessonEvidence items={proofItems} />
 <ReceiptTemplate fields={receiptFields} />
 <h2>Done when</h2>
-<p>One review note exists, is linked to one issue, and did not change product files.</p>
+<p>One review note exists, links to one issue and input file, and the receipt shows <code>productChangedFiles: []</code>.</p>
 <h2>Why it matters</h2>
 <ul>
-  <li><strong>Risk reduced:</strong> extra agent help cannot silently become a second implementation path.</li>
+  <li><strong>Risk reduced:</strong> review output cannot silently become a second implementation path.</li>
   <li><strong>Temptation avoided:</strong> handing the repo to another agent because review feels helpful.</li>
   <li><strong>Do not automate yet:</strong> default implementer roles, product file edits, or automatic follow-up work.</li>
 </ul>

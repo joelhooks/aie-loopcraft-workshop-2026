@@ -33,11 +33,10 @@ fi
 
 # fzf and Atuin are installed in the published image; keep both optional for
 # older images so a plain `git pull && pnpm run workshop` still improves what it can.
-for fzf_file in \
-  /usr/share/doc/fzf/examples/key-bindings.zsh \
-  /usr/share/doc/fzf/examples/completion.zsh; do
-  [[ -r "$fzf_file" ]] && source "$fzf_file"
-done
+if [[ -o interactive && -t 0 && -t 1 ]]; then
+  [[ -r /usr/share/doc/fzf/examples/completion.zsh ]] && source /usr/share/doc/fzf/examples/completion.zsh
+  [[ -r /usr/share/doc/fzf/examples/key-bindings.zsh ]] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+fi
 
 if command -v atuin >/dev/null 2>&1 && [[ -o interactive && -t 0 && -t 1 ]]; then
   eval "$(atuin init zsh --disable-ai)"

@@ -42,4 +42,4 @@ echo "Herdr session: ${session_name}"
 exec docker compose run --rm \
   -e HERDR_SESSION="${session_name}" \
   workshop \
-  zsh -lc 'cd /workspace && herdr integration install pi >/tmp/herdr-pi-integration.log 2>&1 || { cat /tmp/herdr-pi-integration.log >&2; exit 1; }; herdr --session "$HERDR_SESSION"'
+  zsh -lc 'cd /workspace && mkdir -p /home/workshop/.pi/agent/extensions /home/workshop/.pi/agent/sessions && herdr integration install pi >/tmp/herdr-pi-integration.log 2>&1 || { cat /tmp/herdr-pi-integration.log >&2; exit 1; }; herdr --session "$HERDR_SESSION"'

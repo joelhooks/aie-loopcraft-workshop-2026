@@ -1,8 +1,92 @@
 <script lang="ts">
-  import LessonPage from "$lib/lesson-page.svelte";
-  import { lessons } from "$lib/workshop-data";
+  import FeedbackSection from "$lib/feedback-section.svelte";
+  import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
+  import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
+  import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
+  import PromptBlock from "$lib/prompt-block.svelte";
+  import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
+  import { getLesson } from "$lib/workshop-data";
 
-  const lesson = lessons[3];
+  const lesson = getLesson("pi-herdr-control");
+  const promptContext = "The checker now has local events, tests, receipts, and a Lakebed view. The next problem is operation: can you see whether the check is running, stale, waiting, or done? This lesson keeps the status path small and visible before any real claim step exists.";
+  const proofItems = [
+    "A named Herdr pane runs the status process, watcher, or check script.",
+    "A status command reports state, checkedAt, lastCommand, lastReceipt, and waitingReason.",
+    "Pi can inspect status and run the local check.",
+    "Pi output, Herdr output, Lakebed state, and the latest receipt name the same issue and latest check."
+  ];
+  const phases = [
+    {
+      title: "Make state visible",
+      items: [
+        "Start with the status process, watcher, or check script. Name the pane and keep logs visible in Herdr."
+      ]
+    },
+    {
+      title: "Add stable status output",
+      items: [
+        "Return state, checkedAt, lastCommand, lastReceipt, and waitingReason as JSON or a stable text shape."
+      ]
+    },
+    {
+      title: "Wire Pi controls",
+      items: [
+        "Add the smallest Pi command or prompt path for status and check-now. Do not add claim commands yet."
+      ]
+    },
+    {
+      title: "Compare the outputs",
+      items: [
+        "Run one check from Pi, watch Herdr output, inspect the receipt, and compare Lakebed state."
+      ]
+    }
+  ];
+  const starterPrompt = "Add the smallest local status path for the checker. Keep Herdr visible with a Pi pane and a status/check pane. Add status output with state, checkedAt, lastCommand, lastReceipt, and waitingReason. Add a Pi command or prompt that can inspect status and run the local check. Prove Pi output, Herdr output, Lakebed state, and the receipt name the same issue and latest check. Do not add claim commands or background scheduling yet.";
+  const explorationPrompts = [
+    {
+      label: "Check status visibility",
+      text: "Inspect the Pi command, Herdr pane setup, Lakebed status, and local check command. Tell me whether a person can see if the checker is alive, waiting, or failed without reading code."
+    },
+    {
+      label: "Make status boring",
+      text: "Design the smallest status output for the checker. Include state, checkedAt, lastCommand, lastReceipt, waitingReason, and next safe action."
+    },
+    {
+      label: "Prove agreement",
+      text: "Run or describe the proof that Pi output, Herdr output, Lakebed state, and the receipt all point at the same current issue state. Report mismatches before changing anything."
+    }
+  ];
+  const receiptFields = [
+    "herdrPane: pane name and command",
+    "statusCommand: command and output shape",
+    "piCommand: command or prompt used",
+    "latestReceipt: path inspected",
+    "outputAgreement: Pi / Herdr / Lakebed / receipt comparison",
+    "waitingReason: what blocks movement, if anything"
+  ];
 </script>
 
-<LessonPage {lesson} />
+<LessonShell lesson={lesson}>
+<p>{promptContext}</p>
+<h2>Starter prompt</h2>
+<PromptBlock id="lesson-pi-herdr-control-starter-prompt-block" text={starterPrompt} />
+<h2>Build checklist</h2>
+<PhaseChecklist lessonId={lesson.id} phases={phases} />
+<h2>Proof to save</h2>
+<p>Save proof that status, command output, and the visible panes all describe the same current state.</p>
+<LessonEvidence items={proofItems} />
+<ReceiptTemplate fields={receiptFields} />
+<h2>Done when</h2>
+<p>You can start, inspect, and rerun the local check from Pi while Herdr shows what happened and the latest receipt proves it.</p>
+<h2>Why it matters</h2>
+<ul>
+  <li><strong>Risk reduced:</strong> you can tell whether the checker is running, stale, waiting, or done.</li>
+  <li><strong>Temptation avoided:</strong> hiding real state inside a terminal nobody is watching.</li>
+  <li><strong>Do not automate yet:</strong> claim commands, background scheduling, or real work execution.</li>
+</ul>
+<h2>Try this 🔨</h2>
+<p>Pretend the status is stale. Name the first three places you inspect before running anything else.</p>
+<h2>Exploration prompts</h2>
+<ExplorationPrompts lessonId={lesson.id} prompts={explorationPrompts} />
+</LessonShell>

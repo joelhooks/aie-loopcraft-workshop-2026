@@ -15,6 +15,7 @@
 <nav class="workshop-nav" aria-label="Workshop navigation">
   <a class:active={current === "home"} href={href("/")}>Workshop</a>
   <a class:active={current === "lessons"} href={href("/lessons/")}>Lessons</a>
+  <a class:active={current === "glossary"} href={href("/glossary/")}>Glossary</a>
   <a href={site.repo}>Repo</a>
 </nav>
 

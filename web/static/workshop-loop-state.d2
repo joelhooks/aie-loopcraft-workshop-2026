@@ -1,6 +1,6 @@
 direction: down
 
-blocked: "approval_required\noperator gate is visible" {
+blocked: "approval_required\napproval gate is visible" {
   shape: rectangle
   style.fill: "#f4f1e8"
   style.stroke: "#2f5f6f"
@@ -48,14 +48,14 @@ next: "board updates\nor one next issue appears" {
   style.stroke: "#2f5f6f"
 }
 
-blocked -> ready: "operator approves"
+blocked -> ready: "you approve"
 ready -> checking: "manual check / daemon tick"
 checking -> decision: "project state"
 decision -> doing: "yes"
 decision -> needs_input: "no"
 doing -> receipt: "write evidence"
 receipt -> next: "append progression"
-needs_input -> blocked: "operator answers" {
+needs_input -> blocked: "you answer" {
   style.stroke-dash: 3
 }
 next -> ready: "more ready work" {

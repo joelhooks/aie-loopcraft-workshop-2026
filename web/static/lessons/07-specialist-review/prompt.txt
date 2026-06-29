@@ -1,0 +1,1 @@
+Add one read-only reviewer path controlled by the main script. Create a small input file from the issue and acceptance criteria, run or fake the reviewer, save its output, and write a receipt that links the issue, input file, output file, changed files, and next decision. By default, the reviewer must not edit product files.

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="760" height="980" viewBox="0 0 760 980" role="img" aria-labelledby="title desc">
-  <title id="title">Loopcraft in Pi one hour flow</title>
+  <title id="title">Loopcraft in Pi flow</title>
   <desc id="desc">A vertical flow from Herdr setup through Lakebed approval, loop daemon check, receipt, visible progression, and next issue.</desc>
   <defs>
     <style>
@@ -11,18 +11,18 @@
   <g transform="translate(60 45)">
     <rect class="box" width="640" height="96" rx="12"/>
     <text class="txt" x="24" y="36">0. Start with the rig already alive</text>
-    <text class="small" x="24" y="64">Herdr has two panes: operator Pi chat + running loop daemon/status surface.</text>
+    <text class="small" x="24" y="64">Herdr has two panes: Pi chat plus running loop daemon/status output.</text>
     <text class="mono" x="24" y="84">preseed: container • Lakebed capsule • Pi extension shell</text>
 
     <path class="arrow" d="M320 108 V145"/>
     <rect class="hot" y="150" width="640" height="106" rx="12"/>
     <text class="txt" x="24" y="188">1. Lakebed shows the work</text>
     <text class="small" x="24" y="216">A compact board has blocked, ready, doing, and done lanes.</text>
-    <text class="mono" x="24" y="238">one visible issue starts approval_required / needs operator</text>
+    <text class="mono" x="24" y="238">one visible issue starts approval_required / needs you</text>
 
     <path class="arrow" d="M320 268 V305"/>
     <rect class="box" y="310" width="640" height="106" rx="12"/>
-    <text class="txt" x="24" y="348">2. Operator approves one issue</text>
+    <text class="txt" x="24" y="348">2. You approve one issue</text>
     <text class="small" x="24" y="376">The UI appends an issue.updated event instead of mutating hidden state.</text>
     <text class="mono" x="24" y="398">approval_required → ready</text>
 

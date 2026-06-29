@@ -1,6 +1,7 @@
 import adapter from "@sveltejs/adapter-static";
 import { mdsvex } from "mdsvex";
 import { codeToHtml } from "shiki";
+import { feedbackSectionsPreprocess } from "./mdsvex-feedback-sections.js";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -16,6 +17,7 @@ const config = {
     },
   },
   preprocess: [
+    feedbackSectionsPreprocess(),
     mdsvex({
       extensions: [".svx"],
       highlight: {

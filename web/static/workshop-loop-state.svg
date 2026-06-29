@@ -15,11 +15,11 @@
     <rect class="accent" width="520" height="90" rx="12"/>
     <text class="num" x="24" y="28">01</text>
     <text class="label" x="58" y="32">approval_required</text>
-    <text class="small" x="58" y="58">operator gate is visible on the board</text>
+    <text class="small" x="58" y="58">approval gate is visible on the board</text>
     <text class="mono" x="58" y="78">human approval required</text>
   </g>
   <path class="arrow" d="M380 214 V258"/>
-  <text class="note" x="404" y="242">operator approves</text>
+  <text class="note" x="404" y="242">you approve</text>
 
   <g transform="translate(120 270)">
     <rect class="box" width="520" height="86" rx="12"/>

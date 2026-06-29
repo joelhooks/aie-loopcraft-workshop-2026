@@ -1,0 +1,273 @@
+<script lang="ts">
+  import { page } from "$app/state";
+  import FeedbackExportGate from "$lib/feedback-export-gate.svelte";
+  import FeedbackSection from "$lib/feedback-section.svelte";
+  import { isFeedbackEnabled, withFeedback } from "$lib/feedback";
+  import ReportLayout from "$lib/ReportLayout.svelte";
+  import WorkshopNav from "$lib/workshop-nav.svelte";
+  import { site } from "$lib/workshop-data";
+
+  type GlossaryEntry = {
+    id: string;
+    term: string;
+    definition: string;
+    useItWhen: string;
+    links: { label: string; href: string }[];
+  };
+
+  const feedbackEnabled = $derived(isFeedbackEnabled(page.url));
+  const href = $derived((value: string) => withFeedback(value, feedbackEnabled));
+
+  const entries: GlossaryEntry[] = [
+    {
+      id: "local-issue-progress-loop",
+      term: "Local issue-progress loop",
+      definition: "The small system you build here: it reads issue facts, decides the next safe move, stops when it needs you, and writes evidence.",
+      useItWhen: "Use this as the north star for every lesson. If a change does not help the loop read, decide, stop, show, or leave receipts, it can probably wait.",
+      links: [{ label: "Workshop home", href: "/" }],
+    },
+    {
+      id: "issue-event",
+      term: "Issue event",
+      definition: "A local JSONL record that describes something about an issue: new work, missing input, approval required, a claim, a result, or a status change.",
+      useItWhen: "Use issue events as the loop's source material before adding trackers, databases, or background workers.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
+    },
+    {
+      id: "reliability-floor",
+      term: "Reliability floor",
+      definition: "The first set of checks that makes bad input, type mistakes, and confusing output fail loudly.",
+      useItWhen: "Build this before giving the loop more power. The floor is what keeps later autonomy from turning into vibes.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
+    },
+    {
+      id: "receipt",
+      term: "Receipt",
+      definition: "A saved record of what the loop read, decided, refused, changed, checked, and what should happen next.",
+      useItWhen: "Write receipts whenever the loop classifies work, projects state, dispatches, asks a specialist, or compares supervisor decisions.",
+      links: [
+        { label: "Lesson 02", href: "/lessons/02-reliability-floor/" },
+        { label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" },
+      ],
+    },
+    {
+      id: "stop-rule",
+      term: "Stop rule",
+      definition: "A plain boundary that tells the agent when to pause instead of guessing or editing ahead.",
+      useItWhen: "Name stop rules before implementation work starts: missing input, required approval, dirty repo, broken checks, or unclear ownership.",
+      links: [{ label: "Lesson 01", href: "/lessons/01-tour-vision-repo/" }],
+    },
+    {
+      id: "guardrail",
+      term: "Guardrail",
+      definition: "A command, check, hook, schema, or policy that catches mistakes early and explains the failure.",
+      useItWhen: "Add guardrails one at a time so the loop learns from clear failures instead of burying errors in a long run.",
+      links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
+    },
+    {
+      id: "lakebed",
+      term: "Lakebed",
+      definition: "The local view that shows issue state from the same facts the loop already trusts.",
+      useItWhen: "Use Lakebed to inspect the queue. Do not let the view become a second source of truth.",
+      links: [{ label: "Lesson 03", href: "/lessons/03-lakebed-projection/" }],
+    },
+    {
+      id: "pi",
+      term: "Pi",
+      definition: "The coding-agent shell used as the main request path for prompts, status checks, receipts, and small loop moves.",
+      useItWhen: "Use Pi when you need to ask for the next pass, inspect evidence, or decide whether the loop may continue.",
+      links: [{ label: "Lesson 04", href: "/lessons/04-pi-herdr-control/" }],
+    },
+    {
+      id: "herdr",
+      term: "Herdr",
+      definition: "The visible terminal workbench where Pi, commands, logs, status output, and runtime processes can sit side by side.",
+      useItWhen: "Use Herdr when you need to see whether the loop is alive, waiting, stale, running, failed, or finished.",
+      links: [{ label: "Lesson 04", href: "/lessons/04-pi-herdr-control/" }],
+    },
+    {
+      id: "safe-dispatch",
+      term: "Safe dispatch",
+      definition: "Moving one ready item toward execution only after policy, ownership, safe mode, and receipts are in place.",
+      useItWhen: "Use safe dispatch to separate 'this looks ready' from 'the loop is allowed to act now.'",
+      links: [{ label: "Lesson 05", href: "/lessons/05-safe-dispatch/" }],
+    },
+    {
+      id: "dispatch-policy",
+      term: "Dispatch policy",
+      definition: "The rule-based decision that says whether an issue may be claimed, must be refused, or needs approval first.",
+      useItWhen: "Use policy before any implementation pass so the loop can explain why work is safe or blocked.",
+      links: [{ label: "Lesson 05", href: "/lessons/05-safe-dispatch/" }],
+    },
+    {
+      id: "claim-event",
+      term: "Claim event",
+      definition: "A recorded event showing the loop took ownership before a dispatch attempt.",
+      useItWhen: "Write a claim before work starts so later receipts can explain who owned the move and when it happened.",
+      links: [{ label: "Lesson 05", href: "/lessons/05-safe-dispatch/" }],
+    },
+    {
+      id: "dry-run-mode",
+      term: "Dry-run mode",
+      definition: "A safe practice run that reports what would happen without changing product files.",
+      useItWhen: "Use dry-run mode before real dispatch, gardener apply, or supervisor promotion.",
+      links: [
+        { label: "Lesson 05", href: "/lessons/05-safe-dispatch/" },
+        { label: "Lesson 06", href: "/lessons/06-bounded-gardener/" },
+      ],
+    },
+    {
+      id: "bounded-gardener",
+      term: "Bounded gardener",
+      definition: "A maintenance pass that can propose cleanup work, but only inside clear limits and with visible stop reasons.",
+      useItWhen: "Use a gardener after the core loop has receipts and guards. It should never quietly invent or apply broad work.",
+      links: [{ label: "Lesson 06", href: "/lessons/06-bounded-gardener/" }],
+    },
+    {
+      id: "dirty-worktree-guard",
+      term: "Dirty-worktree guard",
+      definition: "A check that stops maintenance or dispatch when the repo already has uncommitted changes.",
+      useItWhen: "Use it to avoid mixing old work, new work, and generated follow-up tasks in one confusing pile.",
+      links: [{ label: "Lesson 06", href: "/lessons/06-bounded-gardener/" }],
+    },
+    {
+      id: "specialist-review",
+      term: "Specialist review",
+      definition: "A narrow read-only help pass from another agent that returns evidence or critique without taking over implementation.",
+      useItWhen: "Use specialists when the main loop owns the question, packet, artifact, and decision about what happens next.",
+      links: [{ label: "Lesson 07", href: "/lessons/07-specialist-review/" }],
+    },
+    {
+      id: "work-packet",
+      term: "Work packet",
+      definition: "A small bundle of issue context, acceptance criteria, files, and questions handed to a specialist or agent pass.",
+      useItWhen: "Use a packet to keep delegated work bounded, reviewable, and tied to the current issue.",
+      links: [{ label: "Lesson 07", href: "/lessons/07-specialist-review/" }],
+    },
+    {
+      id: "supervisor-runtime",
+      term: "Supervisor runtime",
+      definition: "A small state machine that names lifecycle states and compares decisions before it is allowed to drive execution.",
+      useItWhen: "Use a supervisor only after the existing path has enough evidence to compare against.",
+      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
+    },
+    {
+      id: "shadow-mode",
+      term: "Shadow mode",
+      definition: "A safe rollout mode where the supervisor makes a decision beside the current path, but the current path stays in charge.",
+      useItWhen: "Use shadow mode until comparison receipts stay boring enough to earn promotion.",
+      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
+    },
+    {
+      id: "lifecycle-state",
+      term: "Lifecycle state",
+      definition: "A named condition such as idle, checking, waiting for input, waiting for approval, claimed, dispatched, failed, or stopped.",
+      useItWhen: "Use lifecycle states when the loop needs retries, cancellation, approval gates, stale detection, or recovery.",
+      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
+    },
+    {
+      id: "comparison-receipt",
+      term: "Comparison receipt",
+      definition: "A saved record comparing the existing decision path with the supervisor's decision.",
+      useItWhen: "Use it to prove shadow mode agrees, find mismatches, and decide whether the supervisor needs more work.",
+      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
+    },
+    {
+      id: "recovery-drill",
+      term: "Recovery drill",
+      definition: "A deliberate test of what happens when work is stale, failed, running too long, or interrupted.",
+      useItWhen: "Run a recovery drill before trusting a runtime to handle bad states on its own.",
+      links: [{ label: "Lesson 08", href: "/lessons/08-supervisor-runtime/" }],
+    },
+  ];
+
+</script>
+
+<svelte:head>
+  <title>Glossary · {site.title}</title>
+  <meta name="description" content="Plain-language glossary for the Loopcraft workshop lessons." />
+</svelte:head>
+
+<ReportLayout>
+  <WorkshopNav current="glossary" />
+
+  <p class="eyebrow"><span class="mascot">📎</span><span class="eyebrow-stack"><span>Appendix</span><span>{site.title}</span></span></p>
+  <h1>Glossary</h1>
+
+  <FeedbackSection id="glossary-intro">
+    <p class="lead">Use this when a lesson names a tool, guardrail, or loop concept and you want the plain version fast.</p>
+    <p>Each term links back to the lesson where it matters most. When a lesson introduces a new term, add it here and link both directions.</p>
+  </FeedbackSection>
+
+  <FeedbackSection id="glossary-linking-rule">
+    <p class="glossary-rule">Two-way rule: glossary entries link to the lesson that uses them, and lesson pages should link back here when a term becomes important enough to slow someone down.</p>
+  </FeedbackSection>
+
+  <FeedbackSection id="glossary-terms">
+    <div class="glossary-grid">
+      {#each entries as entry}
+        <article class="glossary-card" id={entry.id}>
+          <h2>{entry.term}</h2>
+          <p>{entry.definition}</p>
+          <p class="glossary-use"><strong>Use it when:</strong> {entry.useItWhen}</p>
+          <p class="glossary-links">
+            See:
+            {#each entry.links as link, index}
+              <a href={href(link.href)}>{link.label}</a>{index < entry.links.length - 1 ? ", " : ""}
+            {/each}
+          </p>
+        </article>
+      {/each}
+    </div>
+  </FeedbackSection>
+
+  <FeedbackExportGate run="glossary" slug={`${site.slug}-glossary`} url={`${site.url}glossary/`} version={site.version} />
+
+  <footer>
+    <a href={href("/")}>Workshop home</a> · <a href={href("/lessons/")}>All lessons</a> · <a href={site.repo}>Public repo</a>
+  </footer>
+</ReportLayout>
+
+<style>
+  .glossary-rule {
+    background: #fffdf8;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.45;
+    margin: 18px 0 24px;
+    padding: 12px 14px;
+  }
+
+  .glossary-grid {
+    display: grid;
+    gap: 16px;
+    margin: 20px 0 28px;
+  }
+
+  .glossary-card {
+    background: #fffdf8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .glossary-card h2 {
+    font-size: 24px;
+    margin-top: 0;
+  }
+
+  .glossary-card p {
+    margin: 10px 0 0;
+  }
+
+  .glossary-use,
+  .glossary-links {
+    color: var(--text-dim);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+</style>

@@ -66,11 +66,11 @@
   });
 </script>
 
-<section class="feedback-paragraph" data-paragraph-id={id}>
+<section class="feedback-paragraph" data-paragraph-id={id} data-feedback-section-id={id}>
   <div class="paragraph-copy">
     {@render children()}
   </div>
-  <div class="feedback-bar" aria-label={`Feedback for ${id}`}>
+  <div class="feedback-bar" aria-label={`Section feedback for ${id}`}>
     <button
       type="button"
       class="feedback-toggle"
@@ -82,7 +82,7 @@
       <span>steer</span>
     </button>
 
-    <div class="reaction-row" aria-label="Paragraph reactions">
+    <div class="reaction-row" aria-label="Section reactions">
       {#each reactions as item}
         <button
           type="button"

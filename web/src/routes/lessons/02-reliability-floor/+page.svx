@@ -1,8 +1,99 @@
 <script lang="ts">
-  import LessonPage from "$lib/lesson-page.svelte";
-  import { lessons } from "$lib/workshop-data";
+  import FeedbackSection from "$lib/feedback-section.svelte";
+  import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
+  import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
+  import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
+  import PromptBlock from "$lib/prompt-block.svelte";
+  import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
+  import { getLesson } from "$lib/workshop-data";
 
-  const lesson = lessons[1];
+  const lesson = getLesson("reliability-floor");
+  const promptContext = "Create one local event file and one check command. The command should read every row, fail loudly on bad input, print ready / approval-required / input-required items, and save enough output that the next pass can trust what happened.";
+  const proofItems = [
+    "A local event file exists at issues.jsonl or data/issue-events.jsonl with ready, approval-required, and input-required examples.",
+    "The check command runs from the repo root and prints the file read, event count, classifications, stop reasons, next action, and refused action.",
+    "Tests prove good rows classify correctly and one malformed row fails with a useful error.",
+    "One saved receipt or run log shows real command output, not a hand-written summary."
+  ];
+  const phases = [
+    {
+      "title": "Read the rules",
+      "items": [
+        "Start from VISION.md and AGENTS.md. Keep the tracker local. Do not add auth, schedulers, external issue APIs, or GitHub writes yet."
+      ]
+    },
+    {
+      "title": "Add local events",
+      "items": [
+        "Create issues.jsonl or data/issue-events.jsonl with one ready item, one approval-required item, and one input-required item."
+      ]
+    },
+    {
+      "title": "Add fast checks",
+      "items": [
+        "Add package scripts for typecheck, lint, format, test, and the issue check while preserving the workshop web scripts.",
+        "Use strict TypeScript and fast lint/format checks so sloppy edits fail early."
+      ]
+    },
+    {
+      "title": "Validate and classify",
+      "items": [
+        "Add src/issue-events.ts for the event parser and src/loop-check.ts for the check command.",
+        "Add tests for ready, approval-required, input-required, and one bad row that must fail."
+      ]
+    },
+    {
+      "title": "Save command output",
+      "items": [
+        "Run typecheck, tests, and the issue check from the repo root, then save one receipt or run log from the real output."
+      ]
+    }
+  ];
+  const starterPrompt = "Use VISION.md from Lesson 01. Create issues.jsonl or data/issue-events.jsonl with ready, approval-required, and input-required examples. Add the smallest local check command that validates every row, fails loudly on bad input, prints the file read, event count, classifications, stop reasons, next allowed action, and refused action. Add tests, run the commands from the repo root, and save one receipt from real output. Keep it local; do not add auth, external issue APIs, GitHub writes, schedulers, or background workers yet.";
+  const explorationPrompts = [
+    {
+      "label": "Design event examples",
+      "text": "Using VISION.md, propose three local issue-event examples: ready, approval_required, and input_required. Include fields and one sentence explaining each classification. Do not create files until I approve."
+    },
+    {
+      "label": "Review the check command",
+      "text": "Inspect package scripts, parsers, tests, and check output. Tell me the exact command that proves the local event file works and what evidence the receipt should save."
+    },
+    {
+      "label": "Break a bad input",
+      "text": "Create or describe one malformed issue event that should fail validation. Explain the expected error and which test should cover it. Do not weaken the parser."
+    }
+  ];
+  const receiptFields = [
+    "file: issues.jsonl or data/issue-events.jsonl",
+    "command: typecheck, tests, and the local issue check",
+    "output: event count and ready / approval-required / input-required groups",
+    "stop condition: bad input fails; approval-required and input-required items do not move",
+    "receipt: saved run log or receipt path"
+  ];
 </script>
 
-<LessonPage {lesson} />
+<LessonShell lesson={lesson}>
+<p>{promptContext}</p>
+<h2>Starter prompt</h2>
+<PromptBlock id="lesson-reliability-floor-starter-prompt-block" text={starterPrompt} />
+<h2>Build checklist</h2>
+<PhaseChecklist lessonId={lesson.id} phases={phases} />
+<h2>Proof to save</h2>
+<p>Save proof from the event file, the commands, and the failing-input test.</p>
+<LessonEvidence items={proofItems} />
+<ReceiptTemplate fields={receiptFields} />
+<h2>Done when</h2>
+<p>The check command reads the local event file, prints clear classifications, fails on malformed input, and leaves a receipt from a real run.</p>
+<h2>Why it matters</h2>
+<ul>
+  <li><strong>Risk reduced:</strong> bad input fails before an agent can build on it.</li>
+  <li><strong>Temptation avoided:</strong> wiring UI, GitHub, or scheduling before the local facts are trustworthy.</li>
+  <li><strong>Do not automate yet:</strong> claiming work, writing to trackers, or running implementation passes.</li>
+</ul>
+<h2>Try this 🔨</h2>
+<p>Change one event field to an invalid value, run the check, and confirm the error tells you which row failed.</p>
+<h2>Exploration prompts</h2>
+<ExplorationPrompts lessonId={lesson.id} prompts={explorationPrompts} />
+</LessonShell>

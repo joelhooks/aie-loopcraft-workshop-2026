@@ -1,0 +1,45 @@
+# AI Engineer Loopcraft Workshop 2026
+
+Purpose: hands-on workshop for building a small local issue-progress loop with coding agents. The loop reads local issue events, classifies ready/blocked work, stops for approval or missing input, writes receipts, and later projects state into Lakebed.
+
+Primary public URL: https://aie-loopcraft-workshop-2026.wzrrd.sh/
+Public repo: https://github.com/joelhooks/aie-loopcraft-workshop-2026
+
+## Start here
+
+- Agent start guide: /agent.md
+- Public coding-agent instructions: /AGENTS.md
+- Setup source in repo: `docs/setup.md`
+- Lesson index: /lessons/
+- Glossary appendix: /glossary/
+- Lesson 01: /lessons/01-tour-vision-repo/
+- Lesson 01 starter prompt: /lessons/01-tour-vision-repo/prompt.txt
+- Lesson 02: /lessons/02-reliability-floor/
+- Lesson 02 starter prompt: /lessons/02-reliability-floor/prompt.txt
+
+## Docker happy path
+
+```sh
+git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
+cd aie-loopcraft-workshop-2026
+corepack enable
+corepack prepare pnpm@11.9.0 --activate
+pnpm run workshop
+```
+
+`pnpm run workshop` starts Herdr inside the Docker container. Host Herdr is not required.
+
+## Agent boundary
+
+Use the public repo, the public lesson pages, and the files in the cloned workshop project. Do not assume private machine paths, hidden auth, raw transcripts, MCP, OAuth, external issue APIs, or unpublished setup. If a tool asks for auth, the person running the workshop must sign in locally or inside the container.
+
+## Lesson map
+
+1. Tour the repo, define `VISION.md`, and set stop rules before code.
+2. Build a local reliability floor: local issue events, strict TypeScript, schemas, classifier, tests, and one check receipt.
+3. Project issue state into Lakebed.
+4. Control the loop from Pi and Herdr.
+5. Make dispatch safe.
+6. Add a bounded gardener.
+7. Add specialist review carefully.
+8. Shadow the supervisor runtime.

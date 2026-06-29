@@ -1,8 +1,93 @@
 <script lang="ts">
-  import LessonPage from "$lib/lesson-page.svelte";
-  import { lessons } from "$lib/workshop-data";
+  import FeedbackSection from "$lib/feedback-section.svelte";
+  import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
+  import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
+  import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
+  import PromptBlock from "$lib/prompt-block.svelte";
+  import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
+  import { getLesson } from "$lib/workshop-data";
 
-  const lesson = lessons[6];
+  const lesson = getLesson("specialist-review");
+  const promptContext = "A reviewer is useful when your main script decides what to ask, writes the input file, saves the review note, and waits for you before changing anything. It is dangerous when it becomes a second implementation path. This lesson keeps the reviewer read-only until you approve what happens next.";
+  const proofItems = [
+    "A role contract says what the reviewer may read, produce, and refuse.",
+    "An input file is generated from issue state and acceptance criteria.",
+    "The reviewer run or saved fake output writes a review note, not product changes.",
+    "A receipt links issue id, input file path, review output path, model/tool used, changed files, and next decision."
+  ];
+  const phases = [
+    {
+      title: "Pick one role",
+      items: [
+        "Use scout or reviewer first. Do not add implementer as the default role."
+      ]
+    },
+    {
+      title: "Generate an input file",
+      items: [
+        "Create a small file from issue state, relevant files, constraints, and acceptance criteria."
+      ]
+    },
+    {
+      title: "Run or fake read-only help",
+      items: [
+        "Save the review output under a predictable path. Do not let it edit product files."
+      ]
+    },
+    {
+      title: "Review before action",
+      items: [
+        "Compare the review output to the issue and record what you can approve, reject, or ask next."
+      ]
+    }
+  ];
+  const starterPrompt = "Add one read-only reviewer path controlled by the main script. Create a small input file from the issue and acceptance criteria, run or fake the reviewer, save its output, and write a receipt that links the issue, input file, output file, changed files, and next decision. By default, the reviewer must not edit product files.";
+  const explorationPrompts = [
+    {
+      label: "Shape the input file",
+      text: "Choose one issue and build a read-only reviewer input file: role, question, files to inspect, acceptance criteria, output path, and stop rules. Do not let the reviewer edit product files."
+    },
+    {
+      label: "Review the output",
+      text: "Inspect a review note and compare it to the issue acceptance criteria. Summarize useful evidence, unsupported claims, and what you would do next."
+    },
+    {
+      label: "Classify the role",
+      text: "For this request, decide whether the helper should be a scout, reviewer, implementer, or no-run. Explain the choice and the risk you are avoiding."
+    }
+  ];
+  const receiptFields = [
+    "issueId: issue reviewed",
+    "role: scout or reviewer",
+    "inputPath: reviewer input file saved",
+    "outputPath: review output saved",
+    "changedFiles: should be none",
+    "decisionNeeded: approve / reject / ask more",
+    "nextAllowedAction: what may happen after review"
+  ];
 </script>
 
-<LessonPage {lesson} />
+<LessonShell lesson={lesson}>
+<p>{promptContext}</p>
+<h2>Starter prompt</h2>
+<PromptBlock id="lesson-specialist-review-starter-prompt-block" text={starterPrompt} />
+<h2>Build checklist</h2>
+<PhaseChecklist lessonId={lesson.id} phases={phases} />
+<h2>Proof to save</h2>
+<p>Save proof that the reviewer got a bounded input file, produced a review note, and did not edit product files.</p>
+<LessonEvidence items={proofItems} />
+<ReceiptTemplate fields={receiptFields} />
+<h2>Done when</h2>
+<p>One review note exists, is linked to one issue, and did not change product files.</p>
+<h2>Why it matters</h2>
+<ul>
+  <li><strong>Risk reduced:</strong> extra agent help cannot silently become a second implementation path.</li>
+  <li><strong>Temptation avoided:</strong> handing the repo to another agent because review feels helpful.</li>
+  <li><strong>Do not automate yet:</strong> default implementer roles, product file edits, or automatic follow-up work.</li>
+</ul>
+<h2>Try this 🔨</h2>
+<p>Classify a request as scout, reviewer, implementer, or do-not-run, then explain why.</p>
+<h2>Exploration prompts</h2>
+<ExplorationPrompts lessonId={lesson.id} prompts={explorationPrompts} />
+</LessonShell>

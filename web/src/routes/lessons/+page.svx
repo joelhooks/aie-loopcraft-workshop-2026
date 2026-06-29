@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import FeedbackExportGate from "$lib/feedback-export-gate.svelte";
-  import FeedbackMode from "$lib/feedback-mode.svelte";
+  import FeedbackSection from "$lib/feedback-section.svelte";
   import { isFeedbackEnabled, withFeedback } from "$lib/feedback";
   import ReportLayout from "$lib/ReportLayout.svelte";
   import WorkshopNav from "$lib/workshop-nav.svelte";
@@ -9,7 +9,6 @@
 
   const feedbackEnabled = $derived(isFeedbackEnabled(page.url));
   const href = $derived((value: string) => withFeedback(value, feedbackEnabled));
-  const feedbackParagraphs = ["lessons-lead", "lessons-index"];
 </script>
 
 <svelte:head>
@@ -23,27 +22,27 @@
   <p class="eyebrow"><span class="mascot">🧭</span><span class="eyebrow-stack"><span>Lesson Map</span><span>{site.title}</span></span></p>
   <h1>Eight passes from vision to loop leverage.</h1>
 
-  <FeedbackMode id="lessons-lead" note="Does this explain how to use the lesson pages clearly enough?">
-    <p class="lead">Work through these in order. Each page gives a challenge, starter prompt, build/operate target, observation point, checkpoint, tiny drill, and the run-06 scar behind the move.</p>
-  </FeedbackMode>
+  <FeedbackSection id="lessons-overview">
+    <p class="lead">Work through these in order. Each page gives a challenge, copyable prompt, visible build target, evidence to inspect, checkpoint, tiny drill, and a plain-language reason for the step. Keep the <a href={href("/glossary/")}>glossary appendix</a> open when a term gets fuzzy.</p>
+  </FeedbackSection>
 
-  <FeedbackMode id="lessons-index" note="Does this lesson list make the progression and outcomes easy to scan?">
-    <ol class="lesson-index lesson-index-large">
-      {#each lessons as lesson}
-        <li>
-          <a href={href(lesson.href)}>
-            <span>{lesson.number}</span>
-            <strong>{lesson.title}</strong>
-          </a>
-          <p>{lesson.challenge}</p>
-        </li>
-      {/each}
-    </ol>
-  </FeedbackMode>
+<h2>All lessons</h2>
 
-  <FeedbackExportGate paragraphs={feedbackParagraphs} run="lesson-index" slug={`${site.slug}-lessons`} url={`${site.url}lessons/`} version={site.version} />
+<ol class="lesson-index lesson-index-large">
+  {#each lessons as lesson}
+    <li>
+      <a href={href(lesson.href)}>
+        <span>{lesson.number}</span>
+        <strong>{lesson.title}</strong>
+      </a>
+      <p>{lesson.challenge}</p>
+    </li>
+  {/each}
+</ol>
+
+  <FeedbackExportGate run="lesson-index" slug={`${site.slug}-lessons`} url={`${site.url}lessons/`} version={site.version} />
 
   <footer>
-    Lessons are rails. Issues are the product substrate the loop builds toward.
+    Lessons are the path. Issue events are the project data the loop builds toward. <a href={href("/glossary/")}>Glossary</a>
   </footer>
 </ReportLayout>

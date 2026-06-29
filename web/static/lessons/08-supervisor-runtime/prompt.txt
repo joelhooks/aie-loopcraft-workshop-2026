@@ -1,0 +1,1 @@
+Run the supervisor beside the current local check and GitHub-write code. Save a receipt that shows the input, the current code's answer, the supervisor's answer, whether they match, and one stale/failed/interrupted recovery case. Keep the current code in charge; the supervisor must not write to GitHub yet.

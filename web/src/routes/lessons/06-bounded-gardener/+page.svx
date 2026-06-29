@@ -1,8 +1,93 @@
 <script lang="ts">
-  import LessonPage from "$lib/lesson-page.svelte";
-  import { lessons } from "$lib/workshop-data";
+  import FeedbackSection from "$lib/feedback-section.svelte";
+  import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
+  import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
+  import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
+  import PromptBlock from "$lib/prompt-block.svelte";
+  import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
+  import { getLesson } from "$lib/workshop-data";
 
-  const lesson = lessons[5];
+  const lesson = getLesson("bounded-gardener");
+  const promptContext = "This cleanup command is not a tiny product agent. Its job is to look for a short list of maintenance signals and create at most one issue event. If the repo is dirty, the checker is running, or a matching follow-up already exists, it should print the reason and exit.";
+  const proofItems = [
+    "A dry-run cleanup command prints the issue event it would write without changing files.",
+    "Apply mode can write one fully formed maintenance event when every stop check passes.",
+    "Dirty repo, duplicate follow-up, running loop process, approval-required work, and input-required work stop the command visibly.",
+    "A receipt records what it saw, what it proposed, and why it stopped."
+  ];
+  const phases = [
+    {
+      title: "Define allowed maintenance",
+      items: [
+        "Name the specific facts the cleanup command may turn into events. Everything else is out of scope."
+      ]
+    },
+    {
+      title: "Add stop checks first",
+      items: [
+        "Refuse to run when jj status is not clean, the loop process is running, a matching follow-up already exists, an event is waiting for approval, an event asks for more input, or changed files are outside the allowed paths."
+      ]
+    },
+    {
+      title: "Run dry-run before apply",
+      items: [
+        "Dry-run prints the event it would write. Apply writes only one safe event and records a receipt."
+      ]
+    },
+    {
+      title: "Prove duplicate protection",
+      items: [
+        "Run the command twice and show the second run refuses to recreate the same follow-up."
+      ]
+    }
+  ];
+  const starterPrompt = "Add a cleanup command that can propose at most one maintenance issue event. Start with explicit allowed maintenance types and printed stop messages. Dry-run must show the event it would write; apply may write one fully formed event only when every stop check passes. Refuse to run when jj status is dirty, the loop process is running, the queue already has a matching follow-up, an event needs approval, or an event needs more input. Save a receipt with inspected files, proposed event id, written event id if any, and the printed stop message.";
+  const explorationPrompts = [
+    {
+      label: "Find boring maintenance",
+      text: "Scan the repo for maintenance facts the cleanup command may notice: stale receipt, missing link, outdated status, duplicate follow-up, or incomplete event. Return candidates only; do not edit."
+    },
+    {
+      label: "Define boundaries",
+      text: "Write the allowed maintenance types and exact stop messages for the cleanup command. Include dirty repo, running loop process, duplicate follow-up, approval-required work, and missing input."
+    },
+    {
+      label: "Dry-run one event",
+      text: "Take one maintenance candidate and show the exact event the cleanup command would write in dry-run mode. Explain why apply should or should not be allowed."
+    }
+  ];
+  const receiptFields = [
+    "mode: dry-run or apply",
+    "inputsSeen: files/events inspected",
+    "proposedEvents: event ids or summaries",
+    "writtenEvents: event ids, if any",
+    "stopMessages: exact messages printed when the command refused to run",
+    "duplicateCheck: result of second run",
+    "nextAction: approve, fix input, or leave it alone"
+  ];
 </script>
 
-<LessonPage {lesson} />
+<LessonShell lesson={lesson}>
+<p>{promptContext}</p>
+<h2>Starter prompt</h2>
+<PromptBlock id="lesson-bounded-gardener-starter-prompt-block" text={starterPrompt} />
+<h2>Build checklist</h2>
+<PhaseChecklist lessonId={lesson.id} phases={phases} />
+<h2>Proof to save</h2>
+<p>Save proof that the cleanup command can propose one event, write at most one event, and refuse unsafe runs.</p>
+<LessonEvidence items={proofItems} />
+<ReceiptTemplate fields={receiptFields} />
+<h2>Done when</h2>
+<p>The cleanup command can propose or write one useful maintenance event and can explain why it refused the next one.</p>
+<h2>Why it matters</h2>
+<ul>
+  <li><strong>Risk reduced:</strong> cleanup cannot touch the repo freely or create duplicate work.</li>
+  <li><strong>Temptation avoided:</strong> turning cleanup into a catch-all agent.</li>
+  <li><strong>Do not automate yet:</strong> broad file edits, unbounded scanning, or automatic product changes.</li>
+</ul>
+<h2>Try this 🔨</h2>
+<p>Read one printed stop message and say what you would do next: approve, fix the input, or leave it alone.</p>
+<h2>Exploration prompts</h2>
+<ExplorationPrompts lessonId={lesson.id} prompts={explorationPrompts} />
+</LessonShell>

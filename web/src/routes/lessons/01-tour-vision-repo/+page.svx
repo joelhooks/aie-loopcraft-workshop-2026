@@ -1,8 +1,84 @@
 <script lang="ts">
-  import LessonPage from "$lib/lesson-page.svelte";
-  import { lessons } from "$lib/workshop-data";
+  import FeedbackSection from "$lib/feedback-section.svelte";
+  import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
+  import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
+  import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
+  import PromptBlock from "$lib/prompt-block.svelte";
+  import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
+  import { getLesson } from "$lib/workshop-data";
 
-  const lesson = lessons[0];
+  const lesson = getLesson("tour-vision-repo");
+  const promptContext = "Start by writing the rules for a local issue checker. It should say what the checker will do, which files it may edit, what needs approval, and the exact point where it must stop. No issue events, checks, UI work, or product edits yet.";
+  const proofItems = [
+    "VISION.md names the local issue checker goal, allowed files, approval points, non-goals, and stop rules.",
+    "AGENTS.md or README.md changes are durable repo rules or commands, not lesson notes.",
+    "The repo still has no issue events, check command, product code, external tracker setup, or background worker."
+  ];
+  const phases = [
+    {
+      "title": "Read the starting files",
+      "items": [
+        "Read README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed."
+      ]
+    },
+    {
+      "title": "Write the issue checker rules",
+      "items": [
+        "Ask one question at a time, then write the agreed goal, allowed files, approval points, non-goals, and stop rules into VISION.md."
+      ]
+    },
+    {
+      "title": "Stop before product work",
+      "items": [
+        "Only update AGENTS.md or README.md for a real repo rule. Leave event files, checks, UI code, and product edits for later lessons."
+      ]
+    }
+  ];
+  const starterPrompt = "Use grill-with-docs to help me define a small local issue checker before we write code.\n\nRead README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.\n\nAsk one question at a time. Capture what the checker should do, which files it may edit, what needs approval, what is out of scope, and when it must stop. Write the answers into VISION.md. Update AGENTS.md or README.md only if we agree on a clear repo rule. Do not create issue events, checks, UI code, background workers, external tracker setup, or product code yet.";
+  const explorationPrompts = [
+    {
+      "label": "Clarify boundaries",
+      "text": "Read VISION.md, README.md, AGENTS.md, and WORKSHOP_RIG.md. List the local issue checker goal, allowed files, approval points, non-goals, and stop rules. If any are missing, ask me one question before suggesting edits."
+    },
+    {
+      "label": "Find stop rules",
+      "text": "Scan the repo instructions and lesson notes. Name every point where the issue checker should stop instead of guessing. Return a short stop-rule list with the file each rule belongs in."
+    },
+    {
+      "label": "Check for early scope",
+      "text": "Inspect the repo for issue events, check commands, UI changes, external tracker setup, or product code that should wait until later lessons. Report anything that looks too early and why."
+    }
+  ];
+  const receiptFields = [
+    "file: VISION.md",
+    "commands: none required beyond inspection",
+    "output: goal, allowed files, approval points, non-goals, and stop rules are written down",
+    "stop condition: no event files, checks, UI work, or product edits were created",
+    "receipt: this committed or saved VISION.md change"
+  ];
 </script>
 
-<LessonPage {lesson} />
+<LessonShell lesson={lesson}>
+<p>{promptContext}</p>
+<h2>Starter prompt</h2>
+<PromptBlock id="lesson-tour-vision-repo-starter-prompt-block" text={starterPrompt} />
+<h2>Build checklist</h2>
+<PhaseChecklist lessonId={lesson.id} phases={phases} />
+<h2>Proof to save</h2>
+<p>Save proof that you wrote the rule file and stopped before code.</p>
+<LessonEvidence items={proofItems} />
+<ReceiptTemplate fields={receiptFields} />
+<h2>Done when</h2>
+<p><code>VISION.md</code> can answer what the issue checker does, which files it may edit, what needs approval, and what waits for Lesson 02.</p>
+<h2>Why it matters</h2>
+<ul>
+  <li><strong>Risk reduced:</strong> the first agent pass gets clear file boundaries before it edits.</li>
+  <li><strong>Temptation avoided:</strong> jumping into product code before stop rules exist.</li>
+  <li><strong>Do not automate yet:</strong> issue events, check commands, UI work, tracker writes, and background work.</li>
+</ul>
+<h2>Try this 🔨</h2>
+<p>Read one <code>VISION.md</code> sentence and classify it as goal, allowed file, approval point, non-goal, or stop rule.</p>
+<h2>Exploration prompts</h2>
+<ExplorationPrompts lessonId={lesson.id} prompts={explorationPrompts} />
+</LessonShell>

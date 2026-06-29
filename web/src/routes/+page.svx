@@ -1,193 +1,458 @@
 <script lang="ts">
   import { page } from "$app/state";
   import FeedbackExportGate from "$lib/feedback-export-gate.svelte";
-  import FeedbackMode from "$lib/feedback-mode.svelte";
+  import FeedbackSection from "$lib/feedback-section.svelte";
   import { isFeedbackEnabled, withFeedback } from "$lib/feedback";
   import FlowChart from "$lib/flow-chart.svelte";
+  import PromptBlock from "$lib/prompt-block.svelte";
   import ReportLayout from "$lib/ReportLayout.svelte";
   import StatLine from "$lib/stat-line.svelte";
   import ToolGrid from "$lib/tool-grid.svelte";
   import WorkshopNav from "$lib/workshop-nav.svelte";
   import { lessons, site, stats } from "$lib/workshop-data";
 
-  const tools = [
-    { name: "Pi", icon: "spark", text: "The operator harness. We use it to prompt the next move, inspect evidence, and add small local controls." },
-    { name: "Herdr", icon: "check", text: "The two-pane shape: one pane for Pi, one pane for runtime/status output." },
-    { name: "Docker Compose", icon: "guard", text: "The recommended workshop computer. Tool versions stay boring and auth stays out of the image." },
-    { name: "Lakebed", icon: "check", text: "The operator surface. It projects issue facts into list, board, and event views." },
-    { name: "Effect", icon: "guard", text: "The boundary tool. Schemas and structured errors make sloppy issue input hard to ignore." },
-    { name: "XState", icon: "check", text: "The lifecycle tool. We use it when the loop has real states, gates, retries, and recovery paths." },
-    { name: "pi-subagents", icon: "chat", text: "Bounded specialist help. Scouts and reviewers produce artifacts; they do not get the keys by default." },
-    { name: "Claude Code, Codex, OpenCode", icon: "chat", text: "Optional comparison harnesses in the workshop computer. Pi stays the main teaching surface." },
-    { name: "Guardrails", icon: "guard", text: "pnpm, TypeScript, tsgo, oxlint, oxfmt, Ultracite, tests, and hooks are introduced as lesson work." },
-    { name: "Matt Pocock skills", icon: "spark", text: "The reference for clear lesson progression. The core work here is Loopcraft through Pi." },
-  ] as const;
+  type HomeTool = {
+    name: string;
+    icon: "spark" | "chat" | "guard" | "check";
+    summary: string;
+    doesHere: string;
+    touchWhen: string;
+    links: { label: string; href: string }[];
+  };
+
+  const tools: HomeTool[] = [
+    {
+      name: "Pi",
+      icon: "spark",
+      summary: "The coding-agent shell for the workshop. You use it to ask for the next small move, inspect evidence, and stop before risky work.",
+      doesHere: "Starts the repo tour, loads the Lesson 01 prompt, and later exposes local commands for status and checks.",
+      touchWhen: "You want to inspect the loop, ask for a small pass, or decide whether the loop may continue.",
+      links: [
+        { label: "Pi docs", href: "https://github.com/earendil-works/pi/tree/main/packages/coding-agent" },
+        { label: "Pi + Herdr lesson", href: "/lessons/04-pi-herdr-control/" },
+      ],
+    },
+    {
+      name: "Herdr",
+      icon: "check",
+      summary: "A terminal multiplexer for coding agents. In this workshop it is the visible workbench: Pi in one pane, logs or runtime state in another.",
+      doesHere: "Keeps the chat, commands, daemon output, and status visible in one container session.",
+      touchWhen: "You need to see whether the loop is alive, stuck, waiting, or finished.",
+      links: [
+        { label: "Herdr", href: "https://herdr.dev/" },
+        { label: "Control lesson", href: "/lessons/04-pi-herdr-control/" },
+      ],
+    },
+    {
+      name: "Docker Compose",
+      icon: "guard",
+      summary: "The workshop computer. It runs the pinned tools in a container so your host machine stays boring.",
+      doesHere: "Runs Herdr, Pi, Claude Code, Codex, OpenCode, and the local repo in one repeatable container.",
+      touchWhen: "You start the day, reset a broken container, or build the image locally.",
+      links: [
+        { label: "Docker Compose docs", href: "https://docs.docker.com/compose/" },
+        { label: "Setup notes", href: `${site.repo}/blob/main/docs/setup.md` },
+      ],
+    },
+    {
+      name: "Lakebed",
+      icon: "check",
+      summary: "The small app view for loop state. It shows the same issue facts the local loop is using.",
+      doesHere: "Projects issue events into list, board, and event views without becoming the source of truth.",
+      touchWhen: "You want to compare what the loop thinks with what you see.",
+      links: [
+        { label: "Lakebed docs", href: "https://docs.lakebed.dev/" },
+        { label: "Projection lesson", href: "/lessons/03-lakebed-projection/" },
+      ],
+    },
+    {
+      name: "Effect",
+      icon: "guard",
+      summary: "A TypeScript toolkit for typed data, errors, and effects. Here it guards messy issue input before the loop trusts it.",
+      doesHere: "Adds schemas, typed errors, and clear failure output around issue events and checks.",
+      touchWhen: "You read files, accept tool output, or turn loose text into data the loop can trust.",
+      links: [
+        { label: "Effect", href: "https://effect.website/" },
+        { label: "Reliability lesson", href: "/lessons/02-reliability-floor/" },
+      ],
+    },
+    {
+      name: "XState",
+      icon: "check",
+      summary: "A state-machine library for work that can be ready, blocked, waiting, running, failed, cancelled, or stopped.",
+      doesHere: "Turns stop rules, dispatch, recovery, and supervision into explicit states instead of hidden booleans.",
+      touchWhen: "A flow needs retries, approval gates, cancellation, or a clear recovery path.",
+      links: [
+        { label: "XState docs", href: "https://stately.ai/docs/xstate" },
+        { label: "Supervisor lesson", href: "/lessons/08-supervisor-runtime/" },
+      ],
+    },
+    {
+      name: "pi-subagents",
+      icon: "chat",
+      summary: "A Pi package for bounded specialist help. Scouts and reviewers can produce notes without taking over the loop.",
+      doesHere: "Adds narrow review and research passes once the main loop has enough guardrails.",
+      touchWhen: "You want a second read on evidence, design, or risk before you approve a move.",
+      links: [
+        { label: "pi-subagents", href: "https://github.com/nicobailon/pi-subagents#readme" },
+        { label: "Specialist lesson", href: "/lessons/07-specialist-review/" },
+      ],
+    },
+    {
+      name: "Claude Code, Codex, OpenCode",
+      icon: "chat",
+      summary: "Other coding-agent shells you can compare inside the same workshop computer. Pi stays the main path.",
+      doesHere: "Lets you compare how other agent shells behave against the same repo, prompts, and checks.",
+      touchWhen: "You want to compare agent-shell behavior after the core loop is working.",
+      links: [
+        { label: "Claude Code", href: "https://docs.anthropic.com/en/docs/claude-code/overview" },
+        { label: "Codex", href: "https://developers.openai.com/codex/" },
+        { label: "OpenCode", href: "https://opencode.ai/" },
+      ],
+    },
+    {
+      name: "Guardrails",
+      icon: "guard",
+      summary: "The fast local checks we add in front of the agent loop, one at a time, so failure is visible instead of mysterious.",
+      doesHere: "Introduces pnpm, TypeScript, tsgo, oxlint, oxfmt, Ultracite, tests, and hooks as visible setup steps.",
+      touchWhen: "You need the loop to fail early, explain why, and avoid repeating the same mistake.",
+      links: [
+        { label: "pnpm", href: "https://pnpm.io/" },
+        { label: "TypeScript", href: "https://www.typescriptlang.org/" },
+        { label: "oxlint", href: "https://oxc.rs/docs/guide/usage/linter.html" },
+        { label: "Ultracite", href: "https://www.ultracite.ai/" },
+      ],
+    },
+  ];
 
   const feedbackEnabled = $derived(isFeedbackEnabled(page.url));
   const href = $derived((value: string) => withFeedback(value, feedbackEnabled));
-  const feedbackParagraphs = [
-    "home-lead",
-    "home-outcome",
-    "home-get-started",
-    "home-tools",
-    "home-lesson-path",
-    "home-site",
-    "home-repo-map",
-  ];
+  const agentQuickstartPrompt = `You are a coding/browser agent helping me start the Loopcraft workshop from the public site.
+
+Role: guide me through Lesson 01 only. Use the public repo and Docker path; do not assume Joel's private machine, host Herdr, private auth, or local paths.
+
+Start:
+1. Clone ${site.repo}.git and cd into aie-loopcraft-workshop-2026.
+2. Run corepack enable, corepack prepare pnpm@11.9.0 --activate, then pnpm run workshop.
+3. In the Herdr window opened inside Docker, start pi in a pane and use /loop-lesson-01.
+4. Open /lessons/01-tour-vision-repo/ and use the starter prompt as the fallback if the slash command or local skill is unavailable.
+
+Stop rules: do not edit files before Lesson 01 asks. Lesson 01 stops at VISION.md plus clear boundaries. Do not create issue events, checks, Lakebed code, dispatch, or workers yet. Report commands run, files changed, checks, and blockers.`;
+
 </script>
 
 <svelte:head>
   <title>{site.title}</title>
   <meta
     name="description"
-    content="A hands-on workshop for building a local issue-progress loop with Pi, Herdr, Lakebed, typed events, receipts, and bounded agent leverage."
+    content="Build a local issue-progress loop with Pi, Herdr, Lakebed, typed events, receipts, and visible stop points."
   />
   <meta property="og:title" content={site.title} />
-  <meta property="og:description" content="Build a local issue-progress loop from tour and vision through reliability, Lakebed, Pi/Herdr control, safe dispatch, maintenance, specialists, and supervisor runtime." />
+  <meta property="og:description" content="Build a local issue-progress loop from repo tour through reliability checks, Lakebed projection, Pi and Herdr control, safe dispatch, maintenance, specialists, and supervisor runtime." />
   <meta property="og:url" content={site.url} />
 </svelte:head>
 
 <ReportLayout>
   <WorkshopNav current="home" />
-
-  <p class="eyebrow"><span class="mascot">🧶</span><span class="eyebrow-stack"><span>Loopcraft Workshop</span><span>AI Engineer · 2026</span></span></p>
+<p class="eyebrow"><span class="mascot">🧶</span><span class="eyebrow-stack"><span>Loopcraft Workshop</span><span>AI Engineer · 2026</span></span></p>
   <h1>Build a local issue-progress loop you can trust.</h1>
-
-  <FeedbackMode id="home-lead" note="Does the first paragraph say what this is and who it is for without internal course-design language?">
-    <p class="lead">This is a hands-on workshop about developing loop systems with a customized Pi harness. We use Pi, Herdr, Lakebed, typed issue events, receipts, and a small local repo to make agent work visible instead of magical.</p>
-  </FeedbackMode>
+    <FeedbackSection id="home-overview">
+<p class="lead">You will build a small loop that can read issue events, check its own work, stop when it needs you, and leave receipts you can inspect.</p>
+<p>The starting repo is prepared but not finished. Docker gives you the workshop computer, Herdr gives you the two-pane workspace, Pi gives you controls you can use, and Lakebed shows the loop state as it changes.</p>
+<p>By the end, the loop can tell ready work from blocked work, ask before risky moves, show state in Lakebed, and run through Pi and Herdr controls.</p>
+  </FeedbackSection>
 
   <StatLine items={stats} />
-
-  <div class="action-row">
+<div class="action-row">
     <a class="primary-action" href={href("/lessons/01-tour-vision-repo/")}>Start Lesson 01</a>
     <a href={href("/lessons/")}>Browse lessons</a>
-    <a href={site.repo}>Open the public repo</a>
+    <a href={href("/glossary/")}>Open glossary</a>
+    <a href={site.repo}>Open the repo</a>
   </div>
+<h2>Agent quickstart</h2>
+<section class="agent-quickstart" aria-labelledby="agent-quickstart-title">
+<div class="agent-quickstart-copy">
+        <h3 id="agent-quickstart-title">If you are a coding or browser agent reading this page</h3>
+<p>Your role is to help someone run Lesson 01 from the public workshop repo. Use Docker as the happy path, start Pi inside the Herdr window that Docker opens, and stop before product code.</p>
+<p class="agent-surface-note">Public agent instructions are available at <a href={href("/agent.md")}>/agent.md</a>, <a href={href("/AGENTS.md")}>/AGENTS.md</a>, and <a href={href("/llms.txt")}>/llms.txt</a>.</p>
+      </div>
+<ol class="agent-steps">
+        <li><strong>Clone:</strong> <code>git clone {site.repo}.git</code>, then <code>cd aie-loopcraft-workshop-2026</code>.</li>
+        <li><strong>Start Docker:</strong> run <code>corepack enable</code>, <code>corepack prepare pnpm@11.9.0 --activate</code>, then <code>pnpm run workshop</code>.</li>
+        <li><strong>Start Pi:</strong> in the Herdr window opened inside Docker, start <code>pi</code> in a pane and use <code>/loop-lesson-01</code>.</li>
+        <li><strong>Open Lesson 01:</strong> read <a href={href("/lessons/01-tour-vision-repo/")}>Lesson 01</a>, then follow the starter prompt.</li>
+        <li><strong>Fallback:</strong> if the slash command or local skill is unavailable, use the Lesson 01 page manually: ask one question at a time, write <code>VISION.md</code>, and stop at boundaries.</li>
+      </ol>
+<div class="agent-stop-rules">
+        <h3>Stop rules</h3>
+        <ul>
+          <li>Do not require Herdr on the host machine; Herdr runs inside Docker.</li>
+          <li>Do not assume private auth, private paths, raw transcripts, or Joel's local setup.</li>
+          <li>Do not edit before the lesson asks.</li>
+          <li>Lesson 01 stops at <code>VISION.md</code> and clear repo boundaries. No issue events, checks, Lakebed code, dispatch, or workers yet.</li>
+        </ul>
+      </div>
 
-  <h2>Outcome</h2>
+      <PromptBlock
+        id="agent-quickstart-prompt"
+        label="Agent starter prompt"
+        copyLabel="Copy agent prompt"
+        text={agentQuickstartPrompt}
+      />
+<p class="agent-links">
+        Agent links: <a href={href("/agent.md")}>/agent.md</a>, <a href={href("/AGENTS.md")}>/AGENTS.md</a>, <a href={href("/llms.txt")}>/llms.txt</a>, <a href={href("/lessons/01-tour-vision-repo/")}>Lesson 01</a>, <a href={site.repo}>repo</a>, <a href={`${site.repo}/blob/main/docs/setup.md`}>setup</a>.
+      </p>
+    </section>
 
-  <FeedbackMode id="home-outcome" note="Does this outcome feel concrete enough for someone deciding whether to take the workshop?">
-    <p>By the end, you will have a small local loop that can read its own issue events, decide what is ready or blocked, stop for approval, write receipts, show state in Lakebed, and run through Pi and Herdr controls.</p>
-
-    <p>The repo starts prepared, not finished. The harness and source mirrors are here. The product loop is still yours to build.</p>
-  </FeedbackMode>
-
-  <FlowChart
+<h2>System map</h2>
+<FlowChart
     src="/workshop-system.svg"
     title="Workshop system shape"
-    caption="The workshop starts from a prepared rig and turns it into a visible local loop: issue events, checks, Lakebed projection, Pi/Herdr control, safe dispatch, bounded maintenance, specialists, and supervisor shadowing."
+    caption="The workshop turns a prepared repo into a visible local loop: issue events, checks, Lakebed views, Pi and Herdr controls, safe dispatch, bounded maintenance, specialists, and supervisor shadowing."
     alt="A system diagram for the Loopcraft workshop showing Pi, Herdr, Lakebed, issue events, checks, receipts, and a loop runtime."
     version={site.version}
     wide={true}
   />
-
-  <h2>Get started</h2>
-
-  <FeedbackMode id="home-get-started" note="Do these steps feel like a true first-run path for someone arriving cold?">
-    <p>Prereqs: Git, Docker Desktop or OrbStack with Docker Compose, pnpm 11+, and GitHub CLI only if the GHCR package still shows as private.</p>
-
-    <p>Clone the repo:</p>
-
-    <pre><code>git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
+<h2>Get started</h2>
+<p>Use Docker as the main path. You need Git, Docker Desktop or OrbStack, and Corepack for the pinned pnpm command. Herdr opens inside the container, so you do not need Herdr installed on your host machine.</p>
+<ol class="start-steps">
+      <li>
+        <span>Clone the repo.</span>
+        <pre><code>git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
 cd aie-loopcraft-workshop-2026</code></pre>
-
-    <p>If you do not have pnpm yet:</p>
-
-    <pre><code>corepack enable
+      </li>
+      <li>
+        <span>Enable the pinned package manager if this machine has not used pnpm yet.</span>
+        <pre><code>corepack enable
 corepack prepare pnpm@11.9.0 --activate</code></pre>
+      </li>
+      <li>
+        <span>Start the workshop computer.</span>
+        <pre><code>pnpm run workshop</code></pre>
+      </li>
+    </ol>
+<p class="get-started-callout">That command opens Herdr inside the Docker container. Start <code>pi</code> from a Herdr pane, sign in if Pi asks, then use <code>/loop-lesson-01</code>.</p>
 
-    <p>Pull the published workshop image:</p>
-
-    <pre><code>pnpm run workshop:pull</code></pre>
-
-    <p>Or without pnpm:</p>
-
-    <pre><code>docker compose pull workshop</code></pre>
-
-    <p>If you want to build locally instead of pulling:</p>
-
-    <pre><code>pnpm run workshop:build</code></pre>
-
-    <p>Published image:</p>
-
-    <pre><code>ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest</code></pre>
-
-    <p><a href="https://github.com/users/joelhooks/packages/container/package/aie-loopcraft-workshop-2026">Open the GHCR package page</a>.</p>
-
-    <p>If GitHub still reports the package as private, authenticate before pulling:</p>
-
-    <pre><code>gh auth refresh -h github.com -s read:packages
-gh auth token | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin</code></pre>
-
-    <p>Quick smoke test:</p>
-
-    <pre><code>docker run --rm ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest \
-  zsh -lc 'pi --version && codex --version && opencode --version && herdr --version'</code></pre>
-
-    <p>Start Pi inside the workshop computer:</p>
-
-    <pre><code>pnpm run workshop:pi</code></pre>
-
-    <p>In a second terminal, run the temporary status daemon:</p>
-
-    <pre><code>pnpm run workshop:daemon</code></pre>
-
-    <p>Full setup notes live in <a href={`${site.repo}/blob/main/docs/setup.md`}>docs/setup.md</a>.</p>
-  </FeedbackMode>
-
-  <h2>Tools we use</h2>
-
-  <FeedbackMode id="home-tools" note="Are the tool descriptions clear and separated from product guardrails?">
-    <ToolGrid tools={[...tools]} />
-  </FeedbackMode>
-
-  <h2>Lesson path</h2>
-
-  <FeedbackMode id="home-lesson-path" note="Does the lesson path make the progression feel Matt-style and step-by-step enough?">
-    <p>Each lesson is its own MDSvX page. Lessons are rails. Issues are the product substrate we build toward.</p>
-
-    <ol class="lesson-index">
+    <details class="troubleshooting">
+      <summary>If startup fails</summary>
+<p>Use the direct commands below before changing your host machine setup.</p>
+<p>Pull the image, then open Herdr in the container:</p>
+      <pre><code>pnpm run workshop:pull
+pnpm run workshop:herdr</code></pre>
+<p>If the package is still private, sign in to GHCR and pull again:</p>
+      <pre><code>gh auth refresh -h github.com -s read:packages
+gh auth token | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+pnpm run workshop:pull</code></pre>
+<p>If the image is unavailable, build it locally:</p>
+      <pre><code>pnpm run workshop:build
+pnpm run workshop:herdr</code></pre>
+<p>If Herdr is the blocker, use Pi directly inside the same Docker image:</p>
+      <pre><code>pnpm run workshop:pi</code></pre>
+<p>More fallback notes live in <a href={`${site.repo}/blob/main/docs/setup.md`}>docs/setup.md</a>.</p>
+    </details>
+<h2>Tools we use</h2>
+<ToolGrid tools={tools} />
+<h2>Lesson path</h2>
+<p>Each lesson is a checkpoint with something to prompt, build, inspect, or decide. If a term slows you down, use the <a href={href("/glossary/")}>glossary appendix</a>.</p>
+<ol class="lesson-index">
       {#each lessons as lesson}
         <li>
           <a href={href(lesson.href)}>
             <span>{lesson.number}</span>
             <strong>{lesson.title}</strong>
           </a>
-          <p>{lesson.challenge}</p>
+<p>{lesson.challenge}</p>
         </li>
       {/each}
     </ol>
-  </FeedbackMode>
+<h2>Repo map</h2>
+<div class="repo-map">
+<section>
+        <h3>Start the workshop</h3>
+        <ul>
+          <li><code>package.json</code> — Docker and site commands.</li>
+          <li><code>docker-compose.yml</code> — mounts the repo into <code>/workspace</code> and keeps tool state in Docker volumes.</li>
+          <li><code>docker/workshop.Dockerfile</code> — pinned Pi, Herdr, Claude Code, Codex, OpenCode, Node, pnpm, and shell setup.</li>
+          <li><code>WORKSHOP_RIG.md</code> — quick map of the prepared rig and what is intentionally left for the lessons.</li>
+        </ul>
+      </section>
+<section>
+        <h3>Ask for help inside the repo</h3>
+        <ul>
+          <li><code>agents/skills/loopcraft-ta</code> — local guide skill for this repo.</li>
+          <li><code>agents/skills/grill-with-docs</code> — guided questioning for Lesson 01 vision and boundaries.</li>
+          <li><code>.agents/skills</code> and <code>.claude/skills</code> — symlinks that expose the local skills to agent tools.</li>
+          <li><code>.pi/extensions/loop-workshop.ts</code> — Pi commands such as <code>/loop-workshop-status</code> and <code>/loop-lesson-01</code>.</li>
+        </ul>
+      </section>
+<section>
+        <h3>Build the loop</h3>
+        <ul>
+          <li><code>lessons/</code> — step-by-step checkpoints from repo tour to supervisor runtime.</li>
+          <li><a href={href("/glossary/")}>Glossary appendix</a> — plain-language terms linked back to the lessons that use them.</li>
+          <li><code>scripts/loop-daemon-stub.mjs</code> — temporary status process for the Herdr runtime pane.</li>
+          <li><code>surface/lakebed/</code> — Lakebed view shell for issue state.</li>
+          <li><code>.agent_sources/</code> — local source mirrors for Effect, XState, and pi-subagents when you need receipts.</li>
+        </ul>
+      </section>
 
-  <h2>Workshop site</h2>
-
-  <FeedbackMode id="home-site" note="Does this make the editing surface obvious enough?">
-    <p>The site is MDSvX-driven so the workshop copy stays easy to edit. Add <code>?feedback=1</code> to any site URL to turn on the Tufte-style feedback affordances.</p>
-
-    <pre><code>pnpm run web:install
-pnpm run web:check
-pnpm run web:build
-pnpm run web:publish</code></pre>
-  </FeedbackMode>
-
-  <h2>Repo map</h2>
-
-  <FeedbackMode id="home-repo-map" note="Does this map help someone find the right file without explaining internal teacher-surface history?">
-    <pre><code>agents/skills/loopcraft-ta       local guide skill
-agents/skills/grill-with-docs    vision/session grilling skill
-.agent_sources/                  source mirrors for Effect, XState, pi-subagents
-.pi/extensions/loop-workshop.ts  Pi helper commands
-.pi/agents/                      loop-owned scout/reviewer definitions
-lessons/                         lesson rails
-surface/lakebed/                 Lakebed capsule shell
-scripts/loop-daemon-stub.mjs     temporary status daemon
-web/                             MDSvX workshop site</code></pre>
-  </FeedbackMode>
-
-  <FeedbackExportGate paragraphs={feedbackParagraphs} run="workshop-home" slug={site.slug} url={site.url} version={site.version} />
+    </div>
+<FeedbackExportGate run="workshop-home" slug={site.slug} url={site.url} version={site.version} />
 
   <footer>
     No secrets. No raw transcripts. No private machine paths. No hidden auth. If a tool needs auth, sign into it locally or inside the container.
   </footer>
 </ReportLayout>
+
+<style>
+  .agent-quickstart {
+    background: #fffdf8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 20px 0 28px;
+    padding: 16px;
+  }
+
+  .agent-quickstart-copy p,
+  .agent-surface-note,
+  .agent-stop-rules li,
+  .agent-steps li,
+  .agent-links {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .agent-steps {
+    display: grid;
+    gap: 9px;
+    margin: 14px 0 16px;
+    padding-left: 1.15rem;
+  }
+
+  .agent-steps strong,
+  .agent-stop-rules h3 {
+    color: var(--text);
+    font-family: var(--font-sans);
+  }
+
+  .agent-stop-rules {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 16px 0 18px;
+    padding: 12px 14px;
+  }
+
+  .agent-stop-rules h3 {
+    margin-bottom: 8px;
+  }
+
+  .agent-stop-rules ul {
+    margin: 0;
+  }
+
+  .agent-links {
+    font-family: var(--font-sans);
+    margin: 14px 0 0;
+  }
+
+  .start-steps {
+    display: grid;
+    gap: 14px;
+    list-style: none;
+    margin: 18px 0 18px;
+    padding: 0;
+  }
+
+  .start-steps li {
+    background: #fffdf8;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+
+  .start-steps span {
+    color: var(--text);
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+
+  .start-steps pre {
+    margin: 0;
+  }
+
+  .get-started-callout {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.45;
+    margin: 18px 0;
+    padding: 12px 14px;
+  }
+
+  .troubleshooting {
+    background: #fffdf8;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.45;
+    margin: 18px 0 0;
+    padding: 12px 14px;
+  }
+
+  .troubleshooting summary {
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 800;
+  }
+
+  .troubleshooting p {
+    color: var(--text-dim);
+    margin: 12px 0 8px;
+  }
+
+  .troubleshooting pre {
+    margin: 8px 0 14px;
+  }
+
+  .repo-map {
+    display: grid;
+    gap: 14px;
+    margin: 20px 0 10px;
+  }
+
+  .repo-map section {
+    background: #fffdf8;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+
+  .repo-map h3 {
+    margin-bottom: 10px;
+  }
+
+  .repo-map ul {
+    display: grid;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+  }
+
+  .repo-map li {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.45;
+    margin: 0;
+    padding: 0;
+  }
+</style>

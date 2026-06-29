@@ -31,7 +31,7 @@
       <span>Next</span>
       <a href={href(adjacent.next.href)}>{adjacent.next.number}. {adjacent.next.shortTitle}</a>
     {:else}
-      <span>After the hour</span>
+      <span>Replay</span>
       <a href={href(lessons[0].href)}>Replay from Lesson 01</a>
     {/if}
   </div>

@@ -1,8 +1,93 @@
 <script lang="ts">
-  import LessonPage from "$lib/lesson-page.svelte";
-  import { lessons } from "$lib/workshop-data";
+  import FeedbackSection from "$lib/feedback-section.svelte";
+  import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
+  import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
+  import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
+  import PromptBlock from "$lib/prompt-block.svelte";
+  import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
+  import { getLesson } from "$lib/workshop-data";
 
-  const lesson = lessons[4];
+  const lesson = getLesson("safe-dispatch");
+  const promptContext = "This is where people get sloppy. A ready issue is not permission to let an unsupervised agent change files in the repo. First, the script must check that the issue is ready, write the claim, run only a dry-run or memory-mode step, and save evidence.";
+  const proofItems = [
+    "A rule check says whether an issue may be claimed and why.",
+    "A claim event is written before any work attempt.",
+    "The run stays in dry-run or memory mode and does not change product files.",
+    "The receipt links the rule decision, claim event, dry-run result, refused actions, and next action."
+  ];
+  const phases = [
+    {
+      title: "Choose one ready issue",
+      items: [
+        "Use the Lesson 02/03 check output. Do not pick approval-required or input-required work."
+      ]
+    },
+    {
+      title: "Add rules and claim",
+      items: [
+        "Only ready issues can be claimed. Approval-required and input-required issues must say no and explain why. Record a claim event before the dry-run can start."
+      ]
+    },
+    {
+      title: "Run dry-run only",
+      items: [
+        "Use dry-run or memory mode. The result may describe intended work, not edit product files."
+      ]
+    },
+    {
+      title: "Inspect the trail",
+      items: [
+        "Open the events file before and after the claim, then compare the new claim line with the receipt."
+      ]
+    }
+  ];
+  const starterPrompt = "Use one ready issue from the local check. Add rules that say yes/no for the selected issue, write a claim event before any work attempt, run only in dry-run or memory mode, and save a receipt that links the rule decision, claim event, dry-run result, refused actions, and next action. Prove zero product files changed. Do not call an LLM API, GitHub API, or any network service yet.";
+  const explorationPrompts = [
+    {
+      label: "Check whether it can be claimed",
+      text: "Given one ready issue, check whether it can actually be claimed. List the rule checks, required claim event fields, refused actions, and the dry-run result."
+    },
+    {
+      label: "Threat-model the claim",
+      text: "Review the claim flow. How could duplicate claims, dirty state, missing approval, or stale issue data cause harm? Suggest checks before execution."
+    },
+    {
+      label: "Receipt before files change",
+      text: "Draft a receipt that proves the checker stayed in dry-run or memory mode, wrote a claim event, refused unsafe work, and named the next action."
+    }
+  ];
+  const receiptFields = [
+    "issueId: ready issue selected",
+    "decision: claim allowed / refused plus reason",
+    "claimEvent: event id or file offset",
+    "mode: dry-run or memory",
+    "changedFiles: should be none",
+    "receiptPath: saved receipt",
+    "nextAllowedAction: decision after dry-run"
+  ];
 </script>
 
-<LessonPage {lesson} />
+<LessonShell lesson={lesson}>
+<p>{promptContext}</p>
+<h2>Starter prompt</h2>
+<PromptBlock id="lesson-safe-dispatch-starter-prompt-block" text={starterPrompt} />
+<h2>Build checklist</h2>
+<PhaseChecklist lessonId={lesson.id} phases={phases} />
+<h2>Proof to save</h2>
+<p>Save proof that one ready issue was claimed, the run stayed dry, and no product files changed.</p>
+<LessonEvidence items={proofItems} />
+<ReceiptTemplate fields={receiptFields} />
+<h2>Done when</h2>
+<p>One ready issue has a yes/no decision, claim event, dry-run result, and receipt with no hidden file changes.</p>
+<h2>Why it matters</h2>
+<ul>
+  <li><strong>Risk reduced:</strong> ready work cannot skip the claim and dry-run checks.</li>
+  <li><strong>Temptation avoided:</strong> “just run an agent” before ownership and refusal are proven.</li>
+  <li><strong>Do not automate yet:</strong> product file edits, LLM API calls, GitHub API calls, or any network service.</li>
+</ul>
+<h2>Try this 🔨</h2>
+<p>For a candidate issue, say whether it can be claimed, what would be refused, and what evidence you need before real work.</p>
+<h2>Exploration prompts</h2>
+<ExplorationPrompts lessonId={lesson.id} prompts={explorationPrompts} />
+</LessonShell>

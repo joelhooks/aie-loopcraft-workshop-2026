@@ -1,6 +1,6 @@
 direction: down
 
-operator: "1. Operator pane\nPi chat + Lakebed approval click" {
+pi_pane: "1. Pi pane\nPi chat + Lakebed approval click" {
   shape: rectangle
   style.fill: "#fffdf8"
   style.stroke: "#9c9282"
@@ -30,7 +30,7 @@ visible: "5. Visible progression\nready → in_progress or one next issue" {
   style.stroke: "#2f5f6f"
 }
 
-operator -> lakebed: "approval appends issue.updated"
+pi_pane -> lakebed: "approval appends issue.updated"
 lakebed -> loop: "daemon reads projected facts"
 loop -> evidence: "writes why it moved"
 loop -> lakebed: "appends progression event" {

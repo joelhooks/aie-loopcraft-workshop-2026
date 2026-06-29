@@ -19,7 +19,7 @@
   }
 
   interface Props {
-    paragraphs: string[];
+    paragraphs?: string[];
     run: string;
     slug: string;
     url: string;
@@ -30,7 +30,7 @@
   }
 
   const {
-    paragraphs,
+    paragraphs = [],
     run,
     slug,
     url,

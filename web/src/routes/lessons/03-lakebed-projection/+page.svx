@@ -1,8 +1,91 @@
 <script lang="ts">
-  import LessonPage from "$lib/lesson-page.svelte";
-  import { lessons } from "$lib/workshop-data";
+  import FeedbackSection from "$lib/feedback-section.svelte";
+  import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
+  import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
+  import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
+  import PromptBlock from "$lib/prompt-block.svelte";
+  import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
+  import { getLesson } from "$lib/workshop-data";
 
-  const lesson = lessons[2];
+  const lesson = getLesson("lakebed-projection");
+  const promptContext = "Read the same local event file from Lesson 02 and show issue cards in Lakebed. The cards should match the check command output. If the view disagrees with the local check, fix the view code, not the event file.";
+  const proofItems = [
+    "The local event parser and check command still run without Lakebed.",
+    "A small endpoint or module reads the same event file and returns issue cards.",
+    "List, board, and event views show status, stop reason, and next action for each issue.",
+    "A receipt records the event file, check command output, Lakebed route opened, and any mismatch found."
+  ];
+  const phases = [
+    {
+      "title": "Keep the file in charge",
+      "items": [
+        "Reuse the Lesson 02 event loader or wrap it with one small module. Do not move decisions into the UI."
+      ]
+    },
+    {
+      "title": "Return issue cards",
+      "items": [
+        "Add the smallest endpoint or module Lakebed needs to read issue id, title, status, stop reason, next action, and recent events."
+      ]
+    },
+    {
+      "title": "Render useful views",
+      "items": [
+        "Show a list, board columns, and event history that explain why each card landed in its current state."
+      ]
+    },
+    {
+      "title": "Compare and save proof",
+      "items": [
+        "Run the local check, open the Lakebed view, compare counts and statuses, then save a receipt for the comparison."
+      ]
+    }
+  ];
+  const starterPrompt = "Use the local events and check command from Lesson 02. Add the smallest endpoint or module that reads the same event file and returns issue cards for Lakebed. Show list, board, and event views with status, stop reason, and next action. Run the local check, open the Lakebed route, compare the results, and save a receipt. If the view disagrees with the check output, fix the view path, not the event file. Do not add writes, schedulers, external trackers, or background workers yet.";
+  const explorationPrompts = [
+    {
+      "label": "Trace file to card",
+      "text": "Compare the local event file, check command output, and Lakebed cards. List any mismatch between the command output and what the page shows, then suggest the smallest fix."
+    },
+    {
+      "label": "Choose the read path",
+      "text": "Inspect the current Lakebed code. Recommend the smallest endpoint or module for returning issue cards from the local event file without moving decisions into the UI."
+    },
+    {
+      "label": "Write comparison proof",
+      "text": "Draft a receipt that proves one ready, one approval-required, and one input-required issue appear in Lakebed and still match the local check."
+    }
+  ];
+  const receiptFields = [
+    "file: local event file read",
+    "command: local check command and result",
+    "output: local counts and Lakebed card counts",
+    "stop condition: any mismatch means fix the view path before moving on",
+    "receipt: route opened, screenshot or log, and comparison result"
+  ];
 </script>
 
-<LessonPage {lesson} />
+<LessonShell lesson={lesson}>
+<p>{promptContext}</p>
+<h2>Starter prompt</h2>
+<PromptBlock id="lesson-lakebed-projection-starter-prompt-block" text={starterPrompt} />
+<h2>Build checklist</h2>
+<PhaseChecklist lessonId={lesson.id} phases={phases} />
+<h2>Proof to save</h2>
+<p>Save proof that the screen shows the same facts as the command.</p>
+<LessonEvidence items={proofItems} />
+<ReceiptTemplate fields={receiptFields} />
+<h2>Done when</h2>
+<p>One ready, one approval-required, and one input-required issue appear in the correct Lakebed lanes and match the local check output.</p>
+<h2>Why it matters</h2>
+<ul>
+  <li><strong>Risk reduced:</strong> the view cannot quietly invent a different issue state.</li>
+  <li><strong>Temptation avoided:</strong> treating a pretty card as proof when it does not match the command.</li>
+  <li><strong>Do not automate yet:</strong> writes from the UI, claim actions, external tracker calls, or background updates.</li>
+</ul>
+<h2>Try this 🔨</h2>
+<p>Pick one card, find the event that created its status, and say the next allowed action out loud.</p>
+<h2>Exploration prompts</h2>
+<ExplorationPrompts lessonId={lesson.id} prompts={explorationPrompts} />
+</LessonShell>

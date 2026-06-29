@@ -1,0 +1,7 @@
+/skill:grill-with-docs
+
+Help me define a small local issue checker before we write code.
+
+Read README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.
+
+Ask one question at a time. Capture what the checker should do, which files it may edit, what needs approval, what is out of scope, and when it must stop. Write the answers into VISION.md. Update AGENTS.md or README.md only if we agree on a clear repo rule. Do not create issue events, checks, Lakebed code, claim commands, or product code yet.

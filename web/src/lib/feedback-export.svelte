@@ -26,7 +26,7 @@
   }
 
   interface Props {
-    paragraphs: string[];
+    paragraphs?: string[];
     run: string;
     slug: string;
     url: string;
@@ -39,7 +39,7 @@
   }
 
   const {
-    paragraphs,
+    paragraphs = [],
     run,
     slug,
     url,
@@ -106,8 +106,17 @@
     };
   }
 
+  function discoverSectionIds() {
+    if (!browser) return [];
+    const discovered = Array.from(document.querySelectorAll<HTMLElement>("[data-feedback-section-id], [data-paragraph-id]"))
+      .map((element) => element.dataset.feedbackSectionId ?? element.dataset.paragraphId ?? "")
+      .filter(Boolean);
+    return Array.from(new Set(discovered));
+  }
+
   function buildPayload() {
-    const items = paragraphs.map(readFeedback).filter(Boolean);
+    const sectionIds = paragraphs.length ? paragraphs : discoverSectionIds();
+    const items = sectionIds.map(readFeedback).filter(Boolean);
     const answers = questions.map(readAnswer).filter(Boolean);
     const patternFeedback = patterns.map(readPatternFeedback).filter(Boolean);
     const lessonNotes = lessons.map(readLessonNotes).filter(Boolean);
@@ -155,7 +164,7 @@
 <div class="feedback-export">
   <div>
     <p class="feedback-export-title">Feedback export</p>
-    <p class="feedback-export-copy">Copies compact JSON keyed by page version, paragraph id, lesson notes, card feedback, and open-question answer. Paste it back to an agent and it can apply the notes without guessing.</p>
+    <p class="feedback-export-copy">Copies compact JSON keyed by page version, section id, lesson notes, card feedback, and open-question answer. Paste it back to an agent and it can apply the notes without guessing.</p>
   </div>
   <button type="button" bind:this={copyButton}>
     <HugeiconsIcon icon={copied ? CopyCheckIcon : Copy01Icon} size={16} strokeWidth={1.8} />

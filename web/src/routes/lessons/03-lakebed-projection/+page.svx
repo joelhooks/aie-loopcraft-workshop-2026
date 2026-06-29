@@ -3,6 +3,7 @@
   import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
   import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
   import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import LessonScaffold from "$lib/lesson-page/lesson-scaffold.svelte";
   import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
   import PromptBlock from "$lib/prompt-block.svelte";
   import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
@@ -42,6 +43,23 @@
       ]
     }
   ];
+  const zpdScaffold = {
+      "have": [
+          "A local event file and parser from Lesson 02.",
+          "A check command whose output is the source of truth for issue status."
+      ],
+      "add": [
+          "A small endpoint or module that reads the same event file and returns issue cards for Lakebed.",
+          "List, board, and event views that show status, stop reason, and next action.",
+          "A comparison receipt between check output and the Lakebed route."
+      ],
+      "stop": [
+          "Changing event data just to make the page look right.",
+          "Adding writes, schedulers, external trackers, or background workers."
+      ],
+      "exampleTitle": "Tiny projection receipt shape",
+      "example": "eventFile: data/issue-events.jsonl\ncheckCommand: pnpm run check:issues\ncheckCounts: ready 1, approval-required 1, input-required 1\nlakebedRoute: /lakebed\nlakebedCounts: ready 1, approval-required 1, input-required 1\nmismatch: none\nnextAction: keep the view path wired to the same event file"
+  };
   const starterPrompt = "Use the local events and check command from Lesson 02. Add the smallest endpoint or module that reads the same event file and returns issue cards for Lakebed. Show list, board, and event views with status, stop reason, and next action. Run the local check, open the Lakebed route, compare the results, and save a receipt. If the view disagrees with the check output, fix the view path, not the event file. Do not add writes, schedulers, external trackers, or background workers yet.";
   const explorationPrompts = [
     {
@@ -68,6 +86,8 @@
 
 <LessonShell lesson={lesson}>
 <p>{promptContext}</p>
+<h2>Your next move</h2>
+<LessonScaffold have={zpdScaffold.have} add={zpdScaffold.add} stop={zpdScaffold.stop} exampleTitle={zpdScaffold.exampleTitle} example={zpdScaffold.example} />
 <h2>Starter prompt</h2>
 <PromptBlock id="lesson-lakebed-projection-starter-prompt-block" text={starterPrompt} />
 <h2>Build checklist</h2>

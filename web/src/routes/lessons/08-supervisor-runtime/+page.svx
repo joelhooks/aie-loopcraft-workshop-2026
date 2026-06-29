@@ -3,65 +3,84 @@
   import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
   import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
   import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import LessonScaffold from "$lib/lesson-page/lesson-scaffold.svelte";
   import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
   import PromptBlock from "$lib/prompt-block.svelte";
   import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
   import { getLesson } from "$lib/workshop-data";
 
   const lesson = getLesson("supervisor-runtime");
-  const promptContext = "Use the same event file and check command from earlier lessons. Add a plain TypeScript decision table or function that returns nextState and reason for one issue. Run that check beside the current checker as a supervisor comparison: the current checker still decides, and any mismatch stops here.";
+  const promptContext = "Use the same event file and check command from earlier lessons. First add a plain TypeScript candidate check that returns the next state and reason for one issue. Then compare its answer with the current checker: the current checker still decides, and any mismatch stops here.";
   const proofItems = [
-    "A TypeScript function, data table, or transition table returns nextState and reason from one issue event.",
-    "The compare command runs the current checker and the new decision check against the same input.",
-    "A comparison receipt shows inputEvent, currentDecision, supervisorDecision, agreement, reason, and current checker still in charge.",
+    "A plain TypeScript function, data table, or transition table returns the next state and reason from one issue event.",
+    "The compare command runs the current checker and candidate check against the same input.",
+    "A compare-only receipt shows inputEvent, currentDecision, candidateDecision, agreement, reason, and current checker still in charge.",
     "One recovery drill proves stale, running, failed, or interrupted work stops with a reason."
   ];
   const phases = [
     {
-      title: "Write the next-state check",
-      items: [
-        "Start with plain TypeScript data or one function, not a library. Name the states and events it accepts, then return nextState and reason."
+      "title": "Write the candidate check",
+      "items": [
+        "Start with plain TypeScript data or one function, not a library. Name the events it accepts, then return next state and reason."
       ]
     },
     {
-      title: "Run beside the current checker",
-      items: [
-        "Use the same event file and check command. Keep the current checker in charge; the supervisor answer is for comparison only."
+      "title": "Compare beside the current checker",
+      "items": [
+        "Use the same event file and check command. Keep the current checker in charge; the candidate answer is for comparison only."
       ]
     },
     {
-      title: "Compare decisions",
-      items: [
-        "Write a receipt that includes inputEvent, currentDecision, supervisorDecision, agreement, reason, and current checker still in charge."
+      "title": "Record agreement or mismatch",
+      "items": [
+        "Write a receipt that includes inputEvent, currentDecision, candidateDecision, agreement, reason, and current checker still in charge."
       ]
     },
     {
-      title: "Drill recovery",
-      items: [
-        "Simulate stale, failed, or interrupted work and show the nextState, reason, and stop message."
+      "title": "Drill recovery",
+      "items": [
+        "Simulate stale, failed, or interrupted work and show the next state, reason, and stop message."
       ]
     }
   ];
-  const starterPrompt = "Use the event file and check command from earlier lessons. Add a plain TypeScript decision table or function that returns nextState and reason for one issue. Run it beside the current checker as a supervisor comparison. Save a receipt with inputEvent, currentDecision, supervisorDecision, agreement, reason, and one stale/failed/interrupted recovery case. Keep the current checker in charge; the supervisor must not write to GitHub, APIs, or product files yet.";
+  const zpdScaffold = {
+      "have": [
+          "The current checker, event file, check command, status output, dispatch receipts, and read-only review path.",
+          "Enough evidence to compare a new decision path without letting it drive the loop."
+      ],
+      "add": [
+          "A plain TypeScript candidate check that returns the next state and reason for one issue event.",
+          "A compare command that runs the current checker and candidate check against the same input.",
+          "One normal comparison receipt and one recovery drill receipt."
+      ],
+      "stop": [
+          "Replacing the current checker with the candidate check.",
+          "Letting the candidate write to GitHub, APIs, product files, timers, or parallel worktrees.",
+          "Moving past a mismatch without explaining it."
+      ],
+      "exampleTitle": "Tiny compare-only receipt shape",
+      "example": "mode: compare-only\ninputEvent: ISSUE-001 ready\ncurrentDecision: ready -> dry-run claim allowed\ncandidateDecision: ready -> dry-run claim allowed\nagreement: yes\ncurrentCheckerStillInCharge: true\nrecoveryDrill: stale claim -> stopped with reason"
+  };
+  const starterPrompt = "Use the event file and check command from earlier lessons. Add a plain TypeScript candidate check that returns the next state and reason for one issue. Run it beside the current checker as a compare-only check. Save a receipt with inputEvent, currentDecision, candidateDecision, agreement, reason, current checker still in charge, and one stale/failed/interrupted recovery case. Do not let the candidate check write to GitHub, APIs, product files, timers, or parallel worktrees yet.";
   const explorationPrompts = [
     {
-      label: "Name the next-state check",
-      text: "List the states, events, checks, actions, command, and receipt path. Start with a TypeScript table or function, then say which current checker code remains in charge."
+      "label": "Name the candidate check",
+      "text": "List the events, checks, actions, command, and receipt path. Start with a TypeScript table or function, then say which current checker code remains in charge."
     },
     {
-      label: "Compare decisions",
-      text: "Run or simulate one issue through the current checker and the TypeScript decision check. Write a comparison table: input, currentDecision, supervisorDecision, agreement, reason, and receipt path."
+      "label": "Compare decisions",
+      "text": "Run or simulate one issue through the current checker and the candidate check. Write a comparison table: input, currentDecision, candidateDecision, agreement, reason, and receipt path."
     },
     {
-      label: "Practice recovery",
-      text: "Pick one bad state: stale claim, failed check, interrupted run, or missing receipt. Describe the recovery event, next safe action, stop message, and proof that the checker stopped safely."
+      "label": "Practice recovery",
+      "text": "Pick one bad state: stale claim, failed check, interrupted run, or missing receipt. Describe the recovery event, next safe action, stop message, and proof that the checker stopped safely."
     }
   ];
   const receiptFields = [
     "mode: compare-only; current checker stays in charge",
     "inputEvent: event or issue inspected",
     "currentDecision: current checker result",
-    "supervisorDecision: supervisor comparison result",
+    "candidateDecision: candidate check result",
     "agreement: yes / no plus reason",
     "recoveryDrill: scenario and result",
     "nextAction: keep comparing, fix mismatch, or promote later"
@@ -70,24 +89,26 @@
 
 <LessonShell lesson={lesson}>
 <p>{promptContext}</p>
+<h2>Your next move</h2>
+<LessonScaffold have={zpdScaffold.have} add={zpdScaffold.add} stop={zpdScaffold.stop} exampleTitle={zpdScaffold.exampleTitle} example={zpdScaffold.example} />
 <h2>Starter prompt</h2>
 <PromptBlock id="lesson-supervisor-runtime-starter-prompt-block" text={starterPrompt} />
 <h2>Build checklist</h2>
 <PhaseChecklist lessonId={lesson.id} phases={phases} />
 <h2>Proof to save</h2>
-<p>Save proof that the TypeScript next-state check matches one normal decision and one recovery case without taking over.</p>
+<p>Save proof that the candidate check matches one normal decision and one recovery case without taking over.</p>
 <LessonEvidence items={proofItems} />
 <ReceiptTemplate fields={receiptFields} />
 <h2>Done when</h2>
-<p>One comparison receipt shows the current checker and supervisor agree for a normal issue, and one recovery receipt shows stale, failed, or interrupted work stops safely.</p>
+<p>One compare-only receipt shows the current checker and candidate check agree for a normal issue, and one recovery receipt shows stale, failed, or interrupted work stops safely.</p>
 <h2>Why it matters</h2>
 <ul>
-  <li><strong>Risk reduced:</strong> the code that suggests nextState and reason is visible before it can decide anything.</li>
-  <li><strong>Temptation avoided:</strong> swapping in a new controller before it matches the current checker.</li>
+  <li><strong>Risk reduced:</strong> the candidate decision is visible before it can decide anything.</li>
+  <li><strong>Temptation avoided:</strong> swapping in a new controller before its answers match the current checker.</li>
   <li><strong>Do not automate yet:</strong> parallel worktrees, timers, provider switching, or real reviewer launches.</li>
 </ul>
 <h2>Try this 🔨</h2>
-<p>For one issue, name the current state, the event read, the current checker decision, and the TypeScript check decision.</p>
+<p>For one issue, name the event read, the current checker decision, and the candidate check decision.</p>
 <h2>Exploration prompts</h2>
 <ExplorationPrompts lessonId={lesson.id} prompts={explorationPrompts} />
 </LessonShell>

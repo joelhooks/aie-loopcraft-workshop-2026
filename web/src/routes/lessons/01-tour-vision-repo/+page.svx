@@ -3,6 +3,7 @@
   import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
   import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
   import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import LessonScaffold from "$lib/lesson-page/lesson-scaffold.svelte";
   import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
   import PromptBlock from "$lib/prompt-block.svelte";
   import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
@@ -35,6 +36,22 @@
       ]
     }
   ];
+  const zpdScaffold = {
+      "have": [
+          "A mostly blank project with repo instructions, lesson notes, local TA skills, and a Lakebed shell.",
+          "No issue data, check command, UI implementation, dispatch, or background worker yet."
+      ],
+      "add": [
+          "A VISION.md that says what the local issue checker should do, which files it may edit, what needs approval, what is out of scope, and when it must stop.",
+          "A short AGENTS.md or README.md rule only if it helps the next agent open this repo cold."
+      ],
+      "stop": [
+          "Creating event files, check commands, Lakebed code, dispatch, product code, schedulers, or external tracker setup.",
+          "Letting the agent compress your answers into vague “build a system” language."
+      ],
+      "exampleTitle": "Tiny VISION.md shape",
+      "example": "Goal: build a local issue checker that reads local issue events and reports the next safe move.\nAllowed files: docs, local event fixtures, check scripts, receipts.\nNeeds approval: product-file edits, external writes, live services.\nWill not do yet: GitHub writes, schedulers, background workers, model calls.\nStop when: input is missing, approval is needed, checks fail, or ownership is unclear."
+  };
   const starterPrompt = "Use grill-with-docs to help me define a small local issue checker before we write code.\n\nRead README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.\n\nAsk one question at a time. Capture what the checker should do, which files it may edit, what needs approval, what is out of scope, and when it must stop. Write the answers into VISION.md. Update AGENTS.md or README.md only if we agree on a clear repo rule. Do not create issue events, checks, UI code, background workers, external tracker setup, or product code yet. End by reporting the VISION.md sections changed and confirming no event, check, UI, or product files were created.";
   const explorationPrompts = [
     {
@@ -61,6 +78,8 @@
 
 <LessonShell lesson={lesson}>
 <p>{promptContext}</p>
+<h2>Your next move</h2>
+<LessonScaffold have={zpdScaffold.have} add={zpdScaffold.add} stop={zpdScaffold.stop} exampleTitle={zpdScaffold.exampleTitle} example={zpdScaffold.example} />
 <h2>Starter prompt</h2>
 <PromptBlock id="lesson-tour-vision-repo-starter-prompt-block" text={starterPrompt} />
 <h2>Build checklist</h2>

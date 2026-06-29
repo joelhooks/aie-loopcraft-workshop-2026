@@ -3,6 +3,7 @@
   import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
   import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
   import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import LessonScaffold from "$lib/lesson-page/lesson-scaffold.svelte";
   import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
   import PromptBlock from "$lib/prompt-block.svelte";
   import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
@@ -42,6 +43,23 @@
       ]
     }
   ];
+  const zpdScaffold = {
+      "have": [
+          "One selected issue, local state, dry-run discipline, and productChangedFiles checks.",
+          "A reason to ask for help without creating a second implementation path."
+      ],
+      "add": [
+          "A role contract that says what the reviewer may read, produce, and refuse.",
+          "One reviewer input file built from issue state and acceptance criteria.",
+          "One review note and receipt that keep productChangedFiles empty."
+      ],
+      "stop": [
+          "Making implementer the default helper role.",
+          "Letting the reviewer edit product files or roam the repo without a bounded question."
+      ],
+      "exampleTitle": "Tiny review receipt shape",
+      "example": "issueId: ISSUE-001\nrole: reviewer\ninputPath: reviews/ISSUE-001-input.md\noutputPath: reviews/ISSUE-001-review.md\nproductChangedFiles: []\ndecisionNeeded: approve, reject, or ask for more\nnextAllowedAction: human decides before implementation"
+  };
   const starterPrompt = "Add one read-only reviewer path controlled by the main script. Create a small input file from the issue and acceptance criteria, run or fake the reviewer, save its output, and write a receipt that links the issue, input file, output file, productChangedFiles, and next decision. By default, the reviewer must not edit product files.";
   const explorationPrompts = [
     {
@@ -70,6 +88,8 @@
 
 <LessonShell lesson={lesson}>
 <p>{promptContext}</p>
+<h2>Your next move</h2>
+<LessonScaffold have={zpdScaffold.have} add={zpdScaffold.add} stop={zpdScaffold.stop} exampleTitle={zpdScaffold.exampleTitle} example={zpdScaffold.example} />
 <h2>Starter prompt</h2>
 <PromptBlock id="lesson-specialist-review-starter-prompt-block" text={starterPrompt} />
 <h2>Build checklist</h2>

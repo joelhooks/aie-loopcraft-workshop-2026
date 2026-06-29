@@ -3,6 +3,7 @@
   import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
   import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
   import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import LessonScaffold from "$lib/lesson-page/lesson-scaffold.svelte";
   import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
   import PromptBlock from "$lib/prompt-block.svelte";
   import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
@@ -50,6 +51,23 @@
       ]
     }
   ];
+  const zpdScaffold = {
+      "have": [
+          "VISION.md boundaries from Lesson 01.",
+          "No local issue data or check command yet."
+      ],
+      "add": [
+          "One local JSONL event file with ready, approval-required, and input-required examples.",
+          "One check command that validates every row, prints classifications and stop reasons, and saves a receipt from real output.",
+          "Tests that prove good rows classify and malformed rows fail with a useful error."
+      ],
+      "stop": [
+          "Moving approval-required or input-required work forward.",
+          "Adding auth, external issue APIs, GitHub writes, schedulers, or background workers."
+      ],
+      "exampleTitle": "Tiny check output shape",
+      "example": "file: data/issue-events.jsonl\ncommand: pnpm run check:issues\nread: 3 events\nready: ISSUE-001\napproval-required: ISSUE-002 — needs human approval\ninput-required: ISSUE-003 — missing acceptance criteria\nrefused: ISSUE-002, ISSUE-003\nreceipt: receipts/issue-check-001.json"
+  };
   const starterPrompt = "Use VISION.md from Lesson 01. Create issues.jsonl or data/issue-events.jsonl with ready, approval-required, and input-required examples. Add the smallest local check command that validates every row, fails loudly on bad input, prints the file read, event count, classifications, stop reasons, next allowed action, and refused action. Add tests, run the commands from the repo root, and save one receipt from real output. Keep it local; do not add auth, external issue APIs, GitHub writes, schedulers, or background workers yet.";
   const explorationPrompts = [
     {
@@ -76,6 +94,8 @@
 
 <LessonShell lesson={lesson}>
 <p>{promptContext}</p>
+<h2>Your next move</h2>
+<LessonScaffold have={zpdScaffold.have} add={zpdScaffold.add} stop={zpdScaffold.stop} exampleTitle={zpdScaffold.exampleTitle} example={zpdScaffold.example} />
 <h2>Starter prompt</h2>
 <PromptBlock id="lesson-reliability-floor-starter-prompt-block" text={starterPrompt} />
 <h2>Build checklist</h2>

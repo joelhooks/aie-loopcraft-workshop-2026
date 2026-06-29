@@ -3,7 +3,7 @@ export const site = {
   title: "AI Engineer Loopcraft Workshop 2026",
   url: "https://aie-loopcraft-workshop-2026.wzrrd.sh/",
   repo: "https://github.com/joelhooks/aie-loopcraft-workshop-2026",
-  version: "0.8.13",
+  version: "0.8.14",
 };
 
 export type Lesson = {
@@ -75,10 +75,10 @@ export const lessons: Lesson[] = [
   {
     "id": "supervisor-runtime",
     "number": "08",
-    "title": "Run the supervisor beside the current check",
-    "shortTitle": "Supervisor check",
+    "title": "Compare a candidate check beside the current check",
+    "shortTitle": "Compare-only check",
     "href": "/lessons/08-supervisor-runtime/",
-    "challenge": "Use the same event file and check command while a small TypeScript decision check says the next state and reason. The current checker still decides."
+    "challenge": "Use the same event file and check command while a small TypeScript candidate check says the next state and reason. The current checker still decides."
   }
 ];
 

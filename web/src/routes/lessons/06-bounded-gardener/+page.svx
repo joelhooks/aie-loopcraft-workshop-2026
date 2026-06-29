@@ -3,6 +3,7 @@
   import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
   import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
   import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import LessonScaffold from "$lib/lesson-page/lesson-scaffold.svelte";
   import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
   import PromptBlock from "$lib/prompt-block.svelte";
   import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
@@ -18,31 +19,49 @@
   ];
   const phases = [
     {
-      title: "Define allowed maintenance",
-      items: [
-        "Name the specific facts the cleanup command may turn into events. Everything else is out of scope."
+      "title": "Define allowed maintenance",
+      "items": [
+        "Name the few facts the cleanup command may turn into events, such as stale receipt, missing link, outdated status, duplicate follow-up, or incomplete event. Everything else is out of scope."
       ]
     },
     {
-      title: "Add stop checks first",
-      items: [
-        "Refuse to run when jj status is not clean, the checker process is running, a matching follow-up already exists, an event is waiting for approval, an event asks for more input, or changed files are outside the allowed paths."
+      "title": "Pass 1: dry-run one event",
+      "items": [
+        "Dry-run prints exactly one maintenance event it would write and leaves writtenEvents empty."
       ]
     },
     {
-      title: "Run dry-run before apply",
-      items: [
-        "Dry-run prints the event it would write. Apply writes only one safe event and records a receipt."
+      "title": "Pass 2: guarded apply",
+      "items": [
+        "Apply writes one event only when jj status is clean, the checker is idle, no matching follow-up exists, no event waits for approval, and no event asks for more input."
       ]
     },
     {
-      title: "Prove duplicate protection",
-      items: [
-        "Run the command twice and show the second run refuses to recreate the same follow-up."
+      "title": "Prove duplicate protection",
+      "items": [
+        "Run the command again and show the second run refuses to recreate the same follow-up with an exact stop message."
       ]
     }
   ];
-  const starterPrompt = "Add a cleanup command that can propose at most one maintenance issue event. Start with explicit allowed maintenance types and printed stop messages. Dry-run must show the event it would write; apply may write one fully formed event only when every stop check passes. Refuse to run when jj status is dirty, the checker process is running, the queue already has a matching follow-up, an event needs approval, or an event needs more input. Save a receipt with inspected files, proposed event id, written event id if any, and the printed stop message.";
+  const zpdScaffold = {
+      "have": [
+          "A local queue, stop reasons, claim receipts, and proof that dry-runs can avoid product edits.",
+          "A need for boring maintenance without turning cleanup into an unbounded agent."
+      ],
+      "add": [
+          "Pass 1: dry-run one allowed maintenance event and print the exact event it would write.",
+          "Pass 2: apply one event only after every stop check passes.",
+          "A second run that refuses the duplicate follow-up and records the stop message."
+      ],
+      "stop": [
+          "Scanning broadly or proposing more than one maintenance event.",
+          "Applying when jj status is dirty, the checker is running, the follow-up already exists, or any event needs approval/input.",
+          "Editing product files as part of cleanup."
+      ],
+      "exampleTitle": "Tiny two-pass cleanup shape",
+      "example": "pass: dry-run\ncandidate: stale receipt link\nwouldWrite: MAINT-001 update receipt link\nwrittenEvents: []\n\npass: apply\nstopChecks: clean repo, checker idle, no duplicate, no approval/input blockers\nwrittenEvents: [MAINT-001]\nduplicateCheck: refused — matching follow-up already exists"
+  };
+  const starterPrompt = "Add a cleanup command that can propose at most one maintenance issue event. Keep it as two passes: first dry-run one allowed maintenance event and print the exact event it would write; then allow apply to write one event only after every stop check passes. Refuse to apply when jj status is dirty, the checker process is running, the queue already has a matching follow-up, an event needs approval, or an event needs more input. Save a receipt with inspected files, proposed event id, written event id if any, duplicate check result, and the exact printed stop message.";
   const explorationPrompts = [
     {
       label: "Find boring maintenance",
@@ -70,6 +89,8 @@
 
 <LessonShell lesson={lesson}>
 <p>{promptContext}</p>
+<h2>Your next move</h2>
+<LessonScaffold have={zpdScaffold.have} add={zpdScaffold.add} stop={zpdScaffold.stop} exampleTitle={zpdScaffold.exampleTitle} example={zpdScaffold.example} />
 <h2>Starter prompt</h2>
 <PromptBlock id="lesson-bounded-gardener-starter-prompt-block" text={starterPrompt} />
 <h2>Build checklist</h2>

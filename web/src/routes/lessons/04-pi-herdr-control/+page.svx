@@ -3,6 +3,7 @@
   import ExplorationPrompts from "$lib/lesson-page/exploration-prompts.svelte";
   import LessonEvidence from "$lib/lesson-page/lesson-evidence.svelte";
   import LessonShell from "$lib/lesson-page/lesson-shell.svelte";
+  import LessonScaffold from "$lib/lesson-page/lesson-scaffold.svelte";
   import PhaseChecklist from "$lib/lesson-page/phase-checklist.svelte";
   import PromptBlock from "$lib/prompt-block.svelte";
   import ReceiptTemplate from "$lib/lesson-page/receipt-template.svelte";
@@ -42,6 +43,23 @@
       ]
     }
   ];
+  const zpdScaffold = {
+      "have": [
+          "A local event file, check command, tests, receipts, and Lakebed view.",
+          "A person can run the check, but the current state is not easy to see from the agent workspace yet."
+      ],
+      "add": [
+          "One stable status command for the checker.",
+          "A Pi status/check-now path that runs against the local event file.",
+          "A Herdr pane that keeps the current status or latest check visible."
+      ],
+      "stop": [
+          "Adding claim commands, background scheduling, or a real daemon beyond the lesson stub.",
+          "Accepting status output that disagrees between Pi, Herdr, Lakebed, and the latest receipt."
+      ],
+      "exampleTitle": "Tiny status output shape",
+      "example": "state: waiting\ncheckedAt: 2026-06-29T21:00:00.000Z\nlastCommand: pnpm run check:issues\nlastReceipt: receipts/issue-check-001.json\nwaitingReason: ISSUE-002 needs approval\nnextSafeAction: ask for approval or pick a ready issue"
+  };
   const starterPrompt = "Add the smallest local status command for the checker. Keep Herdr visible with a Pi pane and a status/check pane. Print state, checkedAt, lastCommand, lastReceipt, and waitingReason. Add a Pi command or prompt for status and check-now. Prove Pi output, Herdr output, Lakebed state, and the receipt name the same issue and latest check. Do not add claim commands or background scheduling yet.";
   const explorationPrompts = [
     {
@@ -69,6 +87,8 @@
 
 <LessonShell lesson={lesson}>
 <p>{promptContext}</p>
+<h2>Your next move</h2>
+<LessonScaffold have={zpdScaffold.have} add={zpdScaffold.add} stop={zpdScaffold.stop} exampleTitle={zpdScaffold.exampleTitle} example={zpdScaffold.example} />
 <h2>Starter prompt</h2>
 <PromptBlock id="lesson-pi-herdr-control-starter-prompt-block" text={starterPrompt} />
 <h2>Build checklist</h2>

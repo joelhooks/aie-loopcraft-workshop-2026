@@ -19,7 +19,7 @@ docker compose run --rm workshop zsh -lc 'cd /workspace && herdr integration ins
 
 Herdr opens the Loopcraft workspace at `/workspace`. Pi is installed in the container. Start `pi` from a Herdr pane, sign into your provider if prompted, and use `/loop-lesson-01` to load the first prompt.
 
-Detailed setup, image troubleshooting, local build, and host-machine fallback live in `docs/setup.md`.
+Detailed setup, image troubleshooting, local build, and host-machine fallback live in `docs/setup.md`. Complete no-Docker local setup instructions live in `docs/full-setup-without-docker.md`.
 
 ## Pieces
 

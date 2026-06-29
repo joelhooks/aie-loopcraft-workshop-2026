@@ -16,6 +16,7 @@
   <a class:active={current === "home"} href={href("/")}>Workshop</a>
   <a class:active={current === "lessons"} href={href("/lessons/")}>Lessons</a>
   <a class:active={current === "glossary"} href={href("/glossary/")}>Glossary</a>
+  <a class:active={current === "local-setup"} href={href("/appendix/full-setup-without-docker/")}>Local setup</a>
   <a href={site.repo}>Repo</a>
 </nav>
 

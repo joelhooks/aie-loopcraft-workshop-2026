@@ -1,0 +1,295 @@
+<script lang="ts">
+  import { page } from "$app/state";
+  import FeedbackExportGate from "$lib/feedback-export-gate.svelte";
+  import FeedbackSection from "$lib/feedback-section.svelte";
+  import { isFeedbackEnabled, withFeedback } from "$lib/feedback";
+  import ReportLayout from "$lib/ReportLayout.svelte";
+  import WorkshopNav from "$lib/workshop-nav.svelte";
+  import { site } from "$lib/workshop-data";
+
+  const feedbackEnabled = $derived(isFeedbackEnabled(page.url));
+  const href = $derived((value: string) => withFeedback(value, feedbackEnabled));
+</script>
+
+<svelte:head>
+  <title>Full setup without Docker · {site.title}</title>
+  <meta
+    name="description"
+    content="End-to-end local machine setup instructions for running the Loopcraft workshop without Docker."
+  />
+</svelte:head>
+
+<ReportLayout>
+  <WorkshopNav current="local-setup" />
+
+  <p class="eyebrow"><span class="mascot">🧰</span><span class="eyebrow-stack"><span>Appendix</span><span>{site.title}</span></span></p>
+  <h1>Full setup without Docker</h1>
+
+  <FeedbackSection id="local-setup-intro">
+    <p class="lead">Use this only when you explicitly want to run the workshop on your own machine instead of the Docker workshop computer.</p>
+    <p>Docker is still the normal path because it pins the toolchain and keeps auth/state away from your host. This local path is for people who already have, or are willing to install, the tools themselves.</p>
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-agent-contract">
+    <h2>Agent contract</h2>
+    <p>If a coding agent is helping with setup, give it these rules first:</p>
+    <ol>
+      <li>Stay inside the cloned <code>aie-loopcraft-workshop-2026</code> folder.</li>
+      <li>Install or verify host tools only after the person running the machine agrees.</li>
+      <li>Never paste secrets into files, shell history, docs, or chat. If auth is needed, ask the person to sign in through the tool's normal login flow.</li>
+      <li>Do not create lesson artifacts early. Lesson 01 creates <code>VISION.md</code>; Lesson 02 creates the first issue-event file and checks.</li>
+      <li>Leave a short setup receipt: OS, tool versions, commands run, what passed, and what still needs auth.</li>
+    </ol>
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-agent-prompt">
+    <h2>Copy/paste prompt for a setup agent</h2>
+    <p>Use this when you want a coding agent to run the local setup with you:</p>
+
+```txt
+You are helping me run the AI Engineer Loopcraft Workshop 2026 on this machine without Docker.
+
+Stay inside the cloned aie-loopcraft-workshop-2026 repo once it exists. Do not create lesson artifacts yet. Do not edit product files to work around missing host tools. Do not handle secrets or paste tokens anywhere; if auth is needed, stop and ask me to sign in through the normal tool flow.
+
+Goal: get the local machine ready to start Lesson 01. Verify Git, Node 22+, pnpm 11.9.0, Bun, Pi, and Herdr. Install only the missing tools I approve. Run herdr integration install pi, or choose plain terminal mode if Herdr is the blocker. Run pnpm run web:install, pnpm run web:check, and pnpm run web:build. Start or smoke-test node scripts/loop-daemon-stub.mjs. Open Pi from the repo root and confirm it can start or asks me to log in.
+
+Before changing anything, show me the current tool/version audit and the exact install commands you plan to run. When done, report a setup receipt: OS, repo path, git status before lesson work, tool versions, Herdr mode or terminal mode, site checks, daemon test, Pi auth status, and blockers. Stop before Lesson 01 edits unless I explicitly say to continue.
+```
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-done-when">
+    <h2>Done when</h2>
+    <ul class="checklist">
+      <li><code>git</code>, <code>node</code>, <code>pnpm</code>, <code>bun</code>, <code>pi</code>, and <code>herdr</code> are on <code>PATH</code>.</li>
+      <li>The repo is cloned and <code>git status --short</code> is clean before lesson work starts.</li>
+      <li><code>herdr integration install pi</code> has run successfully, or you choose plain terminal mode.</li>
+      <li><code>pnpm run web:check</code> and <code>pnpm run web:build</code> pass after <code>pnpm run web:install</code>.</li>
+      <li><code>node scripts/loop-daemon-stub.mjs</code> starts and prints a status server message.</li>
+      <li>Pi opens from the repo root and either logs in or clearly asks you to log in.</li>
+      <li>You can open Lesson 01 and use <code>/loop-lesson-01</code> or paste the fallback prompt.</li>
+    </ul>
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-prereqs">
+    <h2>1. Install host prerequisites</h2>
+    <p>Recommended local host: macOS or Linux. On Windows, use WSL2 or the Docker path unless you already know how you want to run Herdr and shell tooling.</p>
+    <p>Required tools:</p>
+    <ul>
+      <li>Git</li>
+      <li>Node 22+</li>
+      <li>pnpm 11.9.0 through Corepack</li>
+      <li>Bun, for the SvelteKit workshop site</li>
+      <li>Pi</li>
+      <li>Herdr</li>
+    </ul>
+    <p>Optional comparison shells: Claude Code, Codex, and OpenCode.</p>
+    <p>The Docker image currently pins these versions as a known-good baseline:</p>
+
+```txt
+Pi: 0.80.2
+Claude Code: 2.1.195
+Codex: 0.142.3
+OpenCode: 1.17.11
+Herdr: 0.7.1
+pnpm: 11.9.0
+Node: 22
+```
+
+    <h3>macOS quick install</h3>
+
+```sh
+# Git and Node can come from Homebrew, mise, fnm, asdf, or your normal setup.
+# This is one plain path, not the only path.
+brew install git node@22 bun herdr
+
+corepack enable
+corepack prepare pnpm@11.9.0 --activate
+
+npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.80.2
+npm install -g @anthropic-ai/claude-code@2.1.195 @openai/codex@0.142.3 opencode-ai@1.17.11
+```
+
+    <h3>Linux quick install</h3>
+
+```sh
+corepack enable
+corepack prepare pnpm@11.9.0 --activate
+
+# Pi
+npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.80.2
+
+# Herdr. This follows the public Herdr installer.
+curl -fsSL https://herdr.dev/install.sh | sh
+
+# Optional comparison shells.
+npm install -g @anthropic-ai/claude-code@2.1.195 @openai/codex@0.142.3 opencode-ai@1.17.11
+```
+
+    <p>Pi also has an installer alternative:</p>
+
+```sh
+curl -fsSL https://pi.dev/install.sh | sh
+```
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-verify-tools">
+    <h2>2. Verify the tools</h2>
+    <p>Run this before cloning or changing repo files:</p>
+
+```sh
+git --version
+node --version
+corepack --version
+pnpm --version
+bun --version
+pi --version
+herdr --version
+```
+
+    <p>Optional shell checks:</p>
+
+```sh
+claude --version
+codex --version
+opencode --version
+```
+
+    <p>If a command is missing, stop and fix that one tool. Do not edit the workshop repo to work around a missing host dependency.</p>
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-clone">
+    <h2>3. Clone the workshop repo</h2>
+
+```sh
+git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
+cd aie-loopcraft-workshop-2026
+
+git status --short
+git log --oneline --max-count=5
+```
+
+    <p><code>git status --short</code> should be empty before lesson work starts.</p>
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-herdr">
+    <h2>4. Install the Herdr Pi integration</h2>
+    <p>Run this once on the host account that will use Herdr:</p>
+
+```sh
+herdr integration install pi
+```
+
+    <p>Then start Herdr from the repo root:</p>
+
+```sh
+herdr --session aie-loopcraft-workshop-2026
+```
+
+    <p>Inside Herdr, open a pane in the repo root and run <code>pi</code>. If Pi asks for auth, the person running the machine signs in with <code>/login</code> or the provider flow Pi shows.</p>
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-terminal-mode">
+    <h2>5. Plain terminal mode</h2>
+    <p>If Herdr is the blocker, use two terminals from the repo root instead of debugging the whole day away.</p>
+    <p>Terminal 1:</p>
+
+```sh
+pi
+```
+
+    <p>Terminal 2, when a lesson asks for status/runtime output:</p>
+
+```sh
+node scripts/loop-daemon-stub.mjs
+```
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-site-checks">
+    <h2>6. Install and check the workshop site</h2>
+    <p>The public site source lives under <code>web/</code>. It is separate from lesson work, but checking it proves the local JavaScript toolchain is sane.</p>
+
+```sh
+pnpm run web:install
+pnpm run web:check
+pnpm run web:build
+```
+
+    <p>To preview locally:</p>
+
+```sh
+pnpm run web:dev
+```
+
+    <p>Then open the local URL printed by Vite, or use the published Lesson 01 page: <a href="https://aie-loopcraft-workshop-2026.wzrrd.sh/lessons/01-tour-vision-repo/">Lesson 01</a>.</p>
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-start-lesson-one">
+    <h2>7. Start Lesson 01</h2>
+    <p>From Pi in the repo root:</p>
+
+```txt
+/loop-lesson-01
+```
+
+    <p>If that command is unavailable, paste this fallback prompt:</p>
+
+```txt
+/skill:grill-with-docs
+
+Help me define a small local issue-progress loop before we write code.
+
+Read README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, agents/skills/loopcraft-ta, agents/skills/grill-with-docs, and surface/lakebed.
+
+Ask one question at a time. Capture what the loop should do, what it may change, what needs human approval, and what we are not building yet. Write the answers into VISION.md. Update AGENTS.md or README.md only if we agree on a clear repo rule. Do not create issue events, checks, Lakebed code, dispatch, or product code yet.
+```
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-receipt">
+    <h2>8. Save a setup receipt</h2>
+    <p>Ask the agent to report this in chat before lesson work begins:</p>
+
+```txt
+Local setup receipt
+- OS:
+- Repo path:
+- git status before lesson work:
+- Tool versions:
+- Herdr mode or terminal mode:
+- Site checks run:
+- Runtime/status command tested:
+- Pi auth status:
+- Blockers:
+```
+  </FeedbackSection>
+
+  <FeedbackSection id="local-setup-failures">
+    <h2>Common failures</h2>
+    <ul>
+      <li><strong>Pi opens but no model is available:</strong> use Pi's normal <code>/login</code> flow. The agent does not handle tokens.</li>
+      <li><strong><code>herdr integration install pi</code> fails:</strong> use plain terminal mode for the lesson, then debug Herdr separately.</li>
+      <li><strong><code>pnpm run web:check</code> fails before lesson work:</strong> fix the local toolchain first.</li>
+      <li><strong>The daemon shows empty events:</strong> normal before Lesson 02. Lesson 02 creates <code>data/issue-events.jsonl</code> or <code>issues.jsonl</code>.</li>
+      <li><strong>The agent wants GitHub, Linear, schedulers, or product code:</strong> stop. Local setup changes how tools run, not the lesson order.</li>
+    </ul>
+  </FeedbackSection>
+
+  <FeedbackExportGate run="full-local-setup" slug={`${site.slug}-full-local-setup`} url={`${site.url}appendix/full-setup-without-docker/`} version={site.version} />
+
+  <footer>
+    <a href={href("/")}>Workshop home</a> · <a href={href("/lessons/")}>All lessons</a> · <a href={href("/glossary/")}>Glossary</a> · <a href={`${site.repo}/blob/main/docs/full-setup-without-docker.md`}>Markdown source</a>
+  </footer>
+</ReportLayout>
+
+<style>
+  .checklist {
+    display: grid;
+    gap: 8px;
+  }
+
+  h3 {
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 18px;
+    margin: 24px 0 8px;
+  }
+</style>

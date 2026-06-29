@@ -11,17 +11,21 @@ Read these public instructions first. These are real served paths on this site:
 1. `/llms.txt` — short machine-readable index of this site
 2. `/AGENTS.md` — public repo rules for agents
 3. `/glossary/` — plain-language terms linked back to the lessons
-4. `/lessons/01-tour-vision-repo/` — first lesson page
-5. `/lessons/01-tour-vision-repo/prompt.txt` — pasteable Lesson 01 starter prompt
+4. `/appendix/full-setup-without-docker/` — full host-machine setup path when Docker is not used
+5. `/lessons/01-tour-vision-repo/` — first lesson page
+6. `/lessons/01-tour-vision-repo/prompt.txt` — pasteable Lesson 01 starter prompt
 
 Setup, fallback paths, and troubleshooting live in the repo at `docs/setup.md`
 (viewable at `https://github.com/joelhooks/aie-loopcraft-workshop-2026/blob/main/docs/setup.md`).
-There is no `/docs/` route on this site, so read setup from the repo, not a guessed URL.
+Complete local-machine setup without Docker lives at `docs/full-setup-without-docker.md`
+and is served at `/appendix/full-setup-without-docker/`.
+There is no `/docs/` route on this site, so read setup docs from the repo or the served appendix, not a guessed URL.
 
 If you are working in a cloned repo, read these files too:
 
 - `README.md`
 - `docs/setup.md`
+- `docs/full-setup-without-docker.md` if the person explicitly chooses host-machine setup
 - `WORKSHOP_RIG.md` — what is prepared and intentionally unfinished
 - `lessons/01-tour-vision-repo.md`
 - `lessons/02-reliability-floor.md`
@@ -120,7 +124,7 @@ Evidence to leave:
 
 - Do not use private machine paths, hidden local setup, raw transcripts, or secrets.
 - Do not claim the public site exposes MCP, OAuth, or an API unless the checked public route actually exists.
-- Do not skip Docker setup by assuming host Herdr, host Pi, or host auth.
+- Do not skip Docker setup by assuming host Herdr, host Pi, or host auth. If the person chooses host-machine setup, follow `/appendix/full-setup-without-docker/` end to end.
 - Do not edit future lessons early.
 - Do not convert the workshop into a finished template. Guardrails should be added step by step.
 - If a command fails because auth is missing, stop and ask the person running the workshop to sign in. Do not paste tokens into files.

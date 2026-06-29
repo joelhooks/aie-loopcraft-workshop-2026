@@ -201,35 +201,30 @@ bash scripts/docker-compose.sh down --volumes
 
 That deletes local container auth/state for this Compose project, so do it deliberately.
 
-## Host-machine path
+## Full setup without Docker
 
-Use this only if you already have the tools installed and do not want the Docker workshop computer.
+Use this only if you explicitly want to manage the host machine yourself instead of using the Docker workshop computer.
 
-Start from a fresh clone:
+The complete local-machine checklist and agent instructions live in:
+
+- [`docs/full-setup-without-docker.md`](full-setup-without-docker.md)
+- Published appendix: `https://aie-loopcraft-workshop-2026.wzrrd.sh/appendix/full-setup-without-docker/`
+
+Short version:
 
 ```sh
 git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
 cd aie-loopcraft-workshop-2026
+
+# after installing/verifying Git, Node 22+, pnpm, Bun, Pi, and optionally Herdr
+herdr integration install pi
+herdr --session aie-loopcraft-workshop-2026
 ```
 
-Install or verify the host tools you plan to use:
-
-- Node 22+
-- pnpm 11+
-- Bun, for the workshop site scripts
-- Pi
-- Herdr, if you want the same two-pane shape without Docker
-- Claude Code, Codex, and OpenCode if you want the optional comparison agent shells
-
-Start Pi from the repo root:
+If Herdr is the blocker, use two terminals from the repo root:
 
 ```sh
 pi
-```
-
-In another terminal, start the temporary status daemon:
-
-```sh
 node scripts/loop-daemon-stub.mjs
 ```
 
@@ -239,10 +234,9 @@ For the site source:
 pnpm run web:install
 pnpm run web:check
 pnpm run web:build
-pnpm run web:publish
 ```
 
-The site is MDSvX-driven. Root, lesson index, and lesson pages live in `web/src/routes/**/*.svx`; shared lesson data lives in `web/src/lib/workshop-data.ts`.
+The local path changes how tools run. It does not change the lesson order: Lesson 01 still creates `VISION.md`, and Lesson 02 still creates the first local issue events and checks.
 
 ## What not to do
 

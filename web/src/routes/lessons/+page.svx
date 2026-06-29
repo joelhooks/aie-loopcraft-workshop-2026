@@ -23,7 +23,7 @@
   <h1>Eight passes from vision to loop leverage.</h1>
 
   <FeedbackSection id="lessons-overview">
-    <p class="lead">Work through these in order. Each page gives a challenge, copyable prompt, visible build target, evidence to inspect, checkpoint, tiny drill, and a plain-language reason for the step. Keep the <a href={href("/glossary/")}>glossary appendix</a> open when a term gets fuzzy.</p>
+    <p class="lead">Work through these in order. Each page gives a challenge, copyable prompt, visible build target, evidence to inspect, checkpoint, tiny drill, and a plain-language reason for the step. Keep the <a href={href("/glossary/")}>glossary appendix</a> open when a term gets fuzzy. If you are not using Docker, finish the <a href={href("/appendix/full-setup-without-docker/")}>local setup appendix</a> before Lesson 01.</p>
   </FeedbackSection>
 
 <h2>All lessons</h2>
@@ -43,6 +43,6 @@
   <FeedbackExportGate run="lesson-index" slug={`${site.slug}-lessons`} url={`${site.url}lessons/`} version={site.version} />
 
   <footer>
-    Lessons are the path. Issue events are the project data the loop builds toward. <a href={href("/glossary/")}>Glossary</a>
+    Lessons are the path. Issue events are the project data the loop builds toward. <a href={href("/glossary/")}>Glossary</a> · <a href={href("/appendix/full-setup-without-docker/")}>Local setup</a>
   </footer>
 </ReportLayout>

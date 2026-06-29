@@ -42,6 +42,7 @@ The slug matches the public repo name so the site and source are easy to pair.
 
 ```txt
 src/routes/+page.svx   # root workshop page copy
+src/routes/appendix/full-setup-without-docker/+page.svx # no-Docker setup appendix
 src/routes/lessons/**/*.svx # MDSvX lesson pages
 src/lib/workshop-data.ts # shared lesson data
 src/lib/*.svelte       # report and feedback components

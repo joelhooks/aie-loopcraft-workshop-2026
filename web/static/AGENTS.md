@@ -8,7 +8,7 @@ Help them build a local issue-progress loop one step at a time. The loop eventua
 
 ## Main path
 
-Use the Docker workshop computer unless the person running the workshop explicitly chooses the host-machine path.
+Use the Docker workshop computer unless the person running the workshop explicitly chooses the host-machine path. If they choose the host-machine path, follow `/appendix/full-setup-without-docker/` or `docs/full-setup-without-docker.md` end to end before lesson work starts.
 
 ```sh
 git clone https://github.com/joelhooks/aie-loopcraft-workshop-2026.git
@@ -27,8 +27,10 @@ When Herdr opens, start `pi` in a pane if they want Pi. Sign in only through the
 For setup and public guidance:
 
 - `/glossary/` on the public site when a term is unclear
+- `/appendix/full-setup-without-docker/` when Docker is not being used
 - `README.md`
 - `docs/setup.md`
+- `docs/full-setup-without-docker.md` when Docker is not being used
 - `lessons/01-tour-vision-repo.md`
 - `lessons/02-reliability-floor.md`
 

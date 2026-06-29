@@ -10,6 +10,7 @@ Public repo: https://github.com/joelhooks/aie-loopcraft-workshop-2026
 - Agent start guide: /agent.md
 - Public coding-agent instructions: /AGENTS.md
 - Setup source in repo: `docs/setup.md`
+- Full setup without Docker: /appendix/full-setup-without-docker/ and `docs/full-setup-without-docker.md`
 - Lesson index: /lessons/
 - Glossary appendix: /glossary/
 - Lesson 01: /lessons/01-tour-vision-repo/
@@ -28,6 +29,10 @@ pnpm run workshop
 ```
 
 `pnpm run workshop` starts Herdr inside the Docker container. Host Herdr is not required.
+
+## Full setup without Docker
+
+Use this only when the person running the workshop explicitly chooses host-machine setup. Follow `/appendix/full-setup-without-docker/` end to end: verify Git, Node 22+, pnpm, Bun, Pi, and Herdr; install the Herdr Pi integration or choose terminal mode; run the site checks; start Pi from the repo root; and do not create lesson artifacts before Lesson 01 asks for them.
 
 ## Agent boundary
 

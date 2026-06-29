@@ -252,12 +252,12 @@ pnpm run workshop:pull</code></pre>
 pnpm run workshop:herdr</code></pre>
 <p>If Herdr is the blocker, use Pi directly inside the same Docker image:</p>
       <pre><code>pnpm run workshop:pi</code></pre>
-<p>More fallback notes live in <a href={`${site.repo}/blob/main/docs/setup.md`}>docs/setup.md</a>.</p>
+<p>More fallback notes live in <a href={`${site.repo}/blob/main/docs/setup.md`}>docs/setup.md</a>. If you are intentionally avoiding Docker, use the <a href={href("/appendix/full-setup-without-docker/")}>full setup without Docker appendix</a>.</p>
     </details>
 <h2>Tools we use</h2>
 <ToolGrid tools={tools} />
 <h2>Lesson path</h2>
-<p>Each lesson is a checkpoint with something to prompt, build, inspect, or decide. If a term slows you down, use the <a href={href("/glossary/")}>glossary appendix</a>.</p>
+<p>Each lesson is a checkpoint with something to prompt, build, inspect, or decide. If a term slows you down, use the <a href={href("/glossary/")}>glossary appendix</a>. If Docker is not the right path for your machine, use the <a href={href("/appendix/full-setup-without-docker/")}>local setup appendix</a> before Lesson 01.</p>
 <ol class="lesson-index">
       {#each lessons as lesson}
         <li>

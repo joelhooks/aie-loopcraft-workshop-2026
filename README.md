@@ -41,7 +41,7 @@ When a lesson asks for the runtime/status pane, split a Herdr pane and run:
 node scripts/loop-daemon-stub.mjs
 ```
 
-Detailed setup, no-pnpm commands, GHCR troubleshooting, local builds, and host-machine fallback live in [`docs/setup.md`](docs/setup.md).
+Detailed setup, no-pnpm commands, GHCR troubleshooting, local builds, and the full no-Docker local setup path live in [`docs/setup.md`](docs/setup.md) and [`docs/full-setup-without-docker.md`](docs/full-setup-without-docker.md).
 
 ## What you will build
 

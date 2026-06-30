@@ -1,0 +1,41 @@
+# Loopcraft 008 run recorder
+
+## Decision
+
+The 008 setup records the workshop run as compact JSONL events, not raw transcripts.
+
+Default path:
+
+```txt
+recordings/run-008/events.jsonl
+recordings/run-008/latest.json
+```
+
+Command:
+
+```sh
+pnpm run record:event -- --type milestone --lesson 03 --note "Lakebed matched the local check" --source receipts/lakebed-compare-latest.json
+pnpm run record:summary
+```
+
+## Why
+
+The useful training material is the sequence of prompts, milestones, teaching moments, friction, proof gates, learning goals, support fade, and next stretch. Raw transcript dumps are too noisy and too easy to leak.
+
+## Event shape
+
+Each JSONL event records:
+
+- `run`
+- `recordedAt`
+- `type`
+- `lesson`
+- `note`
+- `source`
+- `tags`
+
+## Receipts
+
+- Recorder script: `scripts/record-run-event.mjs`
+- Operator docs: `docs/loopcraft-008-run-recorder.md`
+- Punch list: `docs/loopcraft-008-punch-list.md`

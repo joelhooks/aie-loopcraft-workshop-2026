@@ -30,6 +30,8 @@ pnpm run workshop
 
 `pnpm run workshop` starts Herdr inside the Docker container. Host Herdr is not required.
 
+Host/browser URL rule: do not treat bare `localhost:3000` as a universal browser URL. The container serves Lakebed on `:3000` and the loop bridge on `:8787`; Docker publishes those ports onto the host. If the browser is not on the Docker host, use SSH forwarding, Tailnet Serve, Funnel, or another host-side tunnel. Run `pnpm run workshop:ui-url` from the Docker host and preserve the printed `?bridge=...` query string when the UI and bridge are on different origins.
+
 ## Full setup without Docker
 
 Use this only when the person running the workshop explicitly chooses host-machine setup. Follow `/appendix/full-setup-without-docker/` end to end: verify Git, Node 22+, pnpm, Bun, Pi, and Herdr; install the Herdr Pi integration or choose terminal mode; run the site checks; start Pi from the repo root; and do not create lesson artifacts before Lesson 01 asks for them.

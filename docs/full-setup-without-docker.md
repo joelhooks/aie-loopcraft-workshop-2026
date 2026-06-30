@@ -212,6 +212,14 @@ If you want to preview the site locally:
 pnpm run web:dev
 ```
 
+That serves the local UI on `http://localhost:3000` for the machine running the command. If you are SSH'd into that machine, your laptop browser still needs SSH port forwarding, Tailnet Serve, Funnel, or another host-side tunnel. The same host/browser rule is explained in `docs/host-container-urls.md`.
+
+To expose the local UI over your tailnet, run this from the host machine:
+
+```sh
+bash scripts/workshop-ui-url.sh --serve
+```
+
 Open the local URL printed by Vite, then open Lesson 01:
 
 ```txt

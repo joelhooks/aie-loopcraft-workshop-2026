@@ -7,6 +7,9 @@ session_name="${LOOPCRAFT_HERDR_SESSION:-aie-loopcraft-workshop-2026}"
 workspace_label="${LOOPCRAFT_HERDR_WORKSPACE_LABEL:-Loopcraft Workshop}"
 tab_label="${LOOPCRAFT_HERDR_TAB_LABEL:-Start Here}"
 image="${LOOPCRAFT_WORKSHOP_IMAGE:-ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest}"
+ui_port="${LOOPCRAFT_UI_PORT:-3000}"
+bridge_port="${LOOPCRAFT_BRIDGE_PORT:-8787}"
+host_bind="${LOOPCRAFT_HOST_BIND:-127.0.0.1}"
 compose=(bash scripts/docker-compose.sh)
 
 "${compose[@]}" version >/dev/null
@@ -42,12 +45,38 @@ EOF
   fi
 fi
 
-echo "Starting Herdr inside the Loopcraft workshop container..."
-echo "Herdr session: ${session_name}"
-echo "Herdr workspace: ${workspace_label}"
-echo "Herdr tab: ${tab_label}"
+cat <<EOF
 
-exec "${compose[@]}" run --rm \
+Loopcraft workshop connection report
+-----------------------------------
+Herdr session:   ${session_name}
+Workspace label: ${workspace_label}
+Start tab:       ${tab_label}
+Docker image:    ${image}
+
+What starts now:
+  - Herdr opens inside the workshop container.
+  - Lakebed serves inside the container on :3000.
+  - The loop bridge serves inside the container on :8787.
+  - Docker publishes those ports onto the host with --service-ports.
+
+Host URLs, for a browser on the Docker host or an SSH-forwarded laptop:
+  Lakebed UI:     http://localhost:${ui_port}
+  Bridge health:  http://localhost:${bridge_port}/health
+  Host bind:      ${host_bind}
+
+If your browser is not on the Docker host, do not trust bare localhost.
+Use one host-side adapter before opening the UI:
+  SSH forwarding: ssh -L ${ui_port}:localhost:${ui_port} -L ${bridge_port}:localhost:${bridge_port} USER@HOST
+  Tailnet/local:  bash scripts/workshop-ui-url.sh --serve
+  Public Funnel:  LOOPCRAFT_PUBLIC=1 bash scripts/workshop-ui-url.sh --serve
+
+Run URL helpers from a host shell, not inside Docker:
+  pnpm run workshop:ui-url
+
+EOF
+
+exec "${compose[@]}" run --rm --service-ports \
   -e HERDR_SESSION="${session_name}" \
   -e HERDR_WORKSPACE_LABEL="${workspace_label}" \
   -e HERDR_TAB_LABEL="${tab_label}" \

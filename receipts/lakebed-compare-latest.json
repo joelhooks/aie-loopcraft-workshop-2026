@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-06-30T19:56:55.574Z",
+  "eventFile": "data/issue-events.jsonl",
+  "localCheck": {
+    "command": "pnpm run loop:check",
+    "eventCount": 3,
+    "statuses": {
+      "ISSUE-001": "ready",
+      "ISSUE-002": "approval-required",
+      "ISSUE-003": "input-required"
+    }
+  },
+  "lakebedRoute": "Host-visible Lakebed URL from bash scripts/workshop-ui-url.sh; bridge endpoint http://127.0.0.1:8787/issue-cards when run on the Docker host",
+  "issueCounts": {
+    "localCheck": 3,
+    "lakebedCards": 3
+  },
+  "mismatches": [],
+  "nextAllowedAction": "Open the host-visible Lakebed URL and inspect the local issue file projection."
+}

@@ -15,7 +15,8 @@
     "A named Herdr pane runs the status/check command and keeps the latest logs visible.",
     "A status command reports state, checkedAt, lastCommand, lastReceipt, and waitingReason.",
     "Pi can run status and check-now against the local event file.",
-    "Pi output, Herdr output, Lakebed state, and the latest receipt name the same issue and latest check."
+    "Pi output, Herdr output, host-visible Lakebed state, and the latest receipt name the same issue and latest check.",
+    "The browser URL and bridge URL come from the host-side URL report, not Docker-internal localhost guesswork."
   ];
   const phases = [
     {
@@ -39,7 +40,7 @@
     {
       title: "Compare the outputs",
       items: [
-        "Run one check from Pi, watch Herdr output, inspect the receipt, and compare Lakebed state."
+        "Run one check from Pi, watch Herdr output, inspect the receipt, run the host URL helper, and compare Lakebed state through the host-visible URL."
       ]
     }
   ];
@@ -55,16 +56,16 @@
       ],
       "stop": [
           "Adding claim commands, background scheduling, or a real daemon beyond the lesson stub.",
-          "Accepting status output that disagrees between Pi, Herdr, Lakebed, and the latest receipt."
+          "Accepting status output that disagrees between Pi, Herdr, host-visible Lakebed, bridge status, and the latest receipt."
       ],
       "exampleTitle": "Tiny status output shape",
       "example": "state: waiting\ncheckedAt: 2026-06-29T21:00:00.000Z\nlastCommand: pnpm run check:issues\nlastReceipt: receipts/issue-check-001.json\nwaitingReason: ISSUE-002 needs approval\nnextSafeAction: ask for approval or pick a ready issue"
   };
-  const starterPrompt = "Add the smallest local status command for the checker. Keep Herdr visible with a Pi pane and a status/check pane. Print state, checkedAt, lastCommand, lastReceipt, and waitingReason. Add a Pi command or prompt for status and check-now. Prove Pi output, Herdr output, Lakebed state, and the receipt name the same issue and latest check. Do not add claim commands or background scheduling yet.";
+  const starterPrompt = "Add the smallest local status command for the checker. Keep Herdr visible with a Pi pane and a status/check pane. Print state, checkedAt, lastCommand, lastReceipt, and waitingReason. Add a Pi command or prompt for status and check-now. From the host shell, run `bash scripts/workshop-ui-url.sh`, open the host-visible Lakebed URL, and prove Pi output, Herdr output, Lakebed state, bridge status, and the receipt name the same issue and latest check. Do not add claim commands or background scheduling yet.";
   const explorationPrompts = [
     {
       label: "Check status visibility",
-      text: "Inspect the Pi command, Herdr pane setup, Lakebed status, and local check command. Tell me whether a person can see if the checker is running, stale, waiting, done, or failed without reading code."
+      text: "Inspect the Pi command, Herdr pane setup, host-visible Lakebed status, bridge status, and local check command. Tell me whether a person can see if the checker is running, stale, waiting, done, or failed without reading code."
     },
     {
       label: "Make status boring",
@@ -72,7 +73,7 @@
     },
     {
       label: "Prove agreement",
-      text: "Run or describe the proof that Pi output, Herdr output, Lakebed state, and the receipt all point at the same current issue state. Report mismatches before changing anything."
+      text: "Run or describe the proof that Pi output, Herdr output, host-visible Lakebed state, bridge status, and the receipt all point at the same current issue state. Report mismatches before changing anything."
     }
   ];
   const receiptFields = [
@@ -80,7 +81,8 @@
     "statusCommand: command and output shape",
     "piCommand: command or prompt used",
     "latestReceipt: path inspected",
-    "outputAgreement: Pi / Herdr / Lakebed / receipt comparison",
+    "hostUrlReport: output from bash scripts/workshop-ui-url.sh",
+    "outputAgreement: Pi / Herdr / host-visible Lakebed / bridge / receipt comparison",
     "waitingReason: what blocks movement, if anything"
   ];
 </script>
@@ -94,11 +96,11 @@
 <h2>Build checklist</h2>
 <PhaseChecklist lessonId={lesson.id} phases={phases} />
 <h2>Proof to save</h2>
-<p>Save proof that status, command output, and the visible panes all describe the same current state.</p>
+<p>Save proof that status, command output, the host-visible Lakebed page, bridge status, and the visible panes all describe the same current state.</p>
 <LessonEvidence items={proofItems} />
 <ReceiptTemplate fields={receiptFields} />
 <h2>Done when</h2>
-<p>Pi can run status/check-now, Herdr shows the run, and the latest receipt names the same issue, command, and checkedAt value.</p>
+<p>Pi can run status/check-now, Herdr shows the run, the host-visible Lakebed page loads through the right bridge URL, and the latest receipt names the same issue, command, and checkedAt value.</p>
 <h2>Why it matters</h2>
 <ul>
   <li><strong>Risk reduced:</strong> you can tell whether the checker is running, stale, waiting, or done.</li>

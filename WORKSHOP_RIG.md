@@ -49,6 +49,23 @@ node scripts/loop-daemon-stub.mjs
 
 Until the real loop daemon exists, that scaffold process exposes `GET /health`, `GET /status`, `POST /check-now`, and `GET /events` on port `8787`. It watches for `data/issue-events.jsonl` or `issues.jsonl` so the issue-event lesson has something visible to wake up.
 
+The Docker path publishes the UI ports through the host. The container serves the app; the host owns reachable URLs:
+
+```txt
+http://localhost:3000   # local UI on the Docker host
+http://localhost:8787   # local loop bridge on the Docker host
+```
+
+This remains true without Tailnet. If you are SSH'd into the host, your shell can check those URLs, but a browser on your laptop still needs SSH port forwarding or a host-side tunnel. See `docs/host-container-urls.md`.
+
+For a tailnet URL, start the workshop first, then run this on the host machine:
+
+```sh
+bash scripts/workshop-ui-url.sh --serve
+```
+
+Do not try to create the public or tailnet tunnel from inside the container.
+
 Fallback helpers:
 
 ```sh

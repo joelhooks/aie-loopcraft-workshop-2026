@@ -66,7 +66,7 @@ Start the workshop computer:
 pnpm run workshop
 ```
 
-That command runs `scripts/start-workshop-herdr.sh`. It pulls the workshop image when possible, builds it locally if the pull is unauthorized or unavailable, starts the Compose service, installs the Herdr Pi integration inside the container, and opens a Herdr session named `aie-loopcraft-workshop-2026` from `/workspace`.
+That command runs `scripts/start-workshop-herdr.sh`. It pulls the workshop image when possible, builds it locally if the pull is unauthorized or unavailable, starts the Compose service with host UI ports published, installs the Herdr Pi integration inside the container, and opens a Herdr session named `aie-loopcraft-workshop-2026` from `/workspace`.
 
 When Herdr opens:
 
@@ -77,6 +77,27 @@ When Herdr opens:
 
 ```sh
 node scripts/loop-daemon-stub.mjs
+```
+
+The container publishes the local UI ports through the host. This is the default debugging model: container serves, host publishes, browser opens the host URL.
+
+```txt
+http://localhost:3000   # Lakebed or workshop UI on the Docker host
+http://localhost:8787   # local loop bridge on the Docker host
+```
+
+If you are SSH'd into the Docker host, your terminal's `localhost` is the host, but your laptop browser's `localhost` is still your laptop. Use SSH port forwarding, Tailnet Serve, Funnel, or another host-side tunnel when opening the UI from another machine. See `docs/host-container-urls.md`.
+
+Need a tailnet or public URL? Run the tunnel from the host machine, not inside Docker:
+
+```sh
+bash scripts/workshop-ui-url.sh --serve
+```
+
+For a public Tailscale Funnel URL, if Funnel is enabled on your tailnet:
+
+```sh
+LOOPCRAFT_PUBLIC=1 bash scripts/workshop-ui-url.sh --serve
 ```
 
 This does not pre-create Pi or daemon panes. Herdr gives you the workspace; you start the panes when the lesson asks for them.
@@ -152,8 +173,10 @@ Use this if Herdr is not cooperating but Docker works. This keeps the work insid
 Terminal 1:
 
 ```sh
-bash scripts/docker-compose.sh run --rm --name loopcraft-workshop workshop zsh
+bash scripts/docker-compose.sh run --rm --service-ports --name loopcraft-workshop workshop zsh
 ```
+
+Keep `--service-ports`; without it, Compose will start the container but the host will not get the `3000` UI or `8787` bridge ports.
 
 Inside that shell, start Pi when you are ready:
 

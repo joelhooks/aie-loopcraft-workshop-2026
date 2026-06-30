@@ -2,6 +2,27 @@
 
 This repo is the public workshop project. Keep visible copy direct and useful for the person building the loop. Do not leak backstage wording into the site, lesson pages, prompts, README, or public agent docs.
 
+## Host/container/browser URL rule
+
+Before debugging Lakebed, bridge, or browser behavior, check the URL path.
+
+The container serves Lakebed on `:3000` and the loop bridge on `:8787`. Docker publishes those ports onto the host. Browsers, SSH forwarding, Tailnet Serve, Funnel, and public tunnels connect to the host-published ports, not Docker-internal `localhost`.
+
+`localhost` means the current machine:
+
+- inside Docker, it means the container;
+- in an SSH shell, it means the Docker host;
+- in a laptop browser while SSH'd into a host, it means the laptop;
+- on a phone, it means the phone.
+
+For any blank UI, bridge error, SSE failure, or unreachable Lakebed route, run this from a host shell first:
+
+```sh
+bash scripts/workshop-ui-url.sh
+```
+
+Do not run Tailnet/Funnel setup from inside Docker. Do not patch Lakebed code until the host-published UI and bridge path has been checked.
+
 ## Core design principle: glossary as appendix
 
 Keep a public glossary appendix at `/glossary/` for terms that carry workshop meaning: tools, guardrails, loop states, receipts, dispatch, gardener work, specialist review, and supervisor runtime.

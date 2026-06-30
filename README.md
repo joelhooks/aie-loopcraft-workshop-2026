@@ -22,7 +22,13 @@ corepack prepare pnpm@11.9.0 --activate
 pnpm run workshop
 ```
 
-`pnpm run workshop` starts Herdr inside the Docker container. It does not use host Herdr.
+`pnpm run workshop` starts Herdr inside the Docker container. It does not use host Herdr. It also prints the connection report for the host-published Lakebed UI and bridge.
+
+If your browser is not running on the Docker host, do not open bare `localhost:3000` and hope. Run this from a host shell and use the printed SSH/Tailnet/Funnel URL shape:
+
+```sh
+pnpm run workshop:ui-url
+```
 
 When Herdr opens:
 
@@ -75,8 +81,20 @@ agents/skills/grill-with-docs    guided vision/session questions
 lessons/                         pointer to the published lesson pages
 surface/lakebed/                 local projection surface shell
 scripts/loop-daemon-stub.mjs     temporary status daemon
+scripts/record-run-event.mjs     lightweight 008 run recorder
 web/                             published workshop site source
 ```
+
+## 008 run recorder
+
+For a recording-aware pass, capture short run events instead of reconstructing the lesson from memory:
+
+```sh
+pnpm run record:event -- --type milestone --lesson 03 --note "Lakebed matched the local check" --source receipts/lakebed-compare-latest.json
+pnpm run record:summary
+```
+
+See [`docs/loopcraft-008-run-recorder.md`](docs/loopcraft-008-run-recorder.md).
 
 ## Public boundary
 

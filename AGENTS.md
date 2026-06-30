@@ -20,6 +20,14 @@ Start with Lesson 01 (run `/loop-lesson-01` in Pi, or read `web/static/lessons/0
 - See `docs/tooling.md` for the toolchain and guardrail rationale (you build these checks in Lesson 02).
 - Commit useful checkpoints.
 
+## Host/container visibility
+
+Default to the host URL model before debugging UI code. The container serves Lakebed and the bridge; Docker publishes ports onto the host; browsers, SSH forwarding, Tailnet, and public tunnels connect to the host.
+
+`localhost` depends on where it is used: inside Docker it is the container, in an SSH shell it is the Docker host, in your laptop browser it is your laptop, and on a phone it is the phone.
+
+For a blank or unreachable UI, first check `docs/host-container-urls.md` and run `bash scripts/workshop-ui-url.sh` from the host. Do not run Tailnet/Funnel commands inside Docker. Do not patch Lakebed until the host-published `3000` UI and `8787` bridge path has been checked.
+
 ## Boundaries
 
 - Keep `VISION.md` human-owned. Ask before changing strategic intent once it exists.

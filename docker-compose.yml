@@ -10,6 +10,9 @@ services:
     environment:
       SHELL: /usr/bin/zsh
       TERM: xterm-256color
+    ports:
+      - "${LOOPCRAFT_HOST_BIND:-127.0.0.1}:${LOOPCRAFT_UI_PORT:-3000}:3000"
+      - "${LOOPCRAFT_HOST_BIND:-127.0.0.1}:${LOOPCRAFT_BRIDGE_PORT:-8787}:8787"
     volumes:
       - .:/workspace
       - workshop-pi:/home/workshop/.pi

@@ -5,7 +5,7 @@ import {
   useMutation,
   useQuery,
 } from "lakebed/client";
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 
 import { demoIssueId, type ProjectedIssue } from "../shared/issue";
 
@@ -65,17 +65,23 @@ type IconName =
   | "sparkles";
 
 const iconPaths: Record<IconName, string> = {
-  archive: "M4 9h16M7 9v8.5A2.5 2.5 0 0 0 9.5 20h5a2.5 2.5 0 0 0 2.5-2.5V9M6 4h12l2 5H4l2-5Zm5 9h2",
+  archive:
+    "M4 9h16M7 9v8.5A2.5 2.5 0 0 0 9.5 20h5a2.5 2.5 0 0 0 2.5-2.5V9M6 4h12l2 5H4l2-5Zm5 9h2",
   bolt: "M13 2 5 13h6l-1 9 8-12h-6l1-8Z",
-  broadcast: "M12 12h.01M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13",
-  folder: "M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5v-9Z",
+  broadcast:
+    "M12 12h.01M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13",
+  folder:
+    "M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5v-9Z",
   kanban: "M4 5h16M6 9h3v9H6V9Zm5 0h3v6h-3V9Zm5 0h3v11h-3V9Z",
   list: "M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01",
-  question: "M9.5 9a2.5 2.5 0 1 1 4.4 1.6c-1.2 1-1.9 1.5-1.9 3.4M12 18h.01M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0Z",
-  rocket: "M5 19c2-1 3-2 4-4M9 15l-3-3 5-7c2-2 5-3 8-2 1 3 0 6-2 8l-7 5-1-1Zm5-7 2 2M6 18l-2 2",
+  question:
+    "M9.5 9a2.5 2.5 0 1 1 4.4 1.6c-1.2 1-1.9 1.5-1.9 3.4M12 18h.01M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0Z",
+  rocket:
+    "M5 19c2-1 3-2 4-4M9 15l-3-3 5-7c2-2 5-3 8-2 1 3 0 6-2 8l-7 5-1-1Zm5-7 2 2M6 18l-2 2",
   seed: "M12 20V9M12 9c-4 0-6-2-7-5 4 0 6 1.5 7 5Zm0 0c4 0 6-2 7-5-4 0-6 1.5-7 5Z",
   shield: "M12 3 5 6v5c0 4.5 3 7.5 7 10 4-2.5 7-5.5 7-10V6l-7-3Zm-3 9 2 2 4-5",
-  sparkles: "M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Zm6 11 .8 2.2L21 17l-2.2.8L18 20l-.8-2.2L15 17l2.2-.8L18 14Z",
+  sparkles:
+    "M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Zm6 11 .8 2.2L21 17l-2.2.8L18 20l-.8-2.2L15 17l2.2-.8L18 14Z",
 };
 
 function HugeIcon({
@@ -101,26 +107,42 @@ function HugeIcon({
   );
 }
 
+type LocalIssueCard = {
+  eventCount: number;
+  events: Array<{ eventId: string; summary: string; type: string }>;
+  issueId: string;
+  nextAllowedAction: string;
+  reason: string;
+  refusedAction: string;
+  status: "approval_required" | "needs_input" | "ready";
+  stopReason: string | null;
+  title: string;
+};
+
+type LocalIssueCardsResponse = {
+  cards: LocalIssueCard[];
+  checkedAt?: string;
+  fileRead?: string;
+  lastReceipt?: string;
+  latestCheck?: { issueId: string; status: string; title: string } | null;
+};
+
 type BridgeStatus = {
+  checkedAt?: string;
   connectedClients?: number;
+  issueEvents?: { count: number; path?: string };
   lastCheckAt?: string;
-  lastCheck?: {
-    classification?: {
-      preApproved?: Array<{ issueId: string; title: string }>;
-    };
-    runId?: string;
-    stopReason?: string;
-  };
+  lastCommand?: string;
   lastError?: string;
+  lastEvent?: string;
   lastEventAt?: string;
-  lastGardenerAt?: string;
-  lastGardenerReceiptPath?: string;
-  lastGardenerRetryEligibleAt?: string;
-  lastGardenerStopReason?: string;
-  lastReceiptPath?: string;
+  lastReceipt?: string;
+  latestCheck?: { issueId: string; status: string; title: string } | null;
   ok?: boolean;
   stale?: boolean;
   startedAt?: string;
+  state?: string;
+  waitingReason?: string;
 };
 
 function formatAge(iso?: string): string {
@@ -130,7 +152,7 @@ function formatAge(iso?: string): string {
 
   const seconds = Math.max(
     0,
-    Math.round((Date.now() - Date.parse(iso)) / 1000)
+    Math.round((Date.now() - Date.parse(iso)) / 1000),
   );
 
   if (seconds < 60) {
@@ -168,8 +190,23 @@ function countByStatus(issues: readonly ProjectedIssue[]) {
       ...counts,
       [issue.status]: (counts[issue.status] ?? 0) + 1,
     }),
-    {} as Partial<Record<ProjectedIssue["status"], number>>
+    {} as Partial<Record<ProjectedIssue["status"], number>>,
   );
+}
+
+function resolveBridgeBase() {
+  if (typeof window === "undefined") {
+    return "http://127.0.0.1:8787";
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const override = params.get("bridge");
+
+  if (override) {
+    return override.replace(/\/$/, "");
+  }
+
+  return `http://${window.location.hostname}:8787`;
 }
 
 function useBridgeStatus() {
@@ -177,13 +214,7 @@ function useBridgeStatus() {
   const [lastEvent, setLastEvent] = useState("boot");
   const [updatedAt, setUpdatedAt] = useState<Date | undefined>();
   const [error, setError] = useState<string | undefined>();
-  const bridgeBase = useMemo(() => {
-    if (typeof window === "undefined") {
-      return "http://127.0.0.1:8787";
-    }
-
-    return `http://${window.location.hostname}:8787`;
-  }, []);
+  const [bridgeBase] = useState(resolveBridgeBase);
 
   useEffect(() => {
     let cancelled = false;
@@ -245,6 +276,42 @@ function useBridgeStatus() {
   return { bridgeBase, error, lastEvent, status, updatedAt };
 }
 
+function useLocalIssueCards() {
+  const [cards, setCards] = useState<LocalIssueCardsResponse | undefined>();
+  const [error, setError] = useState<string | undefined>();
+  const [bridgeBase] = useState(resolveBridgeBase);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadCards = async () => {
+      try {
+        const response = await fetch(`${bridgeBase}/issue-cards`);
+        const nextCards = (await response.json()) as LocalIssueCardsResponse;
+
+        if (!cancelled) {
+          setCards(nextCards);
+          setError(undefined);
+        }
+      } catch (caught) {
+        if (!cancelled) {
+          setError(caught instanceof Error ? caught.message : String(caught));
+        }
+      }
+    };
+
+    void loadCards();
+    const interval = window.setInterval(() => void loadCards(), 2_000);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, [bridgeBase]);
+
+  return { cards, error };
+}
+
 function AuthStatus() {
   const auth = useAuth();
   const authLabel = auth.displayName;
@@ -275,14 +342,19 @@ function AuthStatus() {
 
 function BridgePanel() {
   const { bridgeBase, error, lastEvent, status, updatedAt } = useBridgeStatus();
-  const ready = status?.lastCheck?.classification?.preApproved ?? [];
-  const state = error ? "offline" : status?.stale ? "stale" : "live";
+  const state = error
+    ? "offline"
+    : (status?.state ?? (status?.stale ? "stale" : "live"));
   const stateTone =
-    state === "live"
+    state === "live" || state.includes("ready")
       ? "text-emerald-300"
-      : state === "stale"
+      : state === "stale" || state.includes("waiting")
         ? "text-amber-300"
         : "text-red-300";
+  const checkTime =
+    status?.checkedAt && status.checkedAt !== "never"
+      ? status.checkedAt
+      : status?.lastCheckAt;
 
   return (
     <section className="mb-3 grid gap-2 border border-neutral-900 bg-neutral-950/70 p-3 text-xs lg:grid-cols-[1fr_1fr_1fr]">
@@ -302,30 +374,29 @@ function BridgePanel() {
         </div>
         <div className="flex items-center gap-1.5 font-mono text-neutral-300">
           <HugeIcon className="h-3.5 w-3.5 text-sky-300" name="bolt" />
-          event:{lastEvent} · clients:{status?.connectedClients ?? 0}
+          event:{lastEvent || status?.lastEvent || "none"} · clients:
+          {status?.connectedClients ?? 0}
         </div>
         <div className="font-mono text-neutral-500">
-          check:{formatAge(status?.lastCheckAt)} · ui:
+          check:{formatAge(checkTime)} · ui:
           {updatedAt?.toLocaleTimeString() ?? "never"}
         </div>
       </div>
       <div>
         <div className="font-mono uppercase tracking-[0.16em] text-neutral-600">
-          ready from bridge
+          latest from bridge
         </div>
         <div className="flex items-center gap-1.5 truncate font-mono text-neutral-300">
           <HugeIcon className="h-3.5 w-3.5 text-emerald-300" name="sparkles" />
-          {ready.length > 0
-            ? ready.map((issue) => issue.issueId).join(", ")
-            : "none"}
+          {status?.latestCheck
+            ? `${status.latestCheck.issueId} · ${status.latestCheck.status}`
+            : "no check yet"}
         </div>
         <div className="truncate font-mono text-amber-300">
-          {status?.lastGardenerStopReason
-            ? `gardener:${status.lastGardenerStopReason}`
-            : "gardener:ok"}
+          {status?.waitingReason ?? "waiting for bridge status"}
         </div>
         <div className="truncate font-mono text-neutral-500">
-          {status?.lastGardenerReceiptPath ?? "no gardener receipt"}
+          {status?.lastReceipt ?? "no receipt yet"}
         </div>
         <div className="truncate font-mono text-red-300">
           {error ?? status?.lastError}
@@ -359,7 +430,10 @@ function IssueCard({
         <div className="mb-1 flex items-start justify-between gap-2">
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 font-mono text-[0.68rem] text-neutral-500">
-              <HugeIcon className="h-3.5 w-3.5" name={statusIcon[issue.status]} />
+              <HugeIcon
+                className="h-3.5 w-3.5"
+                name={statusIcon[issue.status]}
+              />
               {issue.issueId} · e{issue.eventCount}
             </div>
             <div className="truncate font-medium text-neutral-100">
@@ -420,7 +494,10 @@ function KanbanColumn({
     <section className="min-h-40 rounded border border-neutral-900 bg-neutral-950/50">
       <div className="sticky top-0 z-10 flex items-center justify-between border-b border-neutral-900 bg-neutral-950 px-3 py-2">
         <h2 className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.16em] text-neutral-400">
-          <HugeIcon className="h-4 w-4" name={label.includes("archive") ? "archive" : "kanban"} />
+          <HugeIcon
+            className="h-4 w-4"
+            name={label.includes("archive") ? "archive" : "kanban"}
+          />
           {label}
         </h2>
         <span className="rounded-full bg-neutral-900 px-2 py-0.5 font-mono text-xs text-neutral-400">
@@ -470,6 +547,108 @@ function ListView({
   );
 }
 
+function LocalIssuePreview() {
+  const { cards, error } = useLocalIssueCards();
+  const localCards = cards?.cards ?? [];
+  const byStatus = {
+    approval_required: localCards.filter(
+      (card) => card.status === "approval_required",
+    ),
+    needs_input: localCards.filter((card) => card.status === "needs_input"),
+    ready: localCards.filter((card) => card.status === "ready"),
+  };
+
+  return (
+    <section className="mb-3 rounded border border-neutral-900 bg-neutral-950/60 p-3">
+      <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-neutral-500">
+            local issue file projection
+          </p>
+          <h2 className="text-lg font-semibold text-neutral-100">
+            Same facts as pnpm run loop:check
+          </h2>
+          <p className="font-mono text-xs text-neutral-500">
+            file: {cards?.fileRead ?? "waiting for bridge"} · cards:{" "}
+            {localCards.length}
+          </p>
+          <p className="font-mono text-xs text-neutral-500">
+            latest check:{" "}
+            {cards?.latestCheck
+              ? `${cards.latestCheck.issueId} [${cards.latestCheck.status}]`
+              : "none"}{" "}
+            · checked: {cards?.checkedAt ?? "never"}
+          </p>
+          <p className="font-mono text-xs text-neutral-600">
+            receipt: {cards?.lastReceipt ?? "none"}
+          </p>
+        </div>
+        {error ? (
+          <p className="font-mono text-xs text-red-300">{error}</p>
+        ) : null}
+      </div>
+
+      <div className="mb-3 grid gap-2 md:grid-cols-3">
+        {(
+          [
+            ["ready", byStatus.ready],
+            ["approval_required", byStatus.approval_required],
+            ["needs_input", byStatus.needs_input],
+          ] as const
+        ).map(([label, columnCards]) => (
+          <div
+            className="rounded border border-neutral-900 bg-black/60 p-2"
+            key={label}
+          >
+            <div className="mb-2 flex items-center justify-between font-mono text-xs text-neutral-400">
+              <span>{label}</span>
+              <span>{columnCards.length}</span>
+            </div>
+            <div className="space-y-2">
+              {columnCards.map((card) => (
+                <article
+                  className="rounded border border-neutral-800 p-2 text-xs"
+                  key={card.issueId}
+                >
+                  <div className="font-mono text-neutral-500">
+                    {card.issueId} · e{card.eventCount}
+                  </div>
+                  <div className="font-medium text-neutral-100">
+                    {card.title}
+                  </div>
+                  <div className="mt-1 text-neutral-400">{card.reason}</div>
+                  <div className="mt-2 font-mono text-amber-300">
+                    stop: {card.stopReason ?? "none"}
+                  </div>
+                  <div className="font-mono text-emerald-300">
+                    next: {card.nextAllowedAction}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded border border-neutral-900 bg-black/60 p-2">
+        <h3 className="mb-2 font-mono text-xs uppercase tracking-[0.16em] text-neutral-500">
+          event view
+        </h3>
+        <div className="space-y-1 font-mono text-xs text-neutral-400">
+          {localCards.flatMap((card) =>
+            card.events.map((event) => (
+              <div className="rounded bg-neutral-950 p-2" key={event.eventId}>
+                {event.eventId} · {card.issueId} · {event.type} ·{" "}
+                {event.summary}
+              </div>
+            )),
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function StatusPill({
   count,
   icon,
@@ -490,10 +669,10 @@ function StatusPill({
 export function App() {
   const issues = useQuery<ProjectedIssue[]>("issues");
   const seedApprovalRequiredIssue = useMutation<[], void>(
-    "seedApprovalRequiredIssue"
+    "seedApprovalRequiredIssue",
   );
   const [expandedIds, setExpandedIds] = useState<ReadonlySet<string>>(
-    () => new Set()
+    () => new Set(),
   );
   const [viewMode, setViewMode] = useState<"kanban" | "list">("kanban");
   const [showClosedArchive, setShowClosedArchive] = useState(false);
@@ -526,22 +705,44 @@ export function App() {
         <header className="mb-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
           <div>
             <p className="mb-1 font-mono text-xs uppercase tracking-[0.18em] text-neutral-500">
-              Lakebed operator surface · live kanban · {visibleIssues.length} shown / {issues.length} total
+              Lakebed operator surface · live kanban · {visibleIssues.length}{" "}
+              shown / {issues.length} total
             </p>
             <h1 className="text-3xl font-bold tracking-tight">
               Issue progress board
             </h1>
           </div>
           <div className="flex flex-wrap gap-2 lg:justify-end">
-            <StatusPill count={counts.ready ?? 0} icon="sparkles" label="ready" />
-            <StatusPill count={counts.in_progress ?? 0} icon="rocket" label="doing" />
-            <StatusPill count={counts.needs_input ?? 0} icon="question" label="input" />
-            <StatusPill count={counts.approval_required ?? 0} icon="shield" label="approve" />
-            <StatusPill count={counts.closed ?? 0} icon="archive" label="archived" />
+            <StatusPill
+              count={counts.ready ?? 0}
+              icon="sparkles"
+              label="ready"
+            />
+            <StatusPill
+              count={counts.in_progress ?? 0}
+              icon="rocket"
+              label="doing"
+            />
+            <StatusPill
+              count={counts.needs_input ?? 0}
+              icon="question"
+              label="input"
+            />
+            <StatusPill
+              count={counts.approval_required ?? 0}
+              icon="shield"
+              label="approve"
+            />
+            <StatusPill
+              count={counts.closed ?? 0}
+              icon="archive"
+              label="archived"
+            />
           </div>
         </header>
 
         <BridgePanel />
+        <LocalIssuePreview />
 
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3 border border-neutral-900 bg-neutral-950/60 px-3 py-2">
           <div className="min-w-0 font-mono text-xs text-neutral-500">
@@ -560,7 +761,9 @@ export function App() {
               onClick={() => setShowClosedArchive((value) => !value)}
             >
               <HugeIcon className="h-3.5 w-3.5" name="archive" />
-              {showClosedArchive ? "hide archive" : `show archive (${counts.closed ?? 0})`}
+              {showClosedArchive
+                ? "hide archive"
+                : `show archive (${counts.closed ?? 0})`}
             </button>
             <button
               className={`inline-flex items-center gap-1.5 border px-3 py-1.5 text-xs font-medium ${
@@ -606,7 +809,7 @@ export function App() {
               <KanbanColumn
                 expandedIds={expandedIds}
                 issues={sorted.filter((issue) =>
-                  column.statuses.includes(issue.status)
+                  column.statuses.includes(issue.status),
                 )}
                 key={column.label}
                 label={column.label}

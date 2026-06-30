@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-06-30T19:56:59.347Z",
+  "lastCommand": "pnpm run loop:check",
+  "fileRead": "data/issue-events.jsonl",
+  "eventCount": 3,
+  "classifications": [
+    {
+      "issueId": "ISSUE-001",
+      "title": "Document the local issue check command",
+      "status": "ready",
+      "reason": "Ready because this is a small documentation change for the command that already exists and stays inside the local loop boundary.",
+      "stopReason": null,
+      "nextAllowedAction": "Run the local check again or prepare a human-reviewed next step.",
+      "refusedAction": "Do not change product code, call external trackers, schedule work, or dispatch agents yet."
+    },
+    {
+      "issueId": "ISSUE-002",
+      "title": "Let the loop change product files after a ready classification",
+      "status": "approval-required",
+      "reason": "Needs human approval because changing product files is outside the first-loop boundary in VISION.md.",
+      "stopReason": "Human approval is required before this issue can move.",
+      "nextAllowedAction": "Ask the human to approve, reject, or narrow the work.",
+      "refusedAction": "Do not treat this issue as ready or change files for it."
+    },
+    {
+      "issueId": "ISSUE-003",
+      "title": "Connect the local issue loop to GitHub issues",
+      "status": "input-required",
+      "reason": "Needs more input because the repository, auth model, issue mapping, write permissions, and failure behavior are not defined yet, and external trackers are out of scope for the first loop.",
+      "stopReason": "More input is required before this issue can move.",
+      "nextAllowedAction": "Ask for missing acceptance criteria or clearer scope.",
+      "refusedAction": "Do not guess the missing requirements or start implementation."
+    }
+  ]
+}

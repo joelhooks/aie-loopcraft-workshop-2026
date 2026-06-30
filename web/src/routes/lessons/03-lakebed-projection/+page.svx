@@ -15,7 +15,8 @@
     "The local event parser and check command still run without Lakebed.",
     "A small endpoint or module reads the same event file and returns issue cards.",
     "List, board, and event views show status, stop reason, and next action for each issue.",
-    "A receipt records the event file, check command output, Lakebed route opened, and any mismatch found."
+    "A host-visible Lakebed URL and bridge URL are checked before debugging UI code.",
+    "A receipt records the event file, check command output, Lakebed route opened, bridge URL used, and any mismatch found."
   ];
   const phases = [
     {
@@ -39,7 +40,7 @@
     {
       "title": "Compare and save proof",
       "items": [
-        "Run the local check, open the Lakebed view, compare counts and statuses, then save a receipt for the comparison."
+        "Run the local check, get the host-visible URL report with bash scripts/workshop-ui-url.sh, open the Lakebed view, compare counts and statuses, then save a receipt for the comparison."
       ]
     }
   ];
@@ -51,7 +52,7 @@
       "add": [
           "A small endpoint or module that reads the same event file and returns issue cards for Lakebed.",
           "List, board, and event views that show status, stop reason, and next action.",
-          "A comparison receipt between check output and the Lakebed route."
+          "A comparison receipt between check output, the host-visible Lakebed route, and the bridge URL."
       ],
       "stop": [
           "Changing event data just to make the page look right.",
@@ -60,11 +61,11 @@
       "exampleTitle": "Tiny projection receipt shape",
       "example": "eventFile: data/issue-events.jsonl\ncheckCommand: pnpm run check:issues\ncheckCounts: ready 1, approval-required 1, input-required 1\nlakebedRoute: /lakebed\nlakebedCounts: ready 1, approval-required 1, input-required 1\nmismatch: none\nnextAction: keep the view path wired to the same event file"
   };
-  const starterPrompt = "Use the local events and check command from Lesson 02. Add the smallest endpoint or module that reads the same event file and returns issue cards for Lakebed. Show list, board, and event views with status, stop reason, and next action. Run the local check, open the Lakebed route, compare the results, and save a receipt. If the view disagrees with the check output, fix the view path, not the event file. Do not add writes, schedulers, external trackers, or background workers yet.";
+  const starterPrompt = "Use the local events and check command from Lesson 02. Add the smallest endpoint or module that reads the same event file and returns issue cards for Lakebed. Show list, board, and event views with status, stop reason, and next action. Run the local check. From the host shell, run `bash scripts/workshop-ui-url.sh`, open the host-visible Lakebed URL, compare the results, and save a receipt with the UI URL and bridge URL. If the view disagrees with the check output, fix the view path, not the event file. Do not add writes, schedulers, external trackers, or background workers yet.";
   const explorationPrompts = [
     {
       "label": "Trace file to card",
-      "text": "Compare the local event file, check command output, and Lakebed cards. List any mismatch between the command output and what the page shows, then suggest the smallest fix."
+      "text": "Compare the local event file, check command output, host-visible Lakebed URL, bridge URL, and Lakebed cards. List any mismatch between the command output and what the page shows, then suggest the smallest fix."
     },
     {
       "label": "Choose the read path",
@@ -78,7 +79,8 @@
   const receiptFields = [
     "file: local event file read",
     "command: local check command and result",
-    "output: local counts and Lakebed card counts",
+    "hostUrlReport: output from bash scripts/workshop-ui-url.sh",
+    "output: local counts and host-visible Lakebed card counts",
     "stop condition: any mismatch means fix the view path before moving on",
     "receipt: route opened, screenshot or log, and comparison result"
   ];

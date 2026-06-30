@@ -22,6 +22,18 @@ pnpm run workshop
 
 When Herdr opens, start `pi` in a pane if they want Pi. Sign in only through the normal local/container auth flow.
 
+## Host/browser URL rule
+
+Do not treat bare `localhost:3000` as a universal browser URL. The container serves Lakebed on `:3000` and the loop bridge on `:8787`; Docker publishes those ports onto the host. A browser on a laptop, phone, or different machine needs SSH forwarding, Tailnet Serve, Funnel, or another host-side tunnel.
+
+Before changing Lakebed or bridge code for a blank page, CORS/SSE error, or unreachable status, run this from the Docker host:
+
+```sh
+pnpm run workshop:ui-url
+```
+
+Use the printed UI URL and bridge URL. If the UI and bridge are on different origins, preserve the printed `?bridge=...` query string.
+
 ## Read before editing
 
 For setup and public guidance:

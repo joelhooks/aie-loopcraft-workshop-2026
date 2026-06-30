@@ -5,17 +5,39 @@
   "type": "module",
   "packageManager": "pnpm@11.9.0",
   "scripts": {
+    "check": "pnpm run typecheck && pnpm run test && pnpm run loop:check",
+    "format": "prettier --check package.json pnpm-workspace.yaml tsconfig.json 'src/**/*.ts' 'tests/**/*.ts' VISION.md",
+    "format:write": "prettier --write package.json pnpm-workspace.yaml tsconfig.json 'src/**/*.ts' 'tests/**/*.ts' VISION.md",
+    "lint": "pnpm run typecheck",
+    "lakebed:compare": "tsx src/lakebed-compare.ts",
+    "loop:check": "tsx src/loop-check.ts",
+    "loop:status": "tsx src/loop-status.ts",
+    "record:event": "node scripts/record-run-event.mjs",
+    "record:summary": "node scripts/record-run-event.mjs --summary",
+    "test": "vitest run tests",
+    "typecheck": "tsc --noEmit",
     "workshop": "bash scripts/start-workshop-herdr.sh",
     "workshop:pull": "bash scripts/docker-compose.sh pull workshop",
     "workshop:build": "bash scripts/docker-compose.sh build workshop",
-    "workshop:shell": "bash scripts/docker-compose.sh run --rm workshop zsh",
-    "workshop:pi": "bash scripts/docker-compose.sh run --rm workshop zsh -lc 'pi'",
+    "workshop:shell": "bash scripts/docker-compose.sh run --rm --service-ports workshop zsh",
+    "workshop:pi": "bash scripts/docker-compose.sh run --rm --service-ports workshop zsh -lc 'pi'",
     "workshop:herdr": "bash scripts/start-workshop-herdr.sh",
     "workshop:daemon": "node scripts/loop-daemon-stub.mjs",
+    "workshop:ui-url": "bash scripts/workshop-ui-url.sh",
     "web:install": "cd web && bun install",
     "web:check": "cd web && bun run check",
     "web:build": "cd web && bun run build",
     "web:dev": "cd web && bun run dev --host 0.0.0.0",
     "web:publish": "cd web && bun run build && wzrrd publish --file build --slug aie-loopcraft-workshop-2026"
+  },
+  "dependencies": {
+    "effect": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "prettier": "^3.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
   }
 }

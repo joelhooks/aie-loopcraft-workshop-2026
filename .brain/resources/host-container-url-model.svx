@@ -1,0 +1,35 @@
+# Host/container URL model
+
+## Decision
+
+The example harness treats host visibility as the default debugging model.
+
+The workshop container serves Lakebed on port `3000` and the loop bridge on port `8787`. Docker publishes those ports onto the host. Browsers, SSH forwarding, Tailnet Serve, Funnel, or any other public tunnel must point at the host-published ports, not Docker-internal `localhost`.
+
+## Why this matters
+
+`localhost` changes meaning by where the browser or command is running:
+
+- inside Docker, `localhost` is the container;
+- in an SSH shell on the Docker host, `localhost` is the host;
+- in a laptop browser while SSH'd into the host, `localhost` is the laptop;
+- on a phone, `localhost` is the phone.
+
+The default should help agents diagnose that shape before they patch Lakebed or the loop code.
+
+## Harness rule
+
+For unreachable UI or bridge problems, check the URL path first:
+
+1. the workshop was started with `docker compose run --service-ports`;
+2. host ports are published on `localhost:3000` and `localhost:8787`;
+3. `scripts/workshop-ui-url.sh` runs from the host, not inside Docker;
+4. Tailnet/Funnel/SSH tunnels are host-side adapters;
+5. the Lakebed URL includes `?bridge=<encoded bridge URL>` whenever the bridge is on a separate origin.
+
+## Receipts
+
+- Human-facing guide: `docs/host-container-urls.md`
+- Host URL helper: `scripts/workshop-ui-url.sh`
+- Docker port publishing: `docker-compose.yml`
+- Launcher: `scripts/start-workshop-herdr.sh`

@@ -8,18 +8,31 @@ The rig ships with the source mirrors and workshop scaffolding, but the product
 check commands below are yours to add — do not assume they already exist. When no
 check exists yet, say so plainly and add it.
 
-## Commands (the reliability-floor target)
+## Commands in this 008 scaffold
 
-These are the scripts the Lesson 02 pass adds to the product `package.json`. Keep
-the workshop web scripts intact alongside them.
+This checkpoint wires the smallest local receipt path the current rig actually
+runs:
 
-- `pnpm run typecheck` — TypeScript 7 native preview through `tsgo`, no emit.
-- `pnpm run lint` — Oxlint with the Ultracite core preset.
-- `pnpm run format` / `pnpm run format:check` — Oxfmt with the Ultracite formatter
-  preset; the check-only variant is for hooks and CI.
-- `pnpm run ultracite:check` — Ultracite check over source and config paths.
-- `pnpm test` — Vitest running TypeScript tests directly.
-- `pnpm run check` — typecheck, lint, format check, and tests in one gate.
+- `pnpm run typecheck` — strict TypeScript with no emit.
+- `pnpm run test` — Vitest tests for the issue-event check and Lakebed card projection.
+- `pnpm run loop:check` — reads local issue events, classifies them, and writes a receipt.
+- `pnpm run lakebed:compare` — compares the local check output with the Lakebed card projection.
+- `pnpm run format` — Prettier check for the current TypeScript/config seed files.
+- `pnpm run check` — typecheck, tests, and the local loop check in one gate.
+
+Keep the workshop web scripts intact alongside these commands.
+
+## Full reliability-floor target
+
+Lesson 02 should still explain the faster/stricter guardrail stack before adding
+it. The target guardrails are:
+
+- TypeScript 7 native preview through `tsgo`, no emit.
+- Oxlint with the Ultracite core preset.
+- Oxfmt with the Ultracite formatter preset.
+- `ultracite:check` over source and config paths.
+- Vitest tests running TypeScript directly.
+- One `check` command that runs typecheck, lint, format check, and tests.
 
 Later passes add the issue-event and runtime surface (typed issue writes, the
 bridge daemon, the supervisor-runtime flag). Document those when you build them;

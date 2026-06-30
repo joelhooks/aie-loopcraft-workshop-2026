@@ -53,6 +53,18 @@ What this does:
 
 When Herdr opens, start `pi` in a pane. If Pi asks for auth, the person running the workshop signs in inside the container. Then use `/loop-lesson-01` if available, or paste the Lesson 01 prompt below.
 
+## Host/browser URL rule
+
+Do not treat bare `localhost:3000` as a universal browser URL. The container serves Lakebed and the loop bridge; Docker publishes those ports onto the Docker host. A browser on a laptop, phone, or different machine needs SSH forwarding, Tailnet Serve, Funnel, or another host-side tunnel.
+
+Before debugging Lakebed code for a blank page or bridge failure, have the person run this from the Docker host:
+
+```sh
+pnpm run workshop:ui-url
+```
+
+Use the printed UI URL and bridge URL. If the UI and bridge are on different origins, keep the printed `?bridge=...` query string.
+
 ## Lesson 01 prompt fallback
 
 Use this if `/loop-lesson-01` or the `grill-with-docs` skill is unavailable. If a skill command is unavailable, behave manually: ask one question at a time, capture the answers, and write only the agreed files.

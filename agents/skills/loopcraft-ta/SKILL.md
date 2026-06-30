@@ -82,6 +82,47 @@ Useful starter prompt pattern:
 - **Specialists** are leverage with boundaries: small scout/reviewer agents produce artifacts; they do not become an unbounded super-agent.
 - **Dynamic runtime** is the final leverage move: bridge glue becomes adapter-only, while an actor tree owns decisions and recovery.
 
+## Host/container/browser topology
+
+Use this before you debug Lakebed, bridge, browser, or Herdr behavior.
+
+The workshop container serves Lakebed on `:3000` and the loop bridge on `:8787`. Docker publishes those ports onto the host when the launcher uses `--service-ports`. Browsers, SSH forwarding, Tailnet Serve, Funnel, and public tunnels connect to the host-published ports.
+
+`localhost` changes by where it is used:
+
+- inside Docker, `localhost` is the container;
+- in an SSH shell, `localhost` is the Docker host;
+- in a laptop browser while SSH'd into the host, `localhost` is the laptop;
+- on a phone, `localhost` is the phone.
+
+TA behavior:
+
+1. For blank Lakebed, bridge errors, or stale UI, ask for the URL path before changing code.
+2. Have the person run `bash scripts/workshop-ui-url.sh` from the host shell.
+3. If the browser is not on the Docker host, use SSH forwarding, Tailnet Serve, Funnel, or another host-side tunnel.
+4. When the UI and bridge are separate origins, include the printed `?bridge=<encoded bridge URL>` value in the Lakebed URL.
+5. Do not run Tailnet/Funnel commands inside Docker. The container serves; the host exposes.
+
+## Recording-aware run guidance
+
+Example 008 should record the run as it happens, not reconstruct it from vibes afterward. Keep the recorder lightweight and evidence-shaped.
+
+Capture these moments when they happen:
+
+- `lesson_started`: lesson id, starting context, current files/checks;
+- `prompt_sent`: the prompt or a short pointer to it;
+- `milestone`: visible capability gained;
+- `teaching_moment`: why this tool/guardrail/choice exists;
+- `friction`: confusion, broken command, misleading URL, stale state, or slow feedback;
+- `checkpoint`: command, receipt, screenshot/path, or proof that lets the lesson move on;
+- `learning_goal`: what the person should now be able to do unaided;
+- `support_fade`: what help can be removed on the next pass;
+- `next_stretch`: the next doable challenge just beyond the current comfort zone.
+- `receipt`: a durable artifact that should be linked into the run trail.
+- `note`: a small observation that does not fit the other event types.
+
+Do not put raw transcripts, secrets, or private machine paths into public recording artifacts. Prefer JSONL plus small summaries: enough to make the next lesson better, not a surveillance dump.
+
 Anecdotes worth surfacing when they help:
 
 - “you are the loop bro” — the first human-driven loop before daemon autonomy.

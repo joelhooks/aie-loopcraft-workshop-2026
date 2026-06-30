@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
@@ -10,16 +11,126 @@ Read README.md, AGENTS.md, WORKSHOP_RIG.md, lessons/, agents/skills/loopcraft-ta
 
 Ask one question at a time. Capture what the loop should do, what it may change, what needs human approval, and what we are not building yet. Write the answers into VISION.md. Update AGENTS.md or README.md only if we agree on a clear repo rule. Do not create issue events, checks, Lakebed code, dispatch, or product code yet.`;
 
-const widgetLines = [
-  "Loopcraft · ready for Lesson 01",
-  "1. Tour the rig + define vision",
-  "2. Build the reliability floor",
-  "3. Project events into Lakebed",
-  "4. Control the loop from Pi + Herdr",
-  "Side pane: node scripts/loop-daemon-stub.mjs",
-  "Use /loop-lesson-01 to prefill the starter prompt.",
-  "Tool: loopcraft_copy_edit audits/replaces public lesson copy.",
-];
+type LoopcraftSnapshot = {
+  phase: string;
+  next: string;
+  eventFile?: string;
+  eventCount: number;
+  receipt?: string;
+  latest?: string;
+};
+
+function countEvents(filePath: string | undefined) {
+  if (!filePath || !existsSync(filePath)) {
+    return 0;
+  }
+
+  return readFileSync(filePath, "utf8")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean).length;
+}
+
+function readJson(pathName: string) {
+  if (!existsSync(pathName)) {
+    return undefined;
+  }
+
+  try {
+    return JSON.parse(readFileSync(pathName, "utf8")) as Record<string, unknown>;
+  } catch {
+    return undefined;
+  }
+}
+
+function readLoopcraftSnapshot(): LoopcraftSnapshot {
+  const eventFile = existsSync("data/issue-events.jsonl")
+    ? "data/issue-events.jsonl"
+    : existsSync("issues.jsonl")
+      ? "issues.jsonl"
+      : undefined;
+  const eventCount = countEvents(eventFile);
+  const receiptPath = "receipts/loop-check-latest.json";
+  const receipt = readJson(receiptPath);
+  const classifications = Array.isArray(receipt?.classifications)
+    ? (receipt.classifications as Array<Record<string, unknown>>)
+    : [];
+  const latest = classifications.find((item) => item.status === "ready") ?? classifications[0];
+
+  if (!existsSync("VISION.md")) {
+    return {
+      phase: "Lesson 01 · vision and boundaries",
+      next: "Use /loop-lesson-01, then write VISION.md before product code.",
+      eventCount,
+    };
+  }
+
+  if (!eventFile) {
+    return {
+      phase: "Lesson 02 · create local issue events",
+      next: "Add the first issue-event queue, checks, tests, and one receipt.",
+      eventCount,
+    };
+  }
+
+  if (!receipt) {
+    return {
+      phase: "Lesson 02 · check receipt missing",
+      next: "Run pnpm run loop:check or /loop-check-now, then inspect receipts/loop-check-latest.json.",
+      eventFile,
+      eventCount,
+    };
+  }
+
+  return {
+    phase: "Loop visible · checks have receipts",
+    next: "Compare Pi, Herdr, Lakebed, and receipt output before moving to the next lesson.",
+    eventFile,
+    eventCount,
+    receipt: receiptPath,
+    latest: latest ? `${latest.issueId ?? "issue"} ${latest.status ?? "unknown"}` : undefined,
+  };
+}
+
+function truncateLine(line: string, width: number) {
+  if (width <= 1 || line.length <= width) {
+    return line;
+  }
+
+  return `${line.slice(0, width - 1)}…`;
+}
+
+function loopcraftWidgetLines(width: number) {
+  const snapshot = readLoopcraftSnapshot();
+  const lines = [
+    `Loopcraft · ${snapshot.phase}`,
+    `Next: ${snapshot.next}`,
+    snapshot.eventFile
+      ? `Events: ${snapshot.eventFile} (${snapshot.eventCount})`
+      : "Events: not created yet",
+    snapshot.receipt ? `Receipt: ${snapshot.receipt}` : "Receipt: waiting for first check",
+    snapshot.latest ? `Latest: ${snapshot.latest}` : "Latest: none yet",
+    "Host URLs: run pnpm run workshop:ui-url from the host shell.",
+    "Bridge pane: node scripts/loop-daemon-stub.mjs",
+    "Commands: /loop-lesson-01 · /loop-status · /loop-check-now",
+    "Recorder: pnpm run record:event -- --type milestone --lesson 01 --note \"...\"",
+  ];
+
+  return lines.map((line) => truncateLine(line, width));
+}
+
+function loopcraftStatusText() {
+  const snapshot = readLoopcraftSnapshot();
+  return `Loopcraft: ${snapshot.phase}`;
+}
+
+function refreshLoopcraftUi(ctx: { ui: { setStatus: Function; setWidget: Function } }) {
+  ctx.ui.setStatus("loopcraft", loopcraftStatusText());
+  ctx.ui.setWidget("loopcraft", () => ({
+    render: (width: number) => loopcraftWidgetLines(width),
+    invalidate: () => {},
+  }));
+}
 
 const DEFAULT_META_TERMS = [
   "hour cut",
@@ -104,16 +215,18 @@ const copyEditParams = {
 
 export default function loopWorkshop(pi: ExtensionAPI) {
   pi.on("session_start", async (_event, ctx) => {
-    ctx.ui.setStatus("loopcraft", "lesson 01 ready");
-    ctx.ui.setWidget("loopcraft", widgetLines);
+    refreshLoopcraftUi(ctx);
+  });
+
+  pi.on("turn_end", async (_event, ctx) => {
+    refreshLoopcraftUi(ctx);
   });
 
   pi.registerCommand("loop-workshop-status", {
     description: "Show the Loopcraft learner rig status.",
     handler: async (_args, ctx) => {
-      ctx.ui.setStatus("loopcraft", "lesson 01 ready");
-      ctx.ui.setWidget("loopcraft", widgetLines);
-      ctx.ui.notify("Loopcraft scaffold is ready for Lesson 01.", "info");
+      refreshLoopcraftUi(ctx);
+      ctx.ui.notify(loopcraftStatusText(), "info");
     },
   });
 
@@ -122,6 +235,39 @@ export default function loopWorkshop(pi: ExtensionAPI) {
     handler: async (_args, ctx) => {
       ctx.ui.setEditorText(lessonOnePrompt);
       ctx.ui.notify("Lesson 01 prompt loaded. Review, then send it.", "info");
+    },
+  });
+
+  pi.registerCommand("loop-status", {
+    description: "Show the latest local checker status.",
+    handler: async (_args, ctx) => {
+      const output = execFileSync("pnpm", ["run", "-s", "loop:status"], {
+        cwd: process.cwd(),
+        encoding: "utf8",
+      }).trim();
+      ctx.ui.setWidget("loop-status", output.split("\n"));
+      ctx.ui.notify("Loop status refreshed from receipts/loop-check-latest.json.", "info");
+    },
+  });
+
+  pi.registerCommand("loop-check-now", {
+    description: "Run the local checker now, then show status.",
+    handler: async (_args, ctx) => {
+      const checkOutput = execFileSync("pnpm", ["run", "-s", "loop:check"], {
+        cwd: process.cwd(),
+        encoding: "utf8",
+      }).trim();
+      const statusOutput = execFileSync("pnpm", ["run", "-s", "loop:status"], {
+        cwd: process.cwd(),
+        encoding: "utf8",
+      }).trim();
+      ctx.ui.setWidget("loop-check-now", [
+        "check-now",
+        ...statusOutput.split("\n"),
+        "---",
+        ...checkOutput.split("\n").slice(0, 8),
+      ]);
+      ctx.ui.notify("Local checker ran and wrote receipts/loop-check-latest.json.", "info");
     },
   });
 

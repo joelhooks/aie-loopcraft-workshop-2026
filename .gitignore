@@ -9,3 +9,4 @@ build/
 .pi/notes-bridge/
 subagent-output/
 .wzrrd/
+.tmp/

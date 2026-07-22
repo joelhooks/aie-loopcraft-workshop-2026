@@ -3,7 +3,6 @@ name: reviewer
 package: loop
 description: Loop-owned non-mutating reviewer for issue-progress diffs and plans
 tools: read, grep, find, ls, bash
-thinking: high
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false

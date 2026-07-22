@@ -3,7 +3,6 @@ name: scout
 package: loop
 description: Loop-owned non-mutating scout for issue-progress codebase reconnaissance
 tools: read, grep, find, ls, bash
-thinking: low
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false

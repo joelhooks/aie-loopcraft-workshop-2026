@@ -95,7 +95,7 @@
       id: "guardrails",
       term: "Guardrails",
       definition: "The fast, strict checks the reliability floor adds: tsgo for typechecking, oxlint and oxfmt for fast lint and format, Ultracite for strict automatic rules, and a Matt Pocock-style strict tsconfig. They are chosen so feedback stays inside the agent loop and sloppy edits fail early.",
-      useItWhen: "Use them as the first product checks in Lesson 02, before Lakebed, dispatch, or review.",
+      useItWhen: "Use them as the first product checks in Lesson 02, before Lakebed, dispatch, or review. Once the checks exist, Lefthook runs the same package scripts through Git hooks before commit and push. Save actual hook output; skipped checks are not evidence of enforcement.",
       links: [{ label: "Lesson 02", href: "/lessons/02-reliability-floor/" }],
     },
     {

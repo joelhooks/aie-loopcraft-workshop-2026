@@ -81,6 +81,14 @@ node scripts/loop-daemon-stub.mjs
 
 This does not pre-create Pi or daemon panes. Herdr gives you the workspace; you start the panes when the lesson asks for them.
 
+The workshop launch scripts match your local `pi --version`. Set `PI_VERSION`
+in your shell to override it, for example `PI_VERSION=1.4.0 pnpm run workshop`. The matching Linux
+package is saved by version in the existing Pi volume and reused across runs,
+so containers requesting different versions keep separate installations.
+Installing a version for the first time requires npm access. Without a local Pi
+or override, the container uses a legacy unversioned saved installation if present,
+otherwise the Pi bundled in the image.
+
 ## No-pnpm Docker commands
 
 If you do not want host pnpm, use the repo scripts directly:

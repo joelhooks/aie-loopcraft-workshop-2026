@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ "${1:-}" == "run" && -z "${PI_VERSION:-}" ]] && command -v pi >/dev/null 2>&1; then
+  export PI_VERSION="$(pi --version 2>/dev/null || true)"
+fi
+
 if ! command -v docker >/dev/null 2>&1; then
   cat >&2 <<'EOF'
 Docker is required for the workshop container path.

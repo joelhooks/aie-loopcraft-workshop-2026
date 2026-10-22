@@ -1,6 +1,13 @@
 # Loopcraft workshop shell
 # Kept deliberately small: fast startup, useful completion, no surprise course magic.
 
+# Keep this container's Pi version ahead of the image copy in new Herdr panes.
+if [[ -n "${PI_VERSION:-}" ]]; then
+  export PATH="$HOME/.pi/npm/versions/$PI_VERSION/bin:$PATH"
+else
+  export PATH="$HOME/.pi/npm/bin:$PATH"
+fi
+
 export EDITOR="${EDITOR:-nano}"
 export VISUAL="${VISUAL:-$EDITOR}"
 export PAGER="${PAGER:-less}"

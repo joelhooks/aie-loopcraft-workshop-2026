@@ -5,7 +5,6 @@ FROM node:22-bookworm
 LABEL org.opencontainers.image.source="https://github.com/joelhooks/aie-loopcraft-workshop-2026"
 LABEL org.opencontainers.image.description="AI Engineer Loopcraft Workshop 2026 workshop computer"
 
-ARG PI_VERSION=0.80.2
 ARG CLAUDE_CODE_VERSION=2.1.195
 ARG CODEX_VERSION=0.142.3
 ARG OPENCODE_VERSION=1.17.11
@@ -56,7 +55,7 @@ RUN groupadd --gid ${USER_GID} ${USERNAME} \
 
 RUN corepack enable \
   && corepack prepare pnpm@11.9.0 --activate \
-  && npm install -g --ignore-scripts @earendil-works/pi-coding-agent@${PI_VERSION} \
+  && npm install -g --ignore-scripts @earendil-works/pi-coding-agent \
   && npm install -g \
     @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION} \
     @openai/codex@${CODEX_VERSION} \

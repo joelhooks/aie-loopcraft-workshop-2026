@@ -5,11 +5,13 @@ services:
       dockerfile: docker/workshop.Dockerfile
     image: ghcr.io/joelhooks/aie-loopcraft-workshop-2026:latest
     working_dir: /workspace
+    entrypoint: ["bash", "/workspace/scripts/workshop-pi-entrypoint.sh"]
     stdin_open: true
     tty: true
     environment:
       SHELL: /usr/bin/zsh
       TERM: xterm-256color
+      PI_VERSION: ${PI_VERSION:-}
     volumes:
       - .:/workspace
       - workshop-pi:/home/workshop/.pi
